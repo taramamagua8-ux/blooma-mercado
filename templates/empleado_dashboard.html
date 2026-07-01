@@ -1,0 +1,1684 @@
+<!DOCTYPE html>
+<!--
+    ============================================================
+    BLOOMA · PANEL DE EMPLEADO (empleado_dashboard.html)
+    ============================================================
+    Este archivo es el panel de control que ve un empleado cuando
+    inicia sesión en el sistema Blooma. Desde aquí puede:
+        - Ver estadísticas rápidas (pedidos de hoy, pendientes, listos).
+        - Ver los datos del local al que pertenece.
+        - Gestionar pedidos (cambiar su estado).
+        - Ver el inventario de productos con imágenes y buscar por nombre.
+        - Registrar nuevos pedidos en mostrador (modo "cara a cara").
+
+    Está diseñado para ser usado en navegadores modernos y es
+    completamente responsivo (se adapta a móviles, tabletas y
+    computadoras de escritorio).
+
+    NOTA PARA EL LECTOR NO PROGRAMADOR:
+    Este código es como una "receta de cocina" muy detallada.
+    Cada línea le dice al navegador (el "cocinero") qué hacer
+    paso a paso para mostrar la página y hacer que funcione.
+    No tengas miedo, aunque no sepas programar, los comentarios
+    explican cada línea de forma sencilla.
+    ============================================================
+-->
+<html lang="es">
+<!--
+    La etiqueta <html> es el contenedor principal de toda la página web.
+    lang="es" le dice al navegador que el contenido está en español,
+    lo que ayuda con la traducción automática y la accesibilidad.
+-->
+<head>
+    <!--
+        La sección <head> contiene información "oculta" que no se ve
+        en la pantalla pero que es muy importante para el navegador.
+        Aquí se configuran aspectos técnicos, se cargan fuentes,
+        estilos y otros recursos.
+    -->
+    <meta charset="UTF-8">
+    <!--
+        <meta charset="UTF-8">: Define la codificación de caracteres.
+        UTF-8 es el estándar universal que permite usar letras con
+        acentos, ñ, y caracteres especiales como emojis.
+        Sin esto, los acentos y la ñ se verían como caracteres extraños.
+    -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <!--
+        <meta name="viewport">: Esta línea es CLAVE para que la página
+        se vea bien en teléfonos y tabletas.
+        - width=device-width: El ancho de la página será igual al ancho
+        de la pantalla del dispositivo.
+        - initial-scale=1.0: La página se abre con el nivel de zoom
+        normal (sin acercar ni alejar).
+        - user-scalable=yes: Permite que el usuario pueda hacer zoom
+        con los dedos (pellizcar para acercar/alejar). Es importante
+        para personas con problemas de visión.
+    -->
+    <title>Blooma · Panel de Empleado</title>
+    <!--
+        <title>: Esto es lo que aparece en la pestaña del navegador.
+        Es como el "nombre" de la página. Aquí dice "Blooma · Panel
+        de Empleado" para que el empleado sepa dónde está.
+    -->
+
+    <!-- ===== FUENTES DE GOOGLE ===== -->
+    <!--
+        Las siguientes líneas cargan fuentes (tipos de letra) desde
+        Google Fonts. Son fuentes bonitas y profesionales que hacen
+        que la página se vea elegante.
+        link rel="preconnect": Son "pre-conexiones" que hacen que
+        la carga de las fuentes sea más rápida.
+    -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Montserrat:wght@200;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <!--
+        Estas líneas cargan tres familias de fuentes:
+        - Cormorant Garamond: una fuente con serifas (remates) que se
+        usa para títulos, con diferentes grosores (300, 400, 600, 700).
+        - Montserrat: una fuente sans-serif (sin remates) moderna,
+        usada para textos generales.
+        - Playfair Display: otra fuente elegante para títulos.
+        Tener diferentes grosores (weight) permite usar negritas y
+        estilos variados.
+    -->
+
+    <!-- ===== FONT AWESOME (ICONOS) ===== -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!--
+        Font Awesome es una librería de iconos. Con esta línea,
+        podemos usar iconos como el de usuario, carrito, etc.
+        Por ejemplo, <i class="fas fa-user"></i> muestra un icono
+        de persona. Es como tener un "mazo de pegatinas" digital.
+    -->
+
+    <!-- ===== ESTILO GLOBAL DE BLOOMA ===== -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/blooma_global.css') }}">
+    <!--
+        Aquí se carga el archivo de estilos global de Blooma.
+        {{ url_for('static', filename='css/blooma_global.css') }} es
+        una instrucción especial del sistema (Flask) que genera la
+        URL correcta para encontrar este archivo.
+        Piensa en ello como una "receta base" de estilos que se
+        comparte en todas las páginas de Blooma para mantener una
+        apariencia consistente.
+    -->
+
+    <!-- ===== FAVICON (ICONO DE PESTAÑA) ===== -->
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/iconic.png') }}">
+    <!--
+        El favicon es ese pequeño icono que aparece en la pestaña
+        del navegador, al lado del título. Es como el "logotipo
+        pequeño" de Blooma. Ayuda a identificar la página rápidamente
+        cuando tienes muchas pestañas abiertas.
+    -->
+
+    <!-- ============================================================ -->
+    <!-- ===== ESTILOS ESPECÍFICOS DEL DASHBOARD ===== -->
+    <!-- ============================================================ -->
+    <!--
+        Esta sección <style> contiene estilos que solo se aplican
+        a este panel de empleado. Son instrucciones de "diseño"
+        que le dicen al navegador cómo deben verse los elementos
+        (colores, tamaños, márgenes, etc.).
+        Es como darle instrucciones al navegador sobre cómo
+        "maquillar" y organizar la página.
+    -->
+    <style>
+        /* ==========================================================
+        REGLA: .dashboard-container
+        ==========================================================
+        Este es el contenedor principal de todo el panel.
+        max-width: 1400px; -> La página no se estirará más de
+        1400 píxeles de ancho, para que no se vea demasiado ancha
+        en pantallas grandes.
+        margin: 1.5rem auto; -> Centra el contenedor horizontalmente
+        y le da un margen superior e inferior de 1.5rem.
+        padding: 0 1rem; -> Añade un poco de espacio interno a los
+        lados para que el contenido no toque los bordes.
+        */
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 1.5rem auto;
+            padding: 0 1rem;
+        }
+
+        /* ==========================================================
+        REGLA: .header
+        ==========================================================
+        Esta es la barra superior donde están el título y los botones.
+        display: flex; -> Usa un modelo de diseño flexible que
+        organiza los elementos en fila.
+        justify-content: space-between; -> Distribuye los elementos:
+        el título a la izquierda y los botones a la derecha.
+        align-items: center; -> Centra verticalmente los elementos.
+        flex-wrap: wrap; -> Si no caben en una línea, los elementos
+        se envuelven a la siguiente línea (útil en móviles).
+        gap: 1rem; -> Espacio de 1rem entre los elementos.
+        background: rgba(10, 5, 20, 0.7); -> Fondo semi-transparente
+        (oscuro con opacidad 0.7).
+        backdrop-filter: blur(12px); -> Efecto de "vidrio esmerilado":
+        lo que está detrás se ve borroso, dando un efecto moderno.
+        border-radius: 48px; -> Bordes muy redondeados.
+        padding: 1.2rem 2rem; -> Espacio interno: 1.2rem arriba/abajo,
+        2rem a los lados.
+        border: 1px solid rgba(255, 107, 129, 0.25); -> Borde
+        delgado de color rosa-berry con transparencia.
+        margin-bottom: 2rem; -> Espacio debajo del header.
+        color: var(--text-light); -> Usa una variable CSS para el
+        color del texto (texto claro). Esta variable está definida
+        en el archivo global.
+        */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            background: rgba(10, 5, 20, 0.7);
+            backdrop-filter: blur(12px);
+            border-radius: 48px;
+            padding: 1.2rem 2rem;
+            border: 1px solid rgba(255, 107, 129, 0.25);
+            margin-bottom: 2rem;
+            /* +++ TEXTO CLARO +++ */
+            color: var(--text-light);
+        }
+
+        /* ==========================================================
+        REGLA: .header h1 (el título dentro del header)
+        ==========================================================
+        font-family: var(--font-title); -> Usa la fuente para títulos
+        definida en el archivo global.
+        font-size: 1.6rem; -> Tamaño de letra.
+        color: var(--golden-hour); -> Color dorado (amarillo cálido).
+        display: flex; -> Para alinear el icono y el texto.
+        align-items: center; -> Centra verticalmente el icono con
+        el texto.
+        gap: 0.8rem; -> Espacio entre el icono y el texto.
+        */
+        .header h1 {
+            font-family: var(--font-title);
+            font-size: 1.6rem;
+            color: var(--golden-hour);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        /* ==========================================================
+        REGLA: .header h1 i (el icono dentro del título)
+        ==========================================================
+        color: var(--berry-lumina); -> Pinta el icono de color
+        rosa-berry (el color característico de Blooma).
+        */
+        .header h1 i {
+            color: var(--berry-lumina);
+        }
+
+        /* ==========================================================
+        REGLA: .header .btn-group (grupo de botones)
+        ==========================================================
+        display: flex; -> Organiza los botones en fila.
+        gap: 0.8rem; -> Espacio entre botones.
+        flex-wrap: wrap; -> Si no caben, se envuelven a la línea
+        siguiente.
+        */
+        .header .btn-group {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        /* ==========================================================
+        REGLA: .btn (botones en general)
+        ==========================================================
+        background: rgba(255, 107, 129, 0.15); -> Fondo rosa con
+        poca opacidad.
+        border: 1px solid var(--accent-berry-pink); -> Borde rosa.
+        padding: 0.5rem 1.2rem; -> Espacio interno.
+        border-radius: 40px; -> Bordes muy redondeados (forma de
+        píldora).
+        color: white; -> Texto blanco.
+        text-decoration: none; -> Elimina el subrayado de los enlaces.
+        font-weight: 600; -> Texto semi-negrita.
+        font-size: 0.85rem; -> Tamaño de letra.
+        transition: 0.2s; -> Hace que los cambios (como al pasar
+        el mouse) sean suaves y lentos.
+        display: inline-flex; -> Muestra el contenido en línea
+        pero con flexibilidad.
+        align-items: center; -> Centra verticalmente el icono y
+        el texto.
+        gap: 0.5rem; -> Espacio entre icono y texto.
+        */
+        .btn {
+            background: rgba(255, 107, 129, 0.15);
+            border: 1px solid var(--accent-berry-pink);
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* ==========================================================
+        REGLA: .btn:hover (cuando el mouse pasa sobre un botón)
+        ==========================================================
+        background: rgba(255, 107, 129, 0.3); -> El fondo se vuelve
+        más opaco (más rosa).
+        transform: translateY(-2px); -> El botón se eleva 2 píxeles
+        dando un efecto de "flotar".
+        */
+        .btn:hover {
+            background: rgba(255, 107, 129, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* ==========================================================
+        REGLA: .stats-grid (cuadrícula de estadísticas)
+        ==========================================================
+        display: grid; -> Organiza los elementos en una cuadrícula.
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        -> Crea columnas automáticas que se ajustan al espacio
+        disponible, cada una con un mínimo de 160px.
+        gap: 1rem; -> Espacio entre las tarjetas.
+        margin-bottom: 2.5rem; -> Espacio debajo de las estadísticas.
+        */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+        }
+
+        /* ==========================================================
+        REGLA: .stat-card (cada tarjeta de estadística)
+        ==========================================================
+        background: rgba(10, 5, 20, 0.7); -> Fondo oscuro
+        semi-transparente.
+        backdrop-filter: blur(8px); -> Efecto de vidrio esmerilado.
+        border-radius: 28px; -> Bordes redondeados.
+        padding: 1.2rem 1.5rem; -> Espacio interno.
+        text-align: center; -> El texto se centra.
+        border: 1px solid rgba(255, 107, 129, 0.2); -> Borde rosa
+        tenue.
+        color: var(--text-light); -> Texto claro.
+        */
+        .stat-card {
+            background: rgba(10, 5, 20, 0.7);
+            backdrop-filter: blur(8px);
+            border-radius: 28px;
+            padding: 1.2rem 1.5rem;
+            text-align: center;
+            border: 1px solid rgba(255, 107, 129, 0.2);
+            /* +++ TEXTO CLARO +++ */
+            color: var(--text-light);
+        }
+
+        /* ==========================================================
+        REGLA: .stat-card h3 (el título de la tarjeta)
+        ==========================================================
+        font-size: 0.85rem; -> Texto pequeño.
+        font-weight: 400; -> Peso normal (no negrita).
+        color: var(--text-mist); -> Color gris claro.
+        margin-bottom: 0.4rem; -> Espacio debajo del título.
+        */
+        .stat-card h3 {
+            font-size: 0.85rem;
+            font-weight: 400;
+            color: var(--text-mist);
+            margin-bottom: 0.4rem;
+        }
+
+        /* ==========================================================
+        REGLA: .stat-number (el número grande de la estadística)
+        ==========================================================
+        font-size: 2rem; -> Tamaño grande.
+        font-weight: 700; -> Negrita.
+        color: var(--golden-hour); -> Color dorado.
+        font-family: var(--font-sans); -> Fuente sans-serif moderna.
+        */
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--golden-hour);
+            font-family: var(--font-sans);
+        }
+
+        /* ==========================================================
+        REGLA: .local-info (información del local)
+        ==========================================================
+        background: rgba(10, 5, 20, 0.6); -> Fondo oscuro
+        semi-transparente.
+        backdrop-filter: blur(8px); -> Efecto de vidrio esmerilado.
+        border-radius: 32px; -> Bordes redondeados.
+        padding: 1.5rem 2rem; -> Espacio interno.
+        margin-bottom: 2.5rem; -> Espacio debajo.
+        border: 1px solid rgba(255, 107, 129, 0.15); -> Borde rosa
+        tenue.
+        color: var(--text-light); -> Texto claro.
+        */
+        .local-info {
+            background: rgba(10, 5, 20, 0.6);
+            backdrop-filter: blur(8px);
+            border-radius: 32px;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2.5rem;
+            border: 1px solid rgba(255, 107, 129, 0.15);
+            /* +++ TEXTO CLARO +++ */
+            color: var(--text-light);
+        }
+
+        /* ==========================================================
+        REGLA: .local-info p (párrafos dentro de la info del local)
+        ==========================================================
+        margin: 0.4rem 0; -> Margen vertical pequeño.
+        font-size: 0.95rem; -> Tamaño de letra.
+        color: #e8e0da; -> Color crema claro.
+        */
+        .local-info p {
+            margin: 0.4rem 0;
+            font-size: 0.95rem;
+            color: #e8e0da;
+        }
+
+        /* ==========================================================
+        REGLA: .local-info strong (texto en negrita dentro de la info)
+        ==========================================================
+        color: var(--golden-hour); -> Color dorado para resaltar.
+        */
+        .local-info strong {
+            color: var(--golden-hour);
+        }
+
+        /* ==========================================================
+        REGLA: .tabs (contenedor de las pestañas)
+        ==========================================================
+        display: flex; -> Organiza las pestañas en fila.
+        flex-wrap: wrap; -> Permite que las pestañas se envuelvan
+        en móviles.
+        gap: 0.5rem; -> Espacio entre pestañas.
+        margin-bottom: 2rem; -> Espacio debajo.
+        background: rgba(10, 5, 20, 0.5); -> Fondo oscuro
+        semi-transparente.
+        backdrop-filter: blur(8px); -> Efecto de vidrio esmerilado.
+        border-radius: 60px; -> Bordes muy redondeados.
+        padding: 0.4rem; -> Espacio interno.
+        border: 1px solid rgba(255, 255, 255, 0.06); -> Borde
+        blanco muy tenue.
+        */
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            background: rgba(10, 5, 20, 0.5);
+            backdrop-filter: blur(8px);
+            border-radius: 60px;
+            padding: 0.4rem;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        /* ==========================================================
+        REGLA: .tab-btn (cada botón de pestaña)
+        ==========================================================
+        background: transparent; -> Sin fondo (transparente).
+        border: none; -> Sin borde.
+        padding: 0.6rem 1.4rem; -> Espacio interno.
+        border-radius: 40px; -> Bordes redondeados.
+        color: var(--text-mist); -> Color gris claro.
+        font-weight: 600; -> Semi-negrita.
+        cursor: pointer; -> El cursor cambia a una mano al pasar
+        por encima.
+        transition: 0.2s; -> Transición suave.
+        font-family: var(--font-sans); -> Fuente moderna.
+        font-size: 0.85rem; -> Tamaño de letra.
+        */
+        .tab-btn {
+            background: transparent;
+            border: none;
+            padding: 0.6rem 1.4rem;
+            border-radius: 40px;
+            color: var(--text-mist);
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+        }
+
+        /* ==========================================================
+        REGLA: .tab-btn:hover (cuando el mouse pasa sobre una pestaña)
+        ==========================================================
+        color: white; -> El texto se vuelve blanco.
+        background: rgba(255,255,255,0.05); -> Fondo blanco muy
+        tenue.
+        */
+        .tab-btn:hover {
+            color: white;
+            background: rgba(255,255,255,0.05);
+        }
+
+        /* ==========================================================
+        REGLA: .tab-btn.active (la pestaña que está activa/seleccionada)
+        ==========================================================
+        background: var(--berry-lumina); -> Fondo rosa-berry.
+        color: #0a0514; -> Texto casi negro para contraste.
+        box-shadow: 0 4px 15px rgba(255, 107, 129, 0.3); -> Sombra
+        rosa para resaltar.
+        */
+        .tab-btn.active {
+            background: var(--berry-lumina);
+            color: #0a0514;
+            box-shadow: 0 4px 15px rgba(255, 107, 129, 0.3);
+        }
+
+        /* ==========================================================
+        REGLA: .tab-pane (contenido de cada pestaña)
+        ==========================================================
+        display: none; -> Por defecto, el contenido está oculto.
+        animation: fadeIn 0.3s ease; -> Cuando aparece, tiene una
+        animación suave de entrada (fadeIn).
+        */
+        .tab-pane {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        /* ==========================================================
+        REGLA: .tab-pane.active-pane (la pestaña visible)
+        ==========================================================
+        display: block; -> Muestra el contenido.
+        */
+        .tab-pane.active-pane {
+            display: block;
+        }
+
+        /* ==========================================================
+        REGLA: @keyframes fadeIn (animación de entrada)
+        ==========================================================
+        from: 0% de opacidad y desplazado 8px hacia abajo.
+        to: 100% de opacidad y en su posición normal.
+        */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ==========================================================
+        REGLA: .section (cada sección dentro de una pestaña)
+        ==========================================================
+        background: rgba(10, 5, 20, 0.6); -> Fondo oscuro
+        semi-transparente.
+        backdrop-filter: blur(8px); -> Efecto de vidrio esmerilado.
+        border-radius: 32px; -> Bordes redondeados.
+        padding: 1.8rem 2rem; -> Espacio interno.
+        margin-bottom: 1.5rem; -> Espacio debajo de cada sección.
+        border: 1px solid rgba(255, 107, 129, 0.15); -> Borde rosa
+        tenue.
+        color: var(--text-light); -> Texto claro.
+        */
+        .section {
+            background: rgba(10, 5, 20, 0.6);
+            backdrop-filter: blur(8px);
+            border-radius: 32px;
+            padding: 1.8rem 2rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(255, 107, 129, 0.15);
+            /* +++ TEXTO CLARO +++ */
+            color: var(--text-light);
+        }
+
+        /* ==========================================================
+        REGLA: .section-title (título de cada sección)
+        ==========================================================
+        font-family: var(--font-title); -> Fuente para títulos.
+        font-size: 1.3rem; -> Tamaño de letra.
+        color: var(--golden-hour); -> Color dorado.
+        border-bottom: 2px solid rgba(212, 175, 55, 0.3); -> Línea
+        inferior dorada tenue.
+        padding-bottom: 0.6rem; -> Espacio debajo del título.
+        margin-bottom: 1.2rem; -> Espacio debajo del título.
+        display: flex; -> Alinea el icono y el texto.
+        align-items: center; -> Centra verticalmente.
+        gap: 0.8rem; -> Espacio entre icono y texto.
+        */
+        .section-title {
+            font-family: var(--font-title);
+            font-size: 1.3rem;
+            color: var(--golden-hour);
+            border-bottom: 2px solid rgba(212, 175, 55, 0.3);
+            padding-bottom: 0.6rem;
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        /* ==========================================================
+        REGLA: .section-title i (icono del título)
+        ==========================================================
+        color: var(--berry-lumina); -> Color rosa-berry para el icono.
+        */
+        .section-title i {
+            color: var(--berry-lumina);
+        }
+
+        /* ==========================================================
+        REGLA: .producto-item (cada producto en la lista)
+        ==========================================================
+        display: flex; -> Organiza el contenido en fila.
+        justify-content: space-between; -> Distribuye el contenido
+        a los extremos.
+        align-items: center; -> Centra verticalmente.
+        padding: 0.8rem 0; -> Espacio vertical.
+        border-bottom: 1px solid rgba(255,255,255,0.06); -> Línea
+        separadora tenue.
+        flex-wrap: wrap; -> Permite que los elementos se envuelvan
+        en móviles.
+        gap: 0.8rem; -> Espacio entre elementos.
+        */
+        .producto-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+
+        /* ==========================================================
+        REGLA: .producto-item:last-child (el último producto)
+        ==========================================================
+        border-bottom: none; -> Elimina la línea separadora del
+        último producto para que no quede una línea extra.
+        */
+        .producto-item:last-child {
+            border-bottom: none;
+        }
+
+        /* ==========================================================
+        REGLA: .producto-info (información del producto: imagen + nombre)
+        ==========================================================
+        display: flex; -> Organiza imagen y texto en fila.
+        align-items: center; -> Centra verticalmente.
+        gap: 1rem; -> Espacio entre imagen y texto.
+        flex: 1; -> Ocupa todo el espacio disponible.
+        min-width: 200px; -> Ancho mínimo para que no se comprima
+        demasiado.
+        */
+        .producto-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        /* ==========================================================
+        REGLA: .producto-imagen (imagen del producto)
+        ==========================================================
+        width: 50px; -> Ancho fijo.
+        height: 50px; -> Alto fijo.
+        object-fit: cover; -> La imagen se recorta para llenar
+        el espacio sin deformarse.
+        border-radius: 8px; -> Bordes ligeramente redondeados.
+        background: #1a1425; -> Color de fondo por si la imagen
+        no carga.
+        */
+        .producto-imagen {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 8px;
+            background: #1a1425;
+        }
+
+        /* ==========================================================
+        REGLA: .sin-imagen (cuando un producto no tiene imagen)
+        ==========================================================
+        width: 50px; -> Mismo tamaño que la imagen.
+        height: 50px;
+        display: flex; -> Para centrar el icono.
+        align-items: center; -> Centra verticalmente.
+        justify-content: center; -> Centra horizontalmente.
+        background: #1a1425; -> Fondo oscuro.
+        border-radius: 8px; -> Bordes redondeados.
+        color: #666; -> Icono gris.
+        font-size: 1.5rem; -> Tamaño del icono.
+        */
+        .sin-imagen {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #1a1425;
+            border-radius: 8px;
+            color: #666;
+            font-size: 1.5rem;
+        }
+
+        /* ==========================================================
+        REGLA: .badge (etiqueta de estado, como "Pendiente")
+        ==========================================================
+        padding: 0.2rem 0.8rem; -> Espacio interno.
+        border-radius: 20px; -> Bordes redondeados.
+        font-size: 0.7rem; -> Texto pequeño.
+        font-weight: 600; -> Semi-negrita.
+        text-transform: capitalize; -> La primera letra en mayúscula.
+        */
+        .badge {
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+
+        /* ==========================================================
+        REGLAS: .badge-* (colores para cada estado)
+        ==========================================================
+        Cada estado tiene un color diferente para identificarlo
+        fácilmente.
+        */
+        .badge-pendiente { background: #f39c12; color: #1a1a1a; } /* Amarillo */
+        .badge-listo { background: #3498db; color: white; } /* Azul */
+        .badge-entregado { background: #2ecc71; color: #1a1a1a; } /* Verde */
+        .badge-cancelado { background: #e74c3c; color: white; } /* Rojo */
+
+        /* ==========================================================
+        REGLA: .order-card (cada pedido en la lista)
+        ==========================================================
+        Misma estructura que .producto-item.
+        */
+        .order-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+
+        /* ==========================================================
+        REGLA: .order-card:last-child
+        ==========================================================
+        Elimina la línea del último pedido.
+        */
+        .order-card:last-child {
+            border-bottom: none;
+        }
+
+        /* ==========================================================
+        REGLA: .order-card .estado-select (selector de estado)
+        ==========================================================
+        background: rgba(0,0,0,0.6); -> Fondo oscuro.
+        border: 1px solid rgba(255,255,255,0.15); -> Borde blanco
+        tenue.
+        border-radius: 30px; -> Bordes redondeados.
+        padding: 0.3rem 0.8rem; -> Espacio interno.
+        color: white; -> Texto blanco.
+        font-family: var(--font-sans); -> Fuente moderna.
+        font-size: 0.8rem; -> Tamaño de letra.
+        */
+        .order-card .estado-select {
+            background: rgba(0,0,0,0.6);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 30px;
+            padding: 0.3rem 0.8rem;
+            color: white;
+            font-family: var(--font-sans);
+            font-size: 0.8rem;
+        }
+
+        /* ==========================================================
+        REGLA: .btn-sm (botón pequeño)
+        ==========================================================
+        padding: 0.25rem 0.8rem; -> Espacio interno pequeño.
+        border-radius: 20px; -> Bordes redondeados.
+        border: none; -> Sin borde.
+        font-weight: 600; -> Semi-negrita.
+        cursor: pointer; -> Mano al pasar.
+        transition: 0.15s; -> Transición suave.
+        font-size: 0.75rem; -> Texto pequeño.
+        */
+        .btn-sm {
+            padding: 0.25rem 0.8rem;
+            border-radius: 20px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.15s;
+            font-size: 0.75rem;
+        }
+
+        /* ==========================================================
+        REGLA: .btn-sm:hover (botón pequeño al pasar el mouse)
+        ==========================================================
+        transform: scale(1.02); -> Se agranda ligeramente.
+        */
+        .btn-sm:hover {
+            transform: scale(1.02);
+        }
+
+        /* ==========================================================
+        REGLA: .btn-success (botón de éxito/confirmar)
+        ==========================================================
+        background: var(--berry-lumina); -> Fondo rosa-berry.
+        color: #0a0514; -> Texto oscuro.
+        */
+        .btn-success {
+            background: var(--berry-lumina);
+            color: #0a0514;
+        }
+
+        /* ==========================================================
+        REGLA: .btn-success:hover
+        ==========================================================
+        background: #ff8fa3; -> Rosa más claro al pasar el mouse.
+        */
+        .btn-success:hover {
+            background: #ff8fa3;
+        }
+
+        /* ==========================================================
+        REGLA: .btn-primary (botón primario, azul)
+        ==========================================================
+        background: rgba(52, 152, 219, 0.25); -> Azul transparente.
+        color: #85c1e9; -> Azul claro.
+        */
+        .btn-primary {
+            background: rgba(52, 152, 219, 0.25);
+            color: #85c1e9;
+        }
+
+        /* ==========================================================
+        REGLA: .btn-primary:hover
+        ==========================================================
+        background: rgba(52, 152, 219, 0.4); -> Azul más opaco al
+        pasar el mouse.
+        */
+        .btn-primary:hover {
+            background: rgba(52, 152, 219, 0.4);
+        }
+
+        /* ==========================================================
+        REGLA: .form-agregar (formulario para agregar productos)
+        ==========================================================
+        display: flex; -> Organiza los elementos en fila.
+        flex-wrap: wrap; -> Permite que se envuelvan.
+        gap: 0.8rem; -> Espacio entre elementos.
+        margin: 1rem 0 1.5rem; -> Márgenes verticales.
+        */
+        .form-agregar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin: 1rem 0 1.5rem;
+        }
+
+        /* ==========================================================
+        REGLA: .form-agregar input, .form-agregar select
+        ==========================================================
+        flex: 1; -> Ocupa el espacio disponible.
+        min-width: 120px; -> Ancho mínimo.
+        background: rgba(0,0,0,0.5); -> Fondo oscuro.
+        border: 1px solid rgba(255,255,255,0.15); -> Borde tenue.
+        border-radius: 40px; -> Bordes redondeados.
+        padding: 0.6rem 1rem; -> Espacio interno.
+        color: white; -> Texto blanco.
+        font-family: var(--font-sans); -> Fuente moderna.
+        */
+        .form-agregar input, .form-agregar select {
+            flex: 1;
+            min-width: 120px;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 40px;
+            padding: 0.6rem 1rem;
+            color: white;
+            font-family: var(--font-sans);
+        }
+
+        /* ==========================================================
+        REGLA: .form-agregar input:focus, .form-agregar select:focus
+        ==========================================================
+        outline: none; -> Elimina el borde azul por defecto.
+        border-color: var(--berry-lumina); -> Borde rosa-berry
+        cuando el campo está seleccionado.
+        */
+        .form-agregar input:focus, .form-agregar select:focus {
+            outline: none;
+            border-color: var(--berry-lumina);
+        }
+
+        /* ==========================================================
+        REGLA: .form-agregar button (botón de enviar)
+        ==========================================================
+        background: var(--berry-lumina); -> Fondo rosa-berry.
+        border: none; -> Sin borde.
+        padding: 0.6rem 1.8rem; -> Espacio interno.
+        border-radius: 40px; -> Bordes redondeados.
+        font-weight: 700; -> Negrita.
+        cursor: pointer; -> Mano al pasar.
+        color: #0a0514; -> Texto oscuro.
+        transition: 0.2s; -> Transición suave.
+        */
+        .form-agregar button {
+            background: var(--berry-lumina);
+            border: none;
+            padding: 0.6rem 1.8rem;
+            border-radius: 40px;
+            font-weight: 700;
+            cursor: pointer;
+            color: #0a0514;
+            transition: 0.2s;
+        }
+
+        /* ==========================================================
+        REGLA: .form-agregar button:hover
+        ==========================================================
+        background: #ff8fa3; -> Rosa más claro al pasar el mouse.
+        */
+        .form-agregar button:hover {
+            background: #ff8fa3;
+        }
+
+        /* ==========================================================
+        REGLA: .toast (mensaje emergente)
+        ==========================================================
+        position: fixed; -> Se mantiene fijo en la pantalla
+        (no se mueve al hacer scroll).
+        bottom: 30px; -> A 30px del borde inferior.
+        left: 50%; -> Centrado horizontalmente.
+        transform: translateX(-50%); -> Ajuste para centrar
+        perfectamente.
+        padding: 12px 28px; -> Espacio interno.
+        border-radius: 60px; -> Bordes muy redondeados.
+        color: white; -> Texto blanco.
+        font-weight: 600; -> Semi-negrita.
+        z-index: 4000; -> Se asegura de estar por encima de todo.
+        box-shadow: 0 6px 25px rgba(0,0,0,0.4); -> Sombra.
+        font-family: var(--font-sans); -> Fuente moderna.
+        background: var(--berry-lumina); -> Fondo rosa-berry.
+        animation: slideUp 0.3s ease; -> Animación de entrada.
+        max-width: 90%; -> No ocupa más del 90% del ancho.
+        */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 28px;
+            border-radius: 60px;
+            color: white;
+            font-weight: 600;
+            z-index: 4000;
+            box-shadow: 0 6px 25px rgba(0,0,0,0.4);
+            font-family: var(--font-sans);
+            background: var(--berry-lumina);
+            animation: slideUp 0.3s ease;
+            max-width: 90%;
+        }
+
+        /* ==========================================================
+        REGLA: @keyframes slideUp (animación del toast)
+        ==========================================================
+        El mensaje aparece desde abajo.
+        */
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+
+        /* ==========================================================
+        REGLA: .toast.error (toast de error)
+        ==========================================================
+        background: #e74c3c; -> Fondo rojo para errores.
+        */
+        .toast.error {
+            background: #e74c3c;
+        }
+
+        /* ==========================================================
+        REGLAS RESPONSIVAS (para móviles y tabletas)
+        ==========================================================
+        Estas reglas se activan cuando el ancho de la pantalla
+        es menor a 768px (tabletas) o 480px (móviles pequeños).
+        Ajustan los tamaños y distribuciones para que la página
+        se vea bien en dispositivos más pequeños.
+        */
+        @media (max-width: 768px) {
+            .header { flex-direction: column; align-items: stretch; text-align: center; }
+            .header .btn-group { justify-content: center; }
+            .tabs { border-radius: 24px; padding: 0.3rem; gap: 0.3rem; justify-content: center; }
+            .tab-btn { font-size: 0.7rem; padding: 0.4rem 0.8rem; }
+            .section { padding: 1.2rem; }
+            .order-card, .producto-item { flex-direction: column; align-items: stretch; }
+            .producto-info { min-width: auto; }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .header h1 { font-size: 1.2rem; }
+            .form-agregar input { min-width: 80px; }
+        }
+    </style>
+</head>
+
+<body>
+    <!--
+        ============================================================
+        CUERPO DE LA PÁGINA (todo lo que se ve en la pantalla)
+        ============================================================
+        El <body> contiene todo el contenido visible de la página.
+        Aquí se estructura el panel de control que el empleado ve.
+    -->
+
+    <div class="dashboard-container">
+        <!-- ==========================================================
+            HEADER (barra superior)
+            ==========================================================
+            Esta es la cabecera con el título y los botones de navegación.
+        -->
+        <div class="header">
+            <!--
+                TÍTULO:
+                - <i class="fas fa-user-clock"></i>: Icono de usuario con reloj.
+                - {{ local.nombre }}: Esto es una variable especial de
+                Flask (el sistema de la página). Muestra el nombre del
+                local del empleado. Es como un "espacio en blanco"
+                que se llena automáticamente con datos de la base de datos.
+            -->
+            <h1><i class="fas fa-user-clock"></i> Panel de Empleado · {{ local.nombre }}</h1>
+
+            <!--
+                GRUPO DE BOTONES:
+                - href="/perfil": Enlace a la página de perfil.
+                - href="/inicio": Enlace a la página de inicio.
+                - href="/logout": Cierra la sesión del empleado.
+            -->
+            <div class="btn-group">
+                <a href="/perfil" class="btn"><i class="fas fa-user"></i> Perfil</a>
+                <a href="/inicio" class="btn"><i class="fas fa-home"></i> Inicio</a>
+                <a href="/logout" class="btn"><i class="fas fa-sign-out-alt"></i> Salir</a>
+            </div>
+        </div>
+
+        <!-- ==========================================================
+            ESTADÍSTICAS RÁPIDAS
+            ==========================================================
+            Tres tarjetas que muestran números importantes:
+            - Pedidos de hoy
+            - Pedidos pendientes
+            - Pedidos listos
+            Los números se actualizan automáticamente con JavaScript.
+        -->
+        <div class="stats-grid">
+            <!-- Tarjeta 1: Pedidos Hoy -->
+            <div class="stat-card">
+                <h3><i class="fas fa-box"></i> Pedidos Hoy</h3>
+                <!--
+                    El número se muestra dentro de un <div> con la clase
+                    "stat-number" y el id "pedidosHoy".
+                    El valor "-" es temporal, JavaScript lo reemplazará.
+                -->
+                <div class="stat-number" id="pedidosHoy">-</div>
+            </div>
+            <!-- Tarjeta 2: Pendientes -->
+            <div class="stat-card">
+                <h3><i class="fas fa-clock"></i> Pendientes</h3>
+                <div class="stat-number" id="pendientesCount">-</div>
+            </div>
+            <!-- Tarjeta 3: Listos -->
+            <div class="stat-card">
+                <h3><i class="fas fa-check-circle"></i> Listos</h3>
+                <div class="stat-number" id="listosCount">-</div>
+            </div>
+        </div>
+
+        <!-- ==========================================================
+            INFORMACIÓN DEL LOCAL
+            ==========================================================
+            Muestra detalles del local al que pertenece el empleado.
+            {{ local.nombre }}, {{ local.codigo }}, etc. son variables
+            de Flask que se rellenan desde la base de datos.
+        -->
+        <div class="local-info">
+            <p><strong>🏪 Local:</strong> {{ local.nombre }} (Código: {{ local.codigo }})</p>
+            <p><strong>📅 Días de stock:</strong> {{ local.dias_stock or 'No especificado' }}</p>
+            <p><strong>📍 Ubicación:</strong> {{ local.ubicacion or 'No especificada' }}</p>
+            <p><strong>📂 Categoría:</strong> {{ local.categoria or '—' }}</p>
+        </div>
+
+        <!-- ==========================================================
+            PESTAÑAS (TABS)
+            ==========================================================
+            Son tres botones que permiten cambiar entre diferentes
+            vistas: Pedidos, Productos y Registrar pedido.
+            La pestaña "Pedidos" está activa por defecto (clase "active").
+        -->
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="pedidos">📦 Pedidos</button>
+            <button class="tab-btn" data-tab="productos">🍓 Productos (stock)</button>
+            <button class="tab-btn" data-tab="registrar">➕ Registrar pedido</button>
+        </div>
+
+        <!-- ==========================================================
+            PANEL DE PEDIDOS (Pestaña 1)
+            ==========================================================
+            Contiene la lista de pedidos del local.
+            Está oculto por defecto (display: none) pero se muestra
+            cuando la pestaña está activa (clase "active-pane").
+        -->
+        <div id="pedidos" class="tab-pane active-pane">
+            <div class="section">
+                <div class="section-title"><i class="fas fa-clipboard-list"></i> Pedidos del local</div>
+                <!--
+                    Este es el contenedor donde JavaScript cargará
+                    la lista de pedidos. Inicialmente muestra un mensaje
+                    de "Cargando pedidos...".
+                -->
+                <div id="pedidosList">
+                    <p style="text-align:center; color:var(--text-mist);">Cargando pedidos...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================================
+            PANEL DE PRODUCTOS (Pestaña 2)
+            ==========================================================
+            Muestra el inventario de productos con imágenes y permite
+            buscar por nombre.
+        -->
+        <div id="productos" class="tab-pane">
+            <div class="section">
+                <div class="section-title"><i class="fas fa-box-open"></i> Inventario de productos</div>
+
+                <!--
+                    CAJA DE BÚSQUEDA:
+                    Permite filtrar productos por nombre en tiempo real.
+                -->
+                <div style="margin-bottom: 1rem;">
+                    <input type="text" id="buscarProducto" placeholder="🔍 Buscar producto..." style="width:100%; padding:0.6rem 1rem; background:rgba(0,0,0,0.5); border:1px solid rgba(255,255,255,0.15); border-radius:40px; color:white; font-family:var(--font-sans);">
+                </div>
+
+                <!--
+                    Contenedor donde JavaScript mostrará la lista de
+                    productos con sus imágenes.
+                -->
+                <div id="productosList">
+                    <p style="text-align:center; color:var(--text-mist);">Cargando productos...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================================
+            PANEL DE REGISTRAR PEDIDO (Pestaña 3)
+            ==========================================================
+            Permite al empleado crear un nuevo pedido en mostrador
+            (venta cara a cara). El empleado selecciona el cliente
+            por correo y agrega productos.
+        -->
+        <div id="registrar" class="tab-pane">
+            <div class="section">
+                <div class="section-title"><i class="fas fa-cash-register"></i> Nuevo pedido en mostrador</div>
+
+                <!--
+                    FORMULARIO DE REGISTRO:
+                    - El método de envío es "submit", pero JavaScript
+                    intercepta el evento para enviarlo por AJAX
+                    sin recargar la página.
+                -->
+                <form id="formPedidoMostrador">
+                    <!-- Campo: Correo del cliente -->
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display:block; margin-bottom:0.3rem; font-weight:500;">Cliente (correo):</label>
+                        <input type="email" id="clienteCorreo" placeholder="correo@ejemplo.com" required style="width:100%; padding:0.6rem 1rem; background:rgba(0,0,0,0.5); border:1px solid rgba(255,255,255,0.15); border-radius:40px; color:white;">
+                        <small style="opacity:0.7;">Si el correo no existe, se creará un cliente automáticamente</small>
+                    </div>
+
+                    <!--
+                        Contenedor de productos seleccionados:
+                        Muestra los productos que se han agregado
+                        al pedido.
+                    -->
+                    <div id="productosSeleccionados" style="margin: 1rem 0;">
+                        <p style="color:var(--text-mist);">No hay productos agregados.</p>
+                    </div>
+
+                    <!-- Botón para agregar productos al pedido -->
+                    <button type="button" class="btn btn-primary" id="btnAgregarProducto" style="margin: 0.5rem 0;">
+                        <i class="fas fa-plus"></i> Agregar producto
+                    </button>
+
+                    <!-- Total del pedido -->
+                    <div style="text-align: right; margin-top: 1rem; padding-top: 0.5rem; border-top: 1px solid rgba(255,255,255,0.1);">
+                        <strong>Total: $<span id="totalMostrador">0.00</span></strong>
+                    </div>
+
+                    <!-- Botón para confirmar el pedido -->
+                    <button type="submit" class="btn" style="width:100%; margin-top:1rem; background:var(--berry-lumina); color:#0a0514; border:none; padding:0.8rem;">
+                        <i class="fas fa-check"></i> Confirmar pedido
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+        JAVASCRIPT (La "inteligencia" de la página)
+        ============================================================
+        Esta sección contiene todo el código JavaScript que hace
+        que la página sea interactiva y dinámica.
+        - Carga datos del servidor
+        - Actualiza la interfaz
+        - Maneja eventos (clics, cambios, envíos de formularios)
+        - Muestra mensajes emergentes (toasts)
+    -->
+    <script>
+        // ============================================================
+        // COMENTARIO GENERAL:
+        // El código JavaScript que sigue es como el "cerebro" de la página.
+        // Se ejecuta en el navegador del usuario y se comunica con el
+        // servidor para obtener y enviar datos sin recargar la página.
+        // Todas las funciones y variables que se declaran aquí son
+        // para manejar la lógica del panel de empleado.
+        // ============================================================
+
+        // ============================================================
+        // VARIABLES GLOBALES
+        // ============================================================
+        // Se declaran al inicio para que estén disponibles en toda la página.
+
+        // `productosDisponibles`: Almacena la lista de productos que
+        // el empleado puede agregar a un pedido. Esta lista se obtiene
+        // del servidor y se usa para mostrar el modal de selección.
+        let productosDisponibles = [];
+
+        // `selectedProducts`: Almacena los productos que el empleado
+        // ha seleccionado para el pedido que está creando en el
+        // mostrador. Cada producto tiene id, nombre, precio, cantidad
+        // y stock máximo.
+        let selectedProducts = [];
+
+        // ============================================================
+        // FUNCIONES DE CARGA DE DATOS
+        // ============================================================
+        // Estas funciones se comunican con el servidor para obtener
+        // información y actualizar la página.
+
+        /**
+         * `loadStats()`: Obtiene las estadísticas del local
+         * (pedidos de hoy, pendientes, listos) y las muestra en
+         * las tarjetas correspondientes.
+         *
+         * Cómo funciona:
+         * 1. Usa `fetch()` para hacer una solicitud al servidor en
+         *    la ruta `/api/empleado/stats`.
+         * 2. Espera la respuesta y la convierte a formato JSON.
+         * 3. Actualiza el texto de los elementos HTML con los valores
+         *    recibidos.
+         * 4. Si hay un error, lo muestra en la consola del navegador
+         *    (para desarrolladores).
+         */
+        async function loadStats() {
+            try {
+                const res = await fetch('/api/empleado/stats');
+                const data = await res.json();
+                document.getElementById('pedidosHoy').innerText = data.pedidos_hoy || 0;
+                document.getElementById('pendientesCount').innerText = data.pendientes || 0;
+                document.getElementById('listosCount').innerText = data.listos || 0;
+            } catch(e) { console.error('Error al cargar estadísticas:', e); }
+        }
+
+        /**
+         * `loadPedidos()`: Obtiene la lista de pedidos del local
+         * y los muestra en la pestaña "Pedidos".
+         *
+         * Cómo funciona:
+         * 1. Solicita los pedidos al servidor en `/api/empleado/pedidos`.
+         * 2. Si no hay pedidos, muestra un mensaje.
+         * 3. Si hay pedidos, genera HTML para cada uno con su
+         *    información y un selector de estado.
+         * 4. Agrega eventos a los botones "Actualizar" para que
+         *    cuando se haga clic, se envíe el nuevo estado al servidor.
+         * 5. También usa `escapeHtml()` para evitar problemas de
+         *    seguridad con caracteres especiales en los nombres.
+         */
+        async function loadPedidos() {
+            try {
+                const res = await fetch('/api/empleado/pedidos');
+                const pedidos = await res.json();
+                const container = document.getElementById('pedidosList');
+                if (!pedidos.length) {
+                    container.innerHTML = '<p style="text-align:center; color:var(--text-mist);">No hay pedidos para este local.</p>';
+                    return;
+                }
+                container.innerHTML = pedidos.map(p => `
+                    <div class="order-card">
+                        <div>
+                            <strong>#${p.codigo}</strong><br>
+                            Cliente: ${escapeHtml(p.cliente)}<br>
+                            Total: $${p.total.toFixed(2)}
+                        </div>
+                        <div>
+                            <span class="badge badge-${p.estado}">${p.estado}</span>
+                        </div>
+                        <div>
+                            <select id="status-${p.id}" class="estado-select">
+                                <option value="pendiente" ${p.estado=='pendiente'?'selected':''}>⏳ Pendiente</option>
+                                <option value="listo" ${p.estado=='listo'?'selected':''}>✅ Listo</option>
+                                <option value="entregado" ${p.estado=='entregado'?'selected':''}>🏆 Entregado</option>
+                                <option value="cancelado" ${p.estado=='cancelado'?'selected':''}>❌ Cancelado</option>
+                            </select>
+                            <button class="btn-sm btn-success actualizar-estado" data-id="${p.id}">Actualizar</button>
+                        </div>
+                    </div>
+                `).join('');
+
+                // ====================================================
+                // EVENTOS PARA ACTUALIZAR ESTADO DE PEDIDOS
+                // ====================================================
+                // Para cada botón "Actualizar", se agrega un evento
+                // "click" que:
+                // 1. Obtiene el ID del pedido del atributo data-id.
+                // 2. Lee el valor seleccionado en el <select>.
+                // 3. Envía una solicitud PUT al servidor para actualizar
+                //    el estado.
+                // 4. Si la respuesta es exitosa, recarga la lista de
+                //    pedidos y las estadísticas.
+                // 5. Si hay error, muestra un mensaje de error.
+                document.querySelectorAll('.actualizar-estado').forEach(btn => {
+                    btn.addEventListener('click', async () => {
+                        const id = btn.dataset.id;
+                        const select = document.getElementById(`status-${id}`);
+                        const nuevoEstado = select.value;
+                        const res = await fetch(`/api/empleado/pedido/${id}/estado`, {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ estado: nuevoEstado })
+                        });
+                        if (res.ok) {
+                            showToast('Estado actualizado');
+                            loadPedidos();
+                            loadStats();
+                        } else {
+                            showToast('Error al actualizar', true);
+                        }
+                    });
+                });
+            } catch(e) { console.error('Error al cargar pedidos:', e); }
+        }
+
+        /**
+         * `loadProductos()`: Obtiene la lista de productos del local
+         * y los muestra en la pestaña "Productos".
+         *
+         * Cómo funciona:
+         * 1. Solicita los productos al servidor en `/api/empleado/productos`.
+         * 2. Guarda la lista en la variable global `productosDisponibles`
+         *    para usarla en el modal de selección.
+         * 3. Muestra cada producto con su imagen, nombre, precio y stock.
+         * 4. Agrega una etiqueta de estado (Agotado, Stock bajo, Disponible).
+         * 5. También agrega la funcionalidad de búsqueda en tiempo real:
+         *    cuando el usuario escribe en el campo de búsqueda, se
+         *    filtran los productos por nombre.
+         */
+        async function loadProductos() {
+            try {
+                const res = await fetch('/api/empleado/productos');
+                const productos = await res.json();
+                productosDisponibles = productos;
+                const container = document.getElementById('productosList');
+                if (!productos.length) {
+                    container.innerHTML = '<p style="text-align:center; color:var(--text-mist);">No hay productos registrados.</p>';
+                    return;
+                }
+                container.innerHTML = productos.map(p => `
+                    <div class="producto-item">
+                        <div class="producto-info">
+                            ${p.imagen_url ? `<img src="${p.imagen_url}" class="producto-imagen" alt="${p.nombre}" loading="lazy">` : `<div class="sin-imagen">📷</div>`}
+                            <div>
+                                <strong>${escapeHtml(p.nombre)}</strong><br>
+                                Precio: $${p.precio.toFixed(2)} | Stock: ${p.stock}
+                            </div>
+                        </div>
+                        <div>
+                            <span class="badge ${p.stock <= 0 ? 'badge-cancelado' : (p.stock < 5 ? 'badge-pendiente' : 'badge-entregado')}">
+                                ${p.stock <= 0 ? 'Agotado' : (p.stock < 5 ? 'Stock bajo' : 'Disponible')}
+                            </span>
+                        </div>
+                    </div>
+                `).join('');
+
+                // ====================================================
+                // FILTRO DE BÚSQUEDA EN TIEMPO REAL
+                // ====================================================
+                // Cuando el usuario escribe en #buscarProducto, se
+                // filtran los productos cuyo nombre contenga el texto
+                // ingresado (ignorando mayúsculas/minúsculas).
+                document.getElementById('buscarProducto').addEventListener('input', (e) => {
+                    const term = e.target.value.toLowerCase();
+                    const filtered = productos.filter(p => p.nombre.toLowerCase().includes(term));
+                    container.innerHTML = filtered.map(p => `
+                        <div class="producto-item">
+                            <div class="producto-info">
+                                ${p.imagen_url ? `<img src="${p.imagen_url}" class="producto-imagen" alt="${p.nombre}" loading="lazy">` : `<div class="sin-imagen">📷</div>`}
+                                <div>
+                                    <strong>${escapeHtml(p.nombre)}</strong><br>
+                                    Precio: $${p.precio.toFixed(2)} | Stock: ${p.stock}
+                                </div>
+                            </div>
+                            <div>
+                                <span class="badge ${p.stock <= 0 ? 'badge-cancelado' : (p.stock < 5 ? 'badge-pendiente' : 'badge-entregado')}">
+                                    ${p.stock <= 0 ? 'Agotado' : (p.stock < 5 ? 'Stock bajo' : 'Disponible')}
+                                </span>
+                            </div>
+                        </div>
+                    `).join('');
+                });
+            } catch(e) { console.error('Error al cargar productos:', e); }
+        }
+
+        // ============================================================
+        // FUNCIONES PARA EL REGISTRO DE PEDIDOS EN MOSTRADOR
+        // ============================================================
+
+        /**
+         * `actualizarTotalMostrador()`: Calcula el total del pedido
+         * sumando (precio * cantidad) de cada producto seleccionado
+         * y lo muestra en el span con id "totalMostrador".
+         */
+        function actualizarTotalMostrador() {
+            const total = selectedProducts.reduce((sum, p) => sum + (p.precio * p.cantidad), 0);
+            document.getElementById('totalMostrador').innerText = total.toFixed(2);
+        }
+
+        /**
+         * `renderizarProductosSeleccionados()`: Muestra los productos
+         * que el empleado ha agregado al pedido actual.
+         *
+         * Cómo funciona:
+         * 1. Si no hay productos, muestra un mensaje.
+         * 2. Si hay productos, genera HTML para cada uno con su
+         *    imagen, nombre, precio, un campo de cantidad y un botón
+         *    para eliminarlo.
+         * 3. Agrega eventos a los campos de cantidad para que cuando
+         *    se cambie el valor, se actualice el total.
+         * 4. Agrega eventos a los botones de eliminar para quitar
+         *    el producto de la lista y actualizar el total.
+         */
+        function renderizarProductosSeleccionados() {
+            const container = document.getElementById('productosSeleccionados');
+            if (selectedProducts.length === 0) {
+                container.innerHTML = '<p style="color:var(--text-mist);">No hay productos agregados.</p>';
+                return;
+            }
+            container.innerHTML = selectedProducts.map((p, idx) => `
+                <div class="producto-item" style="border-bottom:1px solid rgba(255,255,255,0.05); padding:0.6rem 0;">
+                    <div class="producto-info">
+                        ${p.imagen_url ? `<img src="${p.imagen_url}" class="producto-imagen" alt="${p.nombre}" loading="lazy">` : `<div class="sin-imagen">📷</div>`}
+                        <div>
+                            <strong>${escapeHtml(p.nombre)}</strong> - $${p.precio.toFixed(2)}
+                        </div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:0.5rem;">
+                        <input type="number" class="cantidad-input" data-idx="${idx}" value="${p.cantidad}" min="1" max="${p.stockMax}" style="width:70px; padding:0.3rem; background:rgba(0,0,0,0.5); border:1px solid rgba(255,255,255,0.15); border-radius:30px; color:white; text-align:center;">
+                        <button class="btn-sm btn-danger eliminar-producto" data-idx="${idx}">🗑️</button>
+                    </div>
+                </div>
+            `).join('');
+
+            // Evento para cambiar la cantidad de un producto
+            document.querySelectorAll('.cantidad-input').forEach(input => {
+                input.addEventListener('change', (e) => {
+                    const idx = parseInt(input.dataset.idx);
+                    const newQty = parseInt(input.value);
+                    if (!isNaN(newQty) && newQty > 0) {
+                        selectedProducts[idx].cantidad = newQty;
+                        actualizarTotalMostrador();
+                    }
+                });
+            });
+
+            // Evento para eliminar un producto
+            document.querySelectorAll('.eliminar-producto').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const idx = parseInt(btn.dataset.idx);
+                    selectedProducts.splice(idx, 1);
+                    renderizarProductosSeleccionados();
+                    actualizarTotalMostrador();
+                });
+            });
+        }
+
+        /**
+         * Evento para abrir el modal de selección de productos
+         * al hacer clic en "Agregar producto".
+         *
+         * Cómo funciona:
+         * 1. Verifica que haya productos disponibles.
+         * 2. Crea un modal (ventana emergente) con la lista de
+         *    productos que tienen stock > 0.
+         * 3. Cada producto en el modal es cliqueable y al hacer clic
+         *    se llama a la función `seleccionarProducto()`.
+         * 4. El modal tiene un botón para cerrarlo.
+         */
+        document.getElementById('btnAgregarProducto').addEventListener('click', () => {
+            if (productosDisponibles.length === 0) {
+                showToast('No hay productos disponibles', true);
+                return;
+            }
+
+            const modalHtml = `
+                <div id="modalProductos" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); backdrop-filter:blur(8px); z-index:3000; display:flex; align-items:center; justify-content:center;">
+                    <div style="background:#1e1a2f; border-radius:48px; padding:2rem; max-width:500px; width:90%; max-height:80%; overflow-y:auto; border:1px solid var(--berry-lumina);">
+                        <h3 style="font-family:var(--font-title); color:var(--golden-hour);">Seleccionar producto</h3>
+                        <div style="margin:1rem 0;">
+                            ${productosDisponibles.filter(p => p.stock > 0).map(p => `
+                                <div style="padding:0.8rem; border-bottom:1px solid rgba(255,255,255,0.05); cursor:pointer; display:flex; align-items:center; gap:1rem;" onclick="seleccionarProducto(${p.id}, '${escapeHtml(p.nombre)}', ${p.precio}, ${p.stock}, '${p.imagen_url || ''}')">
+                                    ${p.imagen_url ? `<img src="${p.imagen_url}" style="width:40px; height:40px; object-fit:cover; border-radius:8px;">` : `<span style="font-size:1.5rem;">📷</span>`}
+                                    <div>
+                                        <strong>${escapeHtml(p.nombre)}</strong><br>
+                                        $${p.precio.toFixed(2)} (stock: ${p.stock})
+                                    </div>
+                                </div>
+                            `).join('')}
+                            ${productosDisponibles.filter(p => p.stock > 0).length === 0 ? '<p>No hay productos con stock disponible.</p>' : ''}
+                        </div>
+                        <button class="btn" onclick="cerrarModalProductos()" style="width:100%; margin-top:0.5rem; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2);">Cancelar</button>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+        });
+
+        /**
+         * `seleccionarProducto()`: Se ejecuta cuando el empleado
+         * hace clic en un producto en el modal.
+         *
+         * Cómo funciona:
+         * 1. Recibe el id, nombre, precio, stock máximo y URL de
+         *    la imagen del producto.
+         * 2. Si el producto ya está en la lista, incrementa su cantidad.
+         * 3. Si no está, lo agrega con cantidad 1.
+         * 4. Cierra el modal, actualiza la lista de productos
+         *    seleccionados y recalcula el total.
+         */
+        window.seleccionarProducto = (id, nombre, precio, stockMax, imagenUrl) => {
+            const existing = selectedProducts.find(p => p.id === id);
+            if (existing) {
+                existing.cantidad++;
+            } else {
+                selectedProducts.push({ id, nombre, precio, cantidad: 1, stockMax, imagen_url: imagenUrl });
+            }
+            cerrarModalProductos();
+            renderizarProductosSeleccionados();
+            actualizarTotalMostrador();
+        };
+
+        /**
+         * `cerrarModalProductos()`: Elimina el modal de la página.
+         */
+        window.cerrarModalProductos = () => {
+            const modal = document.getElementById('modalProductos');
+            if (modal) modal.remove();
+        };
+
+        /**
+         * Evento para enviar el formulario de pedido de mostrador.
+         * Se ejecuta cuando el empleado hace clic en "Confirmar pedido".
+         *
+         * Cómo funciona:
+         * 1. Valida que se haya ingresado un correo y al menos un producto.
+         * 2. Construye un objeto con los datos del pedido.
+         * 3. Envía los datos al servidor en `/api/empleado/pedido/mostrador`
+         *    mediante una solicitud POST.
+         * 4. Si la respuesta es exitosa, muestra un mensaje de éxito,
+         *    limpia el formulario y recarga las listas.
+         * 5. Si hay error, muestra un mensaje de error.
+         */
+        document.getElementById('formPedidoMostrador').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const correo = document.getElementById('clienteCorreo').value.trim();
+            if (!correo) {
+                showToast('Ingresa el correo del cliente', true);
+                return;
+            }
+            if (selectedProducts.length === 0) {
+                showToast('Agrega al menos un producto', true);
+                return;
+            }
+
+            const pedidoData = {
+                cliente_correo: correo,
+                productos: selectedProducts.map(p => ({ id: p.id, cantidad: p.cantidad }))
+            };
+
+            try {
+                const res = await fetch('/api/empleado/pedido/mostrador', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(pedidoData)
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    showToast(`✅ Pedido #${data.codigo} creado`);
+                    selectedProducts = [];
+                    renderizarProductosSeleccionados();
+                    actualizarTotalMostrador();
+                    document.getElementById('clienteCorreo').value = '';
+                    loadPedidos();
+                    loadStats();
+                    loadProductos();
+                } else {
+                    showToast(data.error || 'Error al crear pedido', true);
+                }
+            } catch(e) {
+                showToast('Error de conexión', true);
+            }
+        });
+
+        // ============================================================
+        // FUNCIÓN PARA MOSTRAR MENSAJES EMERGENTES (TOASTS)
+        // ============================================================
+
+        /**
+         * `showToast()`: Muestra un mensaje emergente en la parte
+         * inferior de la pantalla.
+         *
+         * Cómo funciona:
+         * 1. Crea un elemento <div> con la clase "toast".
+         * 2. Si es un error (isError = true), añade la clase "error".
+         * 3. Lo agrega al final del <body>.
+         * 4. Después de 3 segundos, lo desvanece y lo elimina.
+         */
+        function showToast(msg, isError = false) {
+            const toast = document.createElement('div');
+            toast.className = 'toast' + (isError ? ' error' : '');
+            toast.innerText = msg;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = '0.3s';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // ============================================================
+        // FUNCIÓN DE UTILIDAD PARA ESCAPAR HTML
+        // ============================================================
+
+        /**
+         * `escapeHtml()`: Convierte caracteres especiales (<, >, &)
+         * en sus equivalentes HTML para evitar que se interpreten
+         * como código y causen problemas de seguridad (XSS).
+         *
+         * Por ejemplo: "Pan & Queso" se convierte en "Pan &amp; Queso".
+         */
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+
+        // ============================================================
+        // CONTROL DE PESTAÑAS (TABS)
+        // ============================================================
+
+        /**
+         * Eventos para cambiar entre pestañas.
+         * Cuando el usuario hace clic en una pestaña:
+         * 1. Se quita la clase "active" de todas las pestañas.
+         * 2. Se añade la clase "active" a la pestaña cliqueada.
+         * 3. Se ocultan todos los paneles (tab-pane).
+         * 4. Se muestra el panel correspondiente a la pestaña
+         *    (añadiendo la clase "active-pane").
+         * 5. Si la pestaña es "pedidos" o "productos", recarga los
+         *    datos para asegurarse de que estén actualizados.
+         */
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active-pane'));
+                const tabId = btn.dataset.tab;
+                document.getElementById(tabId).classList.add('active-pane');
+                if (tabId === 'pedidos') loadPedidos();
+                if (tabId === 'productos') loadProductos();
+            });
+        });
+
+        // ============================================================
+        // CARGA INICIAL DE DATOS
+        // ============================================================
+        // Cuando la página se carga por primera vez, se llaman a las
+        // funciones que obtienen y muestran los datos.
+        loadStats();
+        loadPedidos();
+        loadProductos();
+
+        // ============================================================
+        // RECARGA AUTOMÁTICA DE ESTADÍSTICAS
+        // ============================================================
+        // Cada 30 segundos, se actualizan las estadísticas para que
+        // el empleado siempre vea datos recientes sin tener que
+        // recargar la página manualmente.
+        setInterval(loadStats, 30000);
+    </script>
+</body>
+</html>

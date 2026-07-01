@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<!-- 
+    DOCTYPE: primera línea de toda página HTML5.
+    Indica al navegador que use el modo de renderizado estándar.
+-->
+
+<html lang="es">
+<!-- 
+    Etiqueta raíz que envuelve todo el contenido.
+    lang="es" define el idioma principal para accesibilidad y motores de búsqueda.
+-->
+
+<head>
+    <!-- 
+        Cabecera de la página.
+        Contiene metadatos, título, enlaces a recursos y estilos internos.
+    -->
+
+    <meta charset="UTF-8">
+    <!-- 
+        Codificación UTF-8: permite usar tildes, eñes y caracteres especiales 
+        sin que se vean símbolos extraños.
+    -->
+
+    <title>Solicitudes de dueño · Blooma</title>
+    <!-- 
+        Título que se muestra en la pestaña del navegador.
+    -->
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/blooma_global.css') }}">
+    <!-- 
+        Carga la hoja de estilos global del sitio (fondos, tipografías, colores base).
+        La función "url_for" genera la ruta real hacia el archivo dentro de la carpeta "static".
+    -->
+
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/iconic.png') }}">
+    <!-- 
+        Carga el favicon (ícono de pestaña) desde la carpeta de imágenes estáticas.
+    -->
+
+    <!-- Estilos internos para mejorar la estética de esta página específica -->
+    <style>
+        /* Contenedor principal: centrado, con fondo sutil y sombra */
+        .container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 30px;
+            background: #1e1e2a;
+            /* Fondo oscuro elegante */
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+            border: 1px solid #3a2e4a;
+        }
+
+        /* Título principal */
+        h1 {
+            color: #f0e6d0;
+            /* Dorado suave */
+            font-weight: 400;
+            letter-spacing: 1px;
+            border-bottom: 2px solid #b8864b;
+            padding-bottom: 12px;
+            margin-top: 0;
+            margin-bottom: 28px;
+            font-size: 2rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Envoltura de la tabla para scroll horizontal en móviles */
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 12px;
+            background: #282836;
+        }
+
+        /* Estilos de la tabla */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+            color: #e4dccf;
+        }
+
+        /* Cabecera de la tabla */
+        thead {
+            background: linear-gradient(145deg, #2d1f3a, #1a1122);
+            color: #f5e7d3;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+        }
+
+        thead th {
+            padding: 16px 14px;
+            text-align: left;
+            border-bottom: 2px solid #b8864b;
+            font-weight: 600;
+        }
+
+        /* Celdas del cuerpo */
+        tbody td {
+            padding: 14px 14px;
+            border-bottom: 1px solid #3a2e4a;
+            vertical-align: middle;
+        }
+
+        /* Efecto zebra (filas alternas) */
+        tbody tr:nth-child(even) {
+            background-color: #222232;
+        }
+
+        /* Efecto hover en las filas */
+        tbody tr:hover {
+            background-color: #33334a;
+            transition: background-color 0.2s ease;
+        }
+
+        /* Enlace del documento (estilo botón secundario) */
+        .doc-link {
+            display: inline-block;
+            padding: 4px 14px;
+            background: #3a3a52;
+            color: #b8d0e0;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 0.8rem;
+            border: 1px solid #5a5a7a;
+            transition: 0.2s;
+        }
+
+        .doc-link:hover {
+            background: #4a4a6a;
+            color: #ffffff;
+            border-color: #8a8aaa;
+        }
+
+        /* Texto "No adjunto" */
+        .no-adjunto {
+            color: #8888aa;
+            font-style: italic;
+            font-size: 0.85rem;
+        }
+
+        /* Contenedor de acciones (botones) */
+        .acciones {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        /* Botón aprobar */
+        .btn-aprobar {
+            display: inline-block;
+            padding: 8px 18px;
+            background: #2a7a4a;
+            color: #ffffff;
+            font-weight: 600;
+            border-radius: 30px;
+            text-decoration: none;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+            border: 1px solid #3a9a5a;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-aprobar:hover {
+            background: #3a9a5a;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(42, 122, 74, 0.4);
+        }
+
+        /* Botón rechazar */
+        .btn-rechazar {
+            display: inline-block;
+            padding: 8px 18px;
+            background: #7a2a3a;
+            color: #ffffff;
+            font-weight: 600;
+            border-radius: 30px;
+            text-decoration: none;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+            border: 1px solid #9a3a4a;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-rechazar:hover {
+            background: #9a3a4a;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(122, 42, 58, 0.4);
+        }
+
+        /* Ajustes para pantallas pequeñas */
+        @media (max-width: 700px) {
+            .container {
+                margin: 15px;
+                padding: 18px;
+            }
+
+            thead th,
+            tbody td {
+                padding: 10px 8px;
+                font-size: 0.8rem;
+            }
+
+            .btn-aprobar,
+            .btn-rechazar {
+                padding: 6px 12px;
+                font-size: 0.7rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 
+        Cuerpo de la página: aquí se muestra todo el contenido visible.
+    -->
+
+    <div class="container">
+        <!-- 
+            Contenedor principal que agrupa y centra el título y la tabla.
+        -->
+
+        <h1>Solicitudes de Dueño pendientes</h1>
+        <!-- 
+            Encabezado principal de nivel 1.
+        -->
+
+        <div class="table-wrapper">
+            <!-- 
+                Envoltura para permitir desplazamiento horizontal en pantallas pequeñas.
+            -->
+
+            <table>
+                <!-- 
+                    Tabla que lista todas las solicitudes de dueño pendientes.
+                -->
+
+                <thead>
+                    <!-- 
+                        Cabecera de la tabla: nombres de las columnas.
+                    -->
+                    <tr>
+                        <th>Usuario</th>
+                        <th>Nombre local</th>
+                        <th>Ubicación</th>
+                        <th>Documento</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <!-- 
+                        Cuerpo de la tabla. 
+                        Aquí se generan las filas dinámicamente con Jinja2.
+                    -->
+
+                    {% for s in solicitudes %}
+                    <!-- 
+                        Bucle "for" de Jinja2: recorre la lista "solicitudes" 
+                        que el servidor envía a esta plantilla.
+                        's' representa una solicitud individual.
+                    -->
+                    <tr>
+                        <!-- 
+                            Cada solicitud se muestra en una fila.
+                        -->
+
+                        <td>{{ s[7] }} ({{ s[8] }})</td>
+                        <!-- 
+                            Celda: nombre de usuario (s[7]) y correo u otro dato (s[8]).
+                            Los datos entre llaves dobles son variables de Jinja2.
+                        -->
+
+                        <td>{{ s[2] }}</td>
+                        <!-- 
+                            Celda: nombre del local que se quiere registrar (s[2]).
+                        -->
+
+                        <td>{{ s[3] }}</td>
+                        <!-- 
+                            Celda: ubicación física dentro del mercado (s[3]).
+                        -->
+
+                        <td>
+                            {% if s[5] %}
+                            <!-- 
+                                Condicional Jinja2: si s[5] (ruta del documento) existe...
+                            -->
+                            <a href="{{ url_for('static', filename=s[5]) }}" target="_blank" class="doc-link">
+                                Ver archivo
+                            </a>
+                            <!-- 
+                                Enlace que abre el documento en una nueva pestaña.
+                                Se usa "url_for" para generar la ruta correcta hacia 
+                                la carpeta "static", donde se almacenan los archivos.
+                            -->
+                            {% else %}
+                            <!-- 
+                                Si s[5] está vacío o no existe...
+                            -->
+                            <span class="no-adjunto">No adjunto</span>
+                            {% endif %}
+                            <!-- 
+                                Fin del condicional.
+                            -->
+                        </td>
+
+                        <td>
+                            <!-- 
+                                Celda de acciones: botones para aprobar o rechazar.
+                            -->
+                            <div class="acciones">
+                                <a href="/admin/solicitud/{{ s[0] }}/aprobar" class="btn-aprobar">Aprobar</a>
+                                <!-- 
+                                    Enlace para aprobar. s[0] es el ID de la solicitud,
+                                    que se usa en la URL para que el servidor identifique 
+                                    cuál se está aprobando.
+                                -->
+                                <a href="/admin/solicitud/{{ s[0] }}/rechazar" class="btn-rechazar">Rechazar</a>
+                                <!-- 
+                                    Enlace para rechazar. Similar al anterior.
+                                -->
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    <!-- 
+                        Fin del bucle for.
+                    -->
+
+                </tbody>
+                <!-- 
+                    Fin del cuerpo de la tabla.
+                -->
+            </table>
+            <!-- 
+                Fin de la tabla.
+            -->
+        </div>
+        <!-- 
+            Fin del contenedor de la tabla.
+        -->
+    </div>
+    <!-- 
+        Fin del contenedor principal.
+    -->
+
+</body>
+<!-- 
+    Fin del cuerpo del documento.
+-->
+
+</html>
+<!-- 
+    Fin del documento HTML.
+-->

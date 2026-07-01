@@ -1,0 +1,163 @@
+<!-- ============================================================
+     BLOOMA · FEEDBACK.HTML
+     Este archivo es la página donde los usuarios pueden enviar
+     su opinión, sugerencias o comentarios sobre el mercado.
+     Está diseñada para ser clara, amable y fácil de usar.
+     ============================================================ -->
+
+<!DOCTYPE html>   <!-- Indica al navegador que este documento es HTML5 -->
+<html lang="es">  <!-- El idioma principal de la página es español -->
+<head>
+<!-- ==========================================================
+     METADATOS Y CONFIGURACIÓN BÁSICA
+     ========================================================== -->
+
+<!-- charset="UTF-8"  →  Permite usar todos los caracteres
+     especiales como tildes, ñ, símbolos, etc. -->
+<meta charset="UTF-8">
+
+<!-- viewport →  Hace que la página se vea bien en móviles
+     y tablets, ajustando el ancho al dispositivo -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Título que aparece en la pestaña del navegador -->
+<title>Blooma · Tu opinión nos importa 🍓</title>
+
+<!-- ==========================================================
+     FUENTES GOOGLE (tipografías bonitas y elegantes)
+     ========================================================== -->
+
+<!-- Preconexión a Google Fonts para que cargue más rápido -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<!-- Se importan varias fuentes:
+     - Cormorant Garamond: con estilos normales e itálicos.
+     - Montserrat: ligera, normal y seminegrita.
+     - Playfair Display: con variantes itálicas y negritas.
+     - Cinzel: para detalles más decorativos.
+     Todas ellas dan un aspecto elegante y natural a la página. -->
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Montserrat:wght@200;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+
+<!-- ==========================================================
+     FONT AWESOME (iconos)
+     ========================================================== -->
+
+<!-- Esta librería nos da iconos como comentarios, flechas,
+     aviones de papel, etc. Se usan para hacer la interfaz
+     más visual y amigable. -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<!-- ==========================================================
+     HOJA DE ESTILOS GLOBAL DE BLOOMA
+     ========================================================== -->
+
+<!-- Aquí se carga el archivo CSS que define los colores,
+     fondos, tamaños y efectos visuales de toda la aplicación.
+     Está en la carpeta 'static/css/' y se llama con url_for
+     que es una función de Flask para localizar archivos. -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/blooma_global.css') }}">
+
+<!-- ==========================================================
+     FAVICON (el icono pequeño en la pestaña)
+     ========================================================== -->
+
+<!-- Muestra el icono de la frutilla (🍓) en la pestaña del
+     navegador. También se ubica con url_for. -->
+<link rel="shortcut icon" href="{{ url_for('static', filename='img/iconic.png') }}">
+</head>
+
+<body>
+<!-- ==========================================================
+     CONTENEDOR PRINCIPAL DE LA PÁGINA
+     ========================================================== -->
+
+<!-- 'feedback-wrapper' es un contenedor que centra la tarjeta
+     de opinión en el centro de la pantalla con un fondo suave. -->
+<div class="feedback-wrapper">
+
+     <!-- ==========================================================
+          TARJETA DE FEEDBACK (la "cajita" blanca)
+          ========================================================== -->
+
+     <!-- 'feedback-card' es la tarjeta donde está todo el contenido
+          del formulario, con bordes redondeados y sombra. -->
+     <div class="feedback-card">
+
+          <!-- TÍTULO PRINCIPAL -->
+          <!-- Uso un encabezado de nivel 1 (h1) con un icono de
+               comentario de Font Awesome (fa-comment-dots).
+               El texto dice "Tu opinión florece" para dar un
+               tono cálido y positivo. -->
+          <h1><i class="fas fa-comment-dots"></i> Tu opinión florece</h1>
+
+          <!-- SUBTÍTULO / DESCRIPCIÓN -->
+          <!-- Un div con clase 'sub' que contiene un mensaje
+               invitando a escribir experiencia, sugerencias o
+               sueños para el mercado, con emojis de frutillas
+               y arándanos para darle alegría. -->
+          <div class="sub">Cuéntanos tu experiencia, sugerencias o lo que sueñas para el mercado 🍓🫐</div>
+
+          <!-- ==========================================================
+               MENSAJES DE ÉXITO O ERROR (desde el servidor)
+               ========================================================== -->
+
+          <!-- Si la variable 'exito' existe (porque el servidor
+               la envió después de guardar el feedback), se muestra
+               un mensaje verde con fondo claro. -->
+          {% if exito %}
+          <div class="mensaje-exito">{{ exito }}</div>
+
+          <!-- Si la variable 'error' existe (por ejemplo, si el
+               mensaje es demasiado corto o hubo un problema),
+               se muestra un mensaje rojo de advertencia. -->
+          {% elif error %}
+          <div class="mensaje-error">{{ error }}</div>
+          {% endif %}
+
+          <!-- ==========================================================
+               FORMULARIO PARA ENVIAR EL FEEDBACK
+               ========================================================== -->
+
+          <!-- method="POST" →  Cuando el usuario haga clic en
+               "Enviar feedback", los datos se mandarán al
+               servidor mediante el método POST (más seguro
+               y adecuado para enviar información). -->
+          <form method="POST">
+
+               <!-- Área de texto donde el usuario escribe su opinión.
+                    - name="mensaje" →  Así el servidor identifica
+                    este campo como 'mensaje'.
+                    - rows="6" →  Muestra 6 líneas de alto.
+                    - placeholder →  Texto de ejemplo que aparece
+                    dentro del campo antes de escribir.
+                    - required →  El navegador obliga a escribir
+                    algo antes de enviar el formulario. -->
+               <textarea name="mensaje" rows="6" placeholder="Escribe aquí tu mensaje... (mínimo 5 caracteres)" required></textarea>
+
+               <!-- Botón para enviar el formulario.
+                    - type="submit" →  Al hacer clic envía el
+                    formulario al servidor.
+                    - Dentro tiene un icono de avión de papel
+                    (fa-paper-plane) y el texto "Enviar feedback". -->
+               <button type="submit"><i class="fas fa-paper-plane"></i> Enviar feedback</button>
+          </form>
+
+          <!-- ==========================================================
+               ENLACE PARA VOLVER AL PERFIL
+               ========================================================== -->
+
+          <!-- Este enlace lleva al usuario de vuelta a su perfil.
+               - href="/perfil" →  Ruta de la aplicación Flask
+               que muestra el perfil del usuario.
+               - clase 'volver' →  Para darle un estilo distinto
+               al enlace (generalmente más discreto).
+               - Tiene un icono de flecha izquierda (fa-arrow-left)
+               y el texto "Volver a mi perfil". -->
+          <a href="/perfil" class="volver"><i class="fas fa-arrow-left"></i> Volver a mi perfil</a>
+
+     </div> <!-- Fin de feedback-card -->
+</div> <!-- Fin de feedback-wrapper -->
+
+</body>   
+</html>

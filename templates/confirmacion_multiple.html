@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<!-- DECLARACION DEL TIPO DE DOCUMENTO COMO HTML5, INDICA AL NAVEGADOR QUE USE ESTANDARES MODERNOS -->
+<html lang="es">
+<!-- ETIQUETA DE INICIO DEL DOCUMENTO HTML, ATRIBUTO LANG CON VALOR "es" PARA IDIOMA ESPAÑOL -->
+
+<head>
+<!-- INICIO DEL BLOQUE HEAD: CONTIENE METADATOS, TITULO, FUENTES, FAVICON Y ESTILOS CSS -->
+
+<meta charset="UTF-8">
+<!-- META ETIQUETA QUE DEFINE LA CODIFICACION DE CARACTERES COMO UTF-8, PERMITE CARACTERES ESPECIALES Y ACENTOS -->
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- META ETIQUETA PARA CONTROLAR EL VIEWPORT EN DISPOSITIVOS MOVILES, AJUSTA EL ANCHO AL ANCHO DEL DISPOSITIVO Y ESCALA INICIAL 1.0 -->
+
+<title>Pedidos confirmados · Blooma</title>
+<!-- TITULO DE LA PESTAÑA DEL NAVEGADOR, MUESTRA "Pedidos confirmados · Blooma" -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<!-- ENLACE DE PRECONEXION A GOOGLE FONTS PARA MEJORAR EL TIEMPO DE CARGA DE LAS FUENTES -->
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- SEGUNDA PRECONEXION AL DOMINIO DE GOOGLE FONTS CON ATRIBUTO CROSSORIGIN PARA PERMITIR CARGAR RECURSOS EXTERNOS -->
+
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Montserrat:wght@200;400;600&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+<!-- ENLACE A LA HOJA DE ESTILOS DE GOOGLE FONTS QUE IMPORTA TRES FAMILIAS DE FUENTES CON PESOS ESPECIFICOS: CORMORANT GARAMOND, MONTSERRAT Y PLAYFAIR DISPLAY -->
+
+<link rel="shortcut icon" href="{{ url_for('static', filename='img/iconic.png') }}">
+<!-- ENLACE AL FAVICON DEL SITIO, UTILIZA LA FUNCION url_for DE FLASK PARA GENERAR LA RUTA DE LA IMAGEN DENTRO DE LA CARPETA STATIC -->
+
+<style>
+     /* INICIO DEL BLOQUE DE ESTILOS CSS, SE DEFINE EL DISEÑO VISUAL DE LA PAGINA */
+
+     * {
+          /* SELECTOR UNIVERSAL, APLICA A TODOS LOS ELEMENTOS */
+          margin: 0;
+          /* ELIMINA EL MARGEN POR DEFECTO DE TODOS LOS ELEMENTOS */
+          padding: 0;
+          /* ELIMINA EL RELLENO POR DEFECTO DE TODOS LOS ELEMENTOS */
+          box-sizing: border-box;
+          /* HACE QUE EL ANCHO Y ALTO INCLUYAN EL BORDE Y RELLENO, FACILITA EL DISEÑO */
+     }
+
+     body {
+          /* ESTILOS PARA EL CUERPO DE LA PAGINA */
+          font-family: 'Montserrat', sans-serif;
+          /* ESTABLECE LA FUENTE PRINCIPAL COMO MONTSERRAT, CON FALLBACK SANS-SERIF */
+          min-height: 100vh;
+          /* ALTURA MINIMA DEL CUERPO IGUAL AL 100% DEL ALTO DE LA VENTANA */
+          display: flex;
+          /* UTILIZA FLEXBOX PARA CENTRAR EL CONTENIDO */
+          align-items: center;
+          /* ALINEA LOS ELEMENTOS VERTICALMENTE AL CENTRO */
+          justify-content: center;
+          /* ALINEA LOS ELEMENTOS HORIZONTALMENTE AL CENTRO */
+          background-image: url('{{ url_for("static", filename="img/fondos/fondoprinci.png") }}');
+          /* ESTABLECE LA IMAGEN DE FONDO USANDO LA FUNCION url_for DE FLASK PARA LA RUTA DE LA IMAGEN */
+          background-size: cover;
+          /* HACE QUE LA IMAGEN DE FONDO CUBRA TODO EL AREA DEL CUERPO */
+          background-position: center;
+          /* CENTRA LA IMAGEN DE FONDO */
+          background-attachment: fixed;
+          /* FIJALA LA IMAGEN DE FONDO PARA QUE NO SE DESPLACE AL HACER SCROLL */
+          padding: 2rem;
+          /* APLICA UN RELLENO DE 2 REM EN TODOS LOS LADOS DEL CUERPO */
+     }
+
+     .card {
+          /* ESTILOS PARA LA TARJETA PRINCIPAL QUE CONTIENE EL CONTENIDO */
+          background: rgba(255, 248, 245, 0.92);
+          /* FONDO BLANCO ROSADO CON OPACIDAD 0.92 PARA UN EFECTO TRANSLUCIDO */
+          backdrop-filter: blur(6px);
+          /* APLICA UN DESENFOQUE DE 6 PIXELES AL FONDO DETRAS DE LA TARJETA (EFECTO VIDRIO) */
+          border-radius: 2.5rem;
+          /* BORDES REDONDEADOS DE 2.5 REM */
+          padding: 3rem 2.5rem;
+          /* RELLENO INTERNO: 3 REM ARRIBA/ABAJO, 2.5 REM LATERALES */
+          max-width: 780px;
+          /* ANCHO MAXIMO DE LA TARJETA DE 780 PIXELES */
+          width: 100%;
+          /* ANCHO DEL 100% DEL CONTENEDOR PADRE HASTA EL MAXIMO DEFINIDO */
+          box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 215, 200, 0.3);
+          /* SOMBRA: PRIMERA SOMBRA PROFUNDA, SEGUNDA COMO BORDE INTERNO CON COLOR ROSADO SUAVE */
+          border: 1px solid rgba(255, 235, 225, 0.5);
+          /* BORDE DE 1 PIXEL CON COLOR ROSADO MUY CLARO Y OPACIDAD 0.5 */
+          transition: transform 0.25s ease;
+          /* TRANSICION SUAVE PARA LA PROPIEDAD TRANSFORM, DURACION 0.25 SEGUNDOS */
+     }
+
+     h1 {
+          /* ESTILOS PARA EL TITULO PRINCIPAL (ETIQUETA H1) */
+          font-family: 'Playfair Display', serif;
+          /* FUENTE PLAYFAIR DISPLAY CON FALLBACK SERIF */
+          font-weight: 700;
+          /* PESO DE FUENTE 700 (NEGRITA) */
+          font-size: 2.2rem;
+          /* TAMAÑO DE FUENTE 2.2 REM */
+          color: #4a2c3a;
+          /* COLOR DE TEXTO MORADO OSCURO (SE SOBREESCRIBE CON EL GRADIENTE) */
+          text-align: center;
+          /* ALINEACION DEL TEXTO AL CENTRO */
+          margin-bottom: 0.75rem;
+          /* MARGEN INFERIOR DE 0.75 REM */
+          letter-spacing: -0.5px;
+          /* ESPACIADO ENTRE LETRAS DE -0.5 PIXELES (MAS JUNTO) */
+          background: linear-gradient(135deg, #7a3b5e, #b45f7a);
+          /* FONDO CON GRADIENTE LINEAL DE ROSA MORADO A ROSA CLARO */
+          -webkit-background-clip: text;
+          /* RECORTA EL FONDO AL TEXTO (PARA EFECTO GRADIENTE EN TEXTO) COMPATIBLE CON WEBKIT */
+          -webkit-text-fill-color: transparent;
+          /* HACE EL COLOR DEL TEXTO TRANSPARENTE PARA MOSTRAR EL GRADIENTE, COMPATIBLE CON WEBKIT */
+          background-clip: text;
+          /* VERSION ESTANDAR DE BACKGROUND-CLIP PARA NAVEGADORES MODERNOS */
+     }
+
+     .card > p:first-of-type {
+          /* SELECCIONA EL PRIMER PARRAFO QUE ES HIJO DIRECTO DE .card (EL TEXTO DE DESCRIPCION) */
+          font-size: 1.05rem;
+          /* TAMAÑO DE FUENTE 1.05 REM */
+          color: #5a3f4a;
+          /* COLOR DE TEXTO MARRON ROSADO OSCURO */
+          font-weight: 300;
+          /* PESO DE FUENTE 300 (LIGERO) */
+          text-align: center;
+          /* ALINEACION AL CENTRO */
+          margin-bottom: 2rem;
+          /* MARGEN INFERIOR DE 2 REM */
+          border-bottom: 1px solid rgba(180, 120, 130, 0.2);
+          /* BORDE INFERIOR DE 1 PIXEL CON COLOR ROSADO SUAVE Y OPACIDAD 0.2 */
+          padding-bottom: 1.2rem;
+          /* RELLENO INFERIOR DE 1.2 REM */
+          font-family: 'Cormorant Garamond', serif;
+          /* FUENTE CORMORANT GARAMOND CON FALLBACK SERIF */
+          font-size: 1.25rem;
+          /* SOBRESCRIBE EL TAMAÑO DE FUENTE A 1.25 REM */
+          letter-spacing: 0.3px;
+          /* ESPACIADO DE LETRAS DE 0.3 PIXELES */
+     }
+
+     .pedido {
+          /* ESTILOS PARA CADA BLOQUE DE PEDIDO */
+          background: rgba(255, 240, 235, 0.6);
+          /* FONDO ROSADO MUY CLARO CON OPACIDAD 0.6 */
+          border-radius: 1.5rem;
+          /* BORDES REDONDEADOS DE 1.5 REM */
+          padding: 1.5rem 2rem;
+          /* RELLENO INTERNO: 1.5 REM ARRIBA/ABAJO, 2 REM LATERALES */
+          margin-bottom: 1.5rem;
+          /* MARGEN INFERIOR DE 1.5 REM PARA SEPARAR PEDIDOS */
+          border-left: 4px solid #b8879a;
+          /* BORDE IZQUIERDO DE 4 PIXELES DE COLOR ROSADO */
+          box-shadow: 0 4px 12px rgba(120, 60, 80, 0.08);
+          /* SOMBRA SUTIL CON COLOR ROSADO OSCURO Y OPACIDAD 0.08 */
+          transition: background 0.2s ease;
+          /* TRANSICION SUAVE PARA EL FONDO AL HACER HOVER */
+     }
+
+     .pedido:hover {
+          /* ESTILOS AL PASAR EL RATON SOBRE UN BLOQUE DE PEDIDO */
+          background: rgba(255, 235, 225, 0.8);
+          /* FONDO MAS OPACO (0.8) PARA DESTACAR */
+     }
+
+     .pedido p {
+          /* ESTILOS PARA TODOS LOS PARRAFOS DENTRO DE UN BLOQUE .pedido */
+          font-size: 0.98rem;
+          /* TAMAÑO DE FUENTE 0.98 REM */
+          color: #3d2a33;
+          /* COLOR DE TEXTO MARRON OSCURO */
+          margin-bottom: 0.4rem;
+          /* MARGEN INFERIOR DE 0.4 REM */
+          font-weight: 300;
+          /* PESO DE FUENTE 300 (LIGERO) */
+          letter-spacing: 0.2px;
+          /* ESPACIADO DE LETRAS DE 0.2 PIXELES */
+     }
+
+     .pedido p strong {
+          /* ESTILOS PARA LAS ETIQUETAS STRONG DENTRO DE PARRAFOS DE PEDIDO */
+          font-weight: 600;
+          /* PESO DE FUENTE 600 (SEMI-NEGRITA) */
+          color: #6a3f52;
+          /* COLOR MORADO OSCURO */
+          letter-spacing: 0.3px;
+          /* ESPACIADO DE LETRAS DE 0.3 PIXELES */
+     }
+
+     .pedido p i {
+          /* ESTILOS PARA LAS ETIQUETAS I (CURSIVA) DENTRO DE PARRAFOS DE PEDIDO */
+          color: #8a5a6e;
+          /* COLOR ROSADO MORADO */
+          font-weight: 300;
+          /* PESO DE FUENTE 300 */
+          font-size: 0.92rem;
+          /* TAMAÑO DE FUENTE 0.92 REM (UN POCO MAS PEQUEÑO) */
+          display: inline-block;
+          /* PERMITE APLICAR RELLENO Y BORDE REDONDEADO COMO BLOQUE EN LINEA */
+          margin-top: 0.3rem;
+          /* MARGEN SUPERIOR DE 0.3 REM */
+          background: rgba(200, 150, 165, 0.15);
+          /* FONDO ROSADO MUY SUAVE CON OPACIDAD 0.15 */
+          padding: 0.2rem 1rem;
+          /* RELLENO: 0.2 REM ARRIBA/ABAJO, 1 REM LATERALES */
+          border-radius: 30px;
+          /* BORDES MUY REDONDEADOS (30 PIXELES) */
+          font-style: italic;
+          /* ESTILO CURSIVA (YA ES I, PERO SE REFUERZA) */
+     }
+
+     .pedido p:last-child {
+          /* SELECCIONA EL ULTIMO PARRAFO DENTRO DE .pedido */
+          margin-bottom: 0;
+          /* ELIMINA EL MARGEN INFERIOR PARA QUE NO HAYA ESPACIO EXTRA */
+     }
+
+     .btn {
+          /* ESTILOS PARA LOS BOTONES (ENLACES CON CLASE .btn) */
+          display: inline-block;
+          /* SE COMPORTA COMO BLOQUE EN LINEA, PERMITE RELLENO Y MARGEN */
+          font-family: 'Montserrat', sans-serif;
+          /* FUENTE MONTSERRAT */
+          font-weight: 500;
+          /* PESO DE FUENTE 500 (MEDIO) */
+          font-size: 0.95rem;
+          /* TAMAÑO DE FUENTE 0.95 REM */
+          text-decoration: none;
+          /* ELIMINA EL SUBRAYADO DE LOS ENLACES */
+          padding: 0.8rem 2.2rem;
+          /* RELLENO: 0.8 REM ARRIBA/ABAJO, 2.2 REM LATERALES */
+          border-radius: 60px;
+          /* BORDES MUY REDONDEADOS (60 PIXELES) */
+          background: #b07a8e;
+          /* COLOR DE FONDO ROSADO */
+          color: white;
+          /* COLOR DE TEXTO BLANCO */
+          box-shadow: 0 4px 14px rgba(130, 70, 95, 0.25);
+          /* SOMBRA CON COLOR ROSADO OSCURO Y OPACIDAD 0.25 */
+          transition: all 0.25s ease;
+          /* TRANSICION SUAVE PARA TODAS LAS PROPIEDADES */
+          letter-spacing: 0.5px;
+          /* ESPACIADO DE LETRAS DE 0.5 PIXELES */
+          border: 1px solid rgba(255, 255, 255, 0.15);
+          /* BORDE BLANCO TRANSPARENTE PARA SUAVIDAD */
+          margin: 0.4rem 0.5rem;
+          /* MARGEN: 0.4 REM ARRIBA/ABAJO, 0.5 REM LATERALES */
+          backdrop-filter: blur(2px);
+          /* DESENFOQUE DE FONDO DE 2 PIXELES PARA EFECTO VIDRIO */
+     }
+
+     .btn:hover {
+          /* ESTILOS AL PASAR EL RATON SOBRE UN BOTON */
+          transform: translateY(-3px);
+          /* DESPLAZA EL BOTON HACIA ARRIBA 3 PIXELES */
+          box-shadow: 0 10px 28px rgba(130, 70, 95, 0.35);
+          /* SOMBRA MAS GRANDE Y CON MAYOR OPACIDAD */
+          background: #c48aa0;
+          /* CAMBIA EL FONDO A UN ROSADO MAS CLARO */
+          color: #fff;
+          /* MANTIENE EL COLOR BLANCO (PUEDE SER redundante) */
+     }
+
+     .btn:active {
+          /* ESTILOS CUANDO EL BOTON ES PRESIONADO (CLICK) */
+          transform: scale(0.96);
+          /* REDUCE EL TAMAÑO DEL BOTON A 96% PARA EFECTO DE PRESION */
+     }
+
+     div[style*="text-align: center;"] {
+          /* SELECCIONA EL DIV QUE CONTIENE EL ESTILO INLINE CON text-align: center (CONTENEDOR DE BOTONES) */
+          margin-top: 2rem;
+          /* MARGEN SUPERIOR DE 2 REM */
+          display: flex;
+          /* USA FLEXBOX PARA LOS BOTONES DENTRO */
+          flex-wrap: wrap;
+          /* PERMITE QUE LOS BOTONES SE ENVUELVAN EN MULTIPLES LINEAS SI NO CABEN */
+          justify-content: center;
+          /* CENTRA LOS BOTONES HORIZONTALMENTE */
+          gap: 0.8rem;
+          /* ESPACIO ENTRE BOTONES DE 0.8 REM */
+     }
+
+     .btn[style*="background: #6c3b7c;"] {
+          /* SELECCIONA EL BOTON QUE TIENE ESTILO INLINE CON BACKGROUND #6c3b7c (BOTON "Mis pedidos") */
+          background: #6c3b7c !important;
+          /* FUERZA EL FONDO MORADO, SOBREESCRIBE CUALQUIER OTRO */
+          box-shadow: 0 4px 14px rgba(80, 40, 90, 0.3);
+          /* SOMBRA CON COLOR MORADO OSCURO */
+     }
+
+     .btn[style*="background: #6c3b7c;"]:hover {
+          /* ESTILOS AL PASAR RATON SOBRE ESE BOTON ESPECIFICO */
+          background: #8a4f9e !important;
+          /* CAMBIA EL FONDO A UN MORADO MAS CLARO */
+          box-shadow: 0 10px 28px rgba(80, 40, 90, 0.4);
+          /* SOMBRA MAS GRANDE Y OSCURA */
+     }
+
+     @media (max-width: 550px) {
+          /* REGLA DE MEDIA QUERY PARA PANTALLAS DE ANCHO MAXIMO 550 PIXELES (MOVILES) */
+          .card {
+               /* AJUSTES PARA LA TARJETA EN MOVIL */
+               padding: 2rem 1.2rem;
+               /* REDUCE EL RELLENO: 2 REM ARRIBA/ABAJO, 1.2 REM LATERALES */
+               border-radius: 1.8rem;
+               /* BORDES UN POCO MENOS REDONDEADOS */
+          }
+          h1 {
+               /* AJUSTES PARA EL TITULO EN MOVIL */
+               font-size: 1.6rem;
+               /* REDUCE EL TAMAÑO DE FUENTE */
+          }
+          .pedido {
+               /* AJUSTES PARA BLOQUES DE PEDIDO EN MOVIL */
+               padding: 1.2rem 1.2rem;
+               /* REDUCE EL RELLENO */
+          }
+          .btn {
+               /* AJUSTES PARA BOTONES EN MOVIL */
+               padding: 0.7rem 1.5rem;
+               /* REDUCE EL RELLENO */
+               font-size: 0.85rem;
+               /* REDUCE EL TAMAÑO DE FUENTE */
+               width: 100%;
+               /* HACE QUE OCUPEN EL 100% DEL ANCHO DISPONIBLE */
+               margin: 0.3rem 0;
+               /* MARGEN VERTICAL DE 0.3 REM, SIN MARGEN LATERAL */
+          }
+          div[style*="text-align: center;"] {
+               /* AJUSTES PARA EL CONTENEDOR DE BOTONES EN MOVIL */
+               flex-direction: column;
+               /* CAMBIA LA DIRECCION DE FLEX A COLUMNA (BOTONES UNO DEBAJO DE OTRO) */
+               align-items: center;
+               /* CENTRA LOS BOTONES HORIZONTALMENTE */
+          }
+     }
+     /* FIN DEL BLOQUE DE ESTILOS CSS */
+</style>
+<!-- FIN DEL BLOQUE HEAD -->
+</head>
+
+<body>
+<!-- INICIO DEL CUERPO DE LA PAGINA, CONTIENE EL CONTENIDO VISIBLE -->
+
+<div class="card">
+     <!-- CONTENEDOR PRINCIPAL CON CLASE "card", QUE AGRUPA TODO EL CONTENIDO DE LA CONFIRMACION -->
+
+     <h1>🍓 ¡Pedidos registrados con éxito! 🍇</h1>
+     <!-- ENCABEZADO PRINCIPAL CON EMOJIS Y TEXTO DE EXITO, ESTILIZADO CON GRADIENTE -->
+
+     <p>Hemos recibido tus pedidos. Cada local lo preparará según las fechas y horas seleccionadas.</p>
+     <!-- PARRAFO DE DESCRIPCION QUE INFORMA AL USUARIO QUE LOS PEDIDOS FUERON REGISTRADOS -->
+
+     <!-- INICIO DEL BUCLE DE JINJA2 PARA RECORRER LA LISTA DE PEDIDOS -->
+     {% for pedido in pedidos %}
+     <!-- BUCLE FOR DE JINJA2: ITERA SOBRE LA VARIABLE "pedidos" (LISTA DE DICCIONARIOS) PASADA DESDE FLASK, CADA ELEMENTO SE ASIGNA A "pedido" -->
+
+     <div class="pedido">
+          <!-- BLOQUE POR CADA PEDIDO, CON CLASE "pedido" PARA ESTILOS -->
+
+          <p><strong>Código:</strong> {{ pedido.codigo }}</p>
+          <!-- PARRAFO QUE MUESTRA EL CODIGO DEL PEDIDO, USANDO LA LLAVE DOBLE DE JINJA2 PARA IMPRIMIR EL VALOR DE "codigo" DEL DICCIONARIO ACTUAL -->
+
+          <p><strong>Local:</strong> {{ pedido.local_nombre }}</p>
+          <!-- PARRAFO QUE MUESTRA EL NOMBRE DEL LOCAL, EXTRAYENDO "local_nombre" DEL DICCIONARIO pedido -->
+
+          <p><strong>Total a pagar:</strong> ${{ "%.2f"|format(pedido.total) }}</p>
+          <!-- PARRAFO QUE MUESTRA EL TOTAL A PAGAR CON FORMATO DE DOS DECIMALES, UTILIZA EL FILTRO "format" DE JINJA2 APLICADO A "pedido.total" -->
+
+          <p><i>Recuerda pagar en efectivo al momento de recoger.</i></p>
+          <!-- PARRAFO CON TEXTO EN CURSIVA QUE RECUERDA AL USUARIO EL METODO DE PAGO -->
+     </div>
+     <!-- FIN DEL BLOQUE .pedido PARA UN PEDIDO -->
+
+     {% endfor %}
+     <!-- FIN DEL BUCLE FOR DE JINJA2 -->
+
+     <div style="text-align: center;">
+          <!-- CONTENEDOR DIV CON ESTILO INLINE text-align: center PARA CENTRAR LOS BOTONES, UTILIZADO PARA FLEXBOX EN CSS -->
+
+          <a href="/inicio" class="btn">✨ Volver al inicio ✨</a>
+          <!-- ENLACE QUE LLEVA A LA RUTA "/inicio" (definida en Flask), CON CLASE "btn" PARA ESTILOS, Y TEXTO CON EMOJIS -->
+
+          <a href="{{ url_for('mis_pedidos') }}" class="btn" style="background: #6c3b7c;">📋 Mis pedidos</a>
+          <!-- ENLACE QUE UTILIZA url_for DE FLASK PARA GENERAR LA URL DE LA FUNCION "mis_pedidos", CON CLASE "btn" Y ESTILO INLINE PARA FONDO MORADO, Y TEXTO CON EMOJI -->
+     </div>
+     <!-- FIN DEL CONTENEDOR DE BOTONES -->
+
+</div>
+<!-- FIN DE LA TARJETA .card -->
+
+</body>
+<!-- FIN DEL CUERPO DE LA PAGINA -->
+
+</html>
+<!-- FIN DEL DOCUMENTO HTML -->

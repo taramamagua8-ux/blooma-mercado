@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<!-- DECLARACION DEL TIPO DE DOCUMENTO: Indica al navegador que se trata de un documento HTML5, lo que activa el modo estándar de renderizado. -->
+<html lang="es">
+<!-- ETIQUETA DE INICIO DEL DOCUMENTO HTML: Define el idioma principal como español (es) para ayudar a los motores de búsqueda y navegadores. -->
+
+<head>
+    <!-- INICIO DE LA CABECERA: Contiene metadatos, títulos, enlaces a fuentes y estilos, y configuraciones globales. -->
+
+    <meta charset="UTF-8">
+    <!-- DECLARACION DEL JUEGO DE CARACTERES: Establece UTF-8 para soportar todos los caracteres especiales y acentos. -->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <!-- CONFIGURACION DE LA VENTANA GRAFICA: Ajusta el ancho al ancho del dispositivo, establece el zoom inicial a 1.0 y permite que el usuario haga zoom (user-scalable=yes) para mejorar accesibilidad en móviles. -->
+
+    <title>Blooma · Gestión de Pedidos · Dueño</title>
+    <!-- TITULO DE LA PESTAÑA: Muestra el nombre de la aplicación y la sección actual. -->
+
+    <!-- FUENTES Y ESTILOS GLOBALES: Se importan fuentes de Google Fonts para usar tipografías elegantes y se enlazan los estilos base. -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <!-- PRECONEXION A GOOGLE FONTS: Establece una conexión temprana al servidor de Google Fonts para mejorar el tiempo de carga de las fuentes. -->
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- PRECONEXION AL SUBDOMINIO DE GOOGLE FONTS: Con crossorigin para permitir la descarga de recursos de fuentes de manera segura. -->
+
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Montserrat:wght@200;400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+    <!-- ENLACE A LAS FUENTES ESPECIFICAS: Descarga las familias tipográficas Cormorant Garamond, Montserrat, Playfair Display y Cinzel con varios pesos y estilos. -->
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- ENLACE A FONT AWESOME: Importa la librería de iconos versión 6.0.0-beta3 para usar iconos vectoriales en la interfaz. -->
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/blooma_global.css') }}">
+    <!-- ENLACE A LA HOJA DE ESTILOS GLOBAL DE BLOOMA: Usa la función url_for de Flask para generar la ruta al archivo CSS global. Define variables y estilos comunes. -->
+
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/iconic.png') }}">
+    <!-- ICONO DE FAVICON: Establece el icono que aparece en la pestaña del navegador, usando la función url_for para la ruta. -->
+
+    <style>
+        /* INICIO DE ESTILOS ESPECIFICOS PARA ESTA PAGINA: Se definen estilos adicionales que solo aplican a la gestión de pedidos del dueño. */
+
+        /* ===== ESTILOS ESPECÍFICOS PARA owner_pedidos ===== */
+        /* BLOQUE DE ESTILOS: Sección de reglas CSS para el contenedor principal, encabezado, tarjetas de estadísticas, filtros, tabla, etc. */
+
+        .dashboard-container {
+            /* SELECTOR DE CLASE: Contenedor principal del panel. */
+            max-width: 1400px;
+            /* Ancho máximo de 1400 píxeles para evitar que se estire demasiado en pantallas grandes. */
+            margin: 1.5rem auto;
+            /* Margen superior e inferior de 1.5rem, y centrado horizontal automático. */
+            padding: 0 1rem;
+            /* Relleno lateral de 1rem para separar del borde en pantallas pequeñas. */
+        }
+
+        .header {
+            /* SELECTOR DE CLASE: Encabezado que contiene título y botones. */
+            display: flex;
+            /* Establece un contenedor flexible para alinear los elementos en fila. */
+            justify-content: space-between;
+            /* Distribuye el espacio entre los elementos: el título a la izquierda y los botones a la derecha. */
+            align-items: center;
+            /* Centra verticalmente los elementos. */
+            flex-wrap: wrap;
+            /* Permite que los elementos se envuelvan a la siguiente línea si no caben. */
+            gap: 1rem;
+            /* Espacio de 1rem entre los elementos. */
+            background: rgba(255, 255, 255, 0.);
+            /* Fondo con transparencia (valor 0. probablemente un error, pero se deja igual). */
+            backdrop-filter: blur(12px);
+            /* Aplica un desenfoque de 12 píxeles al fondo detrás del encabezado, efecto vidrio. */
+            border-radius: 48px;
+            /* Bordes redondeados de 48 píxeles. */
+            padding: 1.2rem 2rem;
+            /* Relleno interno: 1.2rem arriba/abajo y 2rem laterales. */
+            border: 1px solid rgba(255, 107, 129, 0.25);
+            /* Borde de 1 píxel sólido con color rosa y transparencia 0.25. */
+            margin-bottom: 2rem;
+            /* Margen inferior de 2rem para separar del contenido siguiente. */
+            color: var(--text-light);
+            /* Color del texto definido por la variable CSS --text-light (probablemente blanco o claro). */
+        }
+
+        .header h1 {
+            /* SELECTOR: Título h1 dentro del encabezado. */
+            font-family: var(--font-title);
+            /* Fuente definida por la variable --font-title (probablemente Playfair Display o similar). */
+            font-size: 1.6rem;
+            /* Tamaño de fuente de 1.6rem. */
+            color: var(--golden-hour);
+            /* Color dorado definido por la variable --golden-hour. */
+            display: flex;
+            /* Contenedor flexible para alinear el icono y el texto. */
+            align-items: center;
+            /* Centra verticalmente. */
+            gap: 0.8rem;
+            /* Espacio entre el icono y el texto. */
+        }
+        .header h1 i {
+            /* SELECTOR: Icono dentro del h1. */
+            color: var(--berry-lumina);
+            /* Color rosa/berry definido por variable. */
+        }
+
+        .header-buttons {
+            /* SELECTOR: Contenedor de los botones de acción. */
+            display: flex;
+            /* Flex para alinear botones horizontalmente. */
+            gap: 0.8rem;
+            /* Espacio entre botones. */
+            flex-wrap: wrap;
+            /* Permite envolver botones en pantallas pequeñas. */
+        }
+
+        .btn {
+            /* SELECTOR: Estilo base para botones y enlaces con apariencia de botón. */
+            background: rgba(255, 107, 129, 0.15);
+            /* Fondo rosa con transparencia 0.15. */
+            border: 1px solid var(--accent-berry-pink);
+            /* Borde de 1px con color rosa berry. */
+            padding: 0.5rem 1.2rem;
+            /* Relleno interno. */
+            border-radius: 40px;
+            /* Bordes muy redondeados. */
+            color: white;
+            /* Texto blanco. */
+            text-decoration: none;
+            /* Quita subrayado de enlaces. */
+            font-weight: 600;
+            /* Peso de fuente seminegrita. */
+            font-size: 0.85rem;
+            /* Tamaño de fuente. */
+            transition: 0.2s;
+            /* Transición suave para efectos hover. */
+            display: inline-flex;
+            /* Muestra como flex en línea para alinear iconos y texto. */
+            align-items: center;
+            /* Centra verticalmente. */
+            gap: 0.5rem;
+            /* Espacio entre icono y texto. */
+        }
+        .btn:hover {
+            /* ESTADO HOVER: Cambia el fondo y eleva ligeramente el botón. */
+            background: rgba(255, 107, 129, 0.3);
+            /* Fondo más opaco al pasar el ratón. */
+            transform: translateY(-2px);
+            /* Desplaza el botón 2 píxeles hacia arriba. */
+        }
+
+        .stats-grid {
+            /* SELECTOR: Contenedor de las tarjetas de estadísticas. */
+            display: grid;
+            /* Usa CSS Grid para organizar las tarjetas. */
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            /* Columnas automáticas con ancho mínimo de 150px y máximo 1 fracción. */
+            gap: 1rem;
+            /* Espacio entre tarjetas. */
+            margin-bottom: 2.5rem;
+            /* Margen inferior. */
+        }
+
+        .stat-card {
+            /* SELECTOR: Cada tarjeta de estadística. */
+            background: rgba(10, 5, 20, 0.7);
+            /* Fondo oscuro con transparencia. */
+            backdrop-filter: blur(8px);
+            /* Desenfoque de fondo. */
+            border-radius: 28px;
+            /* Bordes redondeados. */
+            padding: 1.2rem 1.5rem;
+            /* Relleno interno. */
+            text-align: center;
+            /* Texto centrado. */
+            border: 1px solid rgba(255, 107, 129, 0.2);
+            /* Borde rosa tenue. */
+            color: var(--text-light);
+            /* Color de texto claro. */
+        }
+        .stat-card h3 {
+            /* SELECTOR: Título de la tarjeta. */
+            font-size: 0.85rem;
+            /* Tamaño pequeño. */
+            font-weight: 400;
+            /* Peso normal. */
+            color: var(--text-mist);
+            /* Color grisáceo. */
+            margin-bottom: 0.4rem;
+            /* Margen inferior. */
+        }
+        .stat-number {
+            /* SELECTOR: Número grande de la estadística. */
+            font-size: 2rem;
+            /* Tamaño grande. */
+            font-weight: 700;
+            /* Negrita. */
+            color: var(--golden-hour);
+            /* Color dorado. */
+            font-family: var(--font-sans);
+            /* Fuente sans-serif. */
+        }
+        .stat-number.revenue {
+            /* SELECTOR MODIFICADOR: Para los ingresos, cambia el color a berry. */
+            color: var(--berry-lumina);
+            /* Color rosa intenso. */
+        }
+
+        .filters-panel {
+            /* SELECTOR: Panel que agrupa búsqueda, filtro de estado y botón refrescar. */
+            display: flex;
+            /* Flex para alinear horizontalmente. */
+            justify-content: space-between;
+            /* Espacio entre los elementos. */
+            align-items: center;
+            /* Centrado vertical. */
+            gap: 1rem;
+            /* Espacio entre elementos. */
+            flex-wrap: wrap;
+            /* Envuelve en pantallas pequeñas. */
+            margin-bottom: 2rem;
+            /* Margen inferior. */
+            background: rgba(10, 5, 20, 0.5);
+            /* Fondo oscuro semitransparente. */
+            backdrop-filter: blur(8px);
+            /* Desenfoque. */
+            border-radius: 60px;
+            /* Bordes muy redondeados. */
+            padding: 0.6rem 1.5rem;
+            /* Relleno interno. */
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            /* Borde muy tenue. */
+        }
+
+        .search-wrapper {
+            /* SELECTOR: Contenedor del campo de búsqueda. */
+            flex: 1;
+            /* Ocupa el espacio disponible. */
+            position: relative;
+            /* Posición relativa para colocar el icono dentro. */
+            max-width: 400px;
+            /* Ancho máximo. */
+            display: flex;
+            /* Flex para alinear icono e input. */
+            align-items: center;
+            /* Centrado vertical. */
+            gap: 0.5rem;
+            /* Espacio. */
+        }
+        .search-wrapper i {
+            /* SELECTOR: Icono de lupa dentro del wrapper. */
+            color: var(--text-mist);
+            /* Color gris. */
+            position: absolute;
+            /* Posicionamiento absoluto dentro del contenedor relativo. */
+            left: 14px;
+            /* Distancia desde la izquierda. */
+            top: 50%;
+            /* Centrado vertical. */
+            transform: translateY(-50%);
+            /* Ajuste para centrar exactamente. */
+        }
+        .search-wrapper input {
+            /* SELECTOR: Campo de entrada de texto. */
+            width: 100%;
+            /* Ancho completo del contenedor. */
+            padding: 0.6rem 1rem 0.6rem 2.4rem;
+            /* Relleno: arriba y abajo 0.6rem, derecha 1rem, izquierda 2.4rem para dejar espacio al icono. */
+            background: rgba(0, 0, 0, 0.4);
+            /* Fondo oscuro. */
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            /* Borde blanco tenue. */
+            border-radius: 40px;
+            /* Bordes redondeados. */
+            color: white;
+            /* Texto blanco. */
+            font-family: var(--font-sans);
+            /* Fuente sans. */
+            font-size: 0.85rem;
+            /* Tamaño. */
+        }
+        .search-wrapper input:focus {
+            /* ESTADO FOCUS: Cuando el input está activo. */
+            outline: none;
+            /* Quita el contorno por defecto. */
+            border-color: var(--berry-lumina);
+            /* Cambia el borde a color berry. */
+        }
+
+        .status-filter select {
+            /* SELECTOR: Selector de filtro por estado. */
+            background: rgba(0, 0, 0, 0.4);
+            /* Fondo oscuro. */
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            /* Borde tenue. */
+            border-radius: 40px;
+            /* Redondeado. */
+            padding: 0.6rem 1.2rem;
+            /* Relleno. */
+            color: white;
+            /* Texto blanco. */
+            font-family: var(--font-sans);
+            /* Fuente. */
+            font-size: 0.85rem;
+            /* Tamaño. */
+            cursor: pointer;
+            /* Cursor de mano. */
+        }
+        .status-filter select:focus {
+            /* ESTADO FOCUS del select. */
+            outline: none;
+            border-color: var(--berry-lumina);
+        }
+
+        .refresh-btn {
+            /* SELECTOR: Botón de refrescar. */
+            background: rgba(255, 107, 129, 0.15);
+            border: 1px solid var(--accent-berry-pink);
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            color: white;
+            cursor: pointer;
+            transition: 0.2s;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+        }
+        .refresh-btn:hover {
+            background: rgba(255, 107, 129, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .table-royal {
+            /* SELECTOR: Contenedor de la tabla con estilo royal. */
+            background: rgba(10, 5, 20, 0.6);
+            backdrop-filter: blur(8px);
+            border-radius: 32px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 107, 129, 0.15);
+            overflow-x: auto;
+            /* Permite desplazamiento horizontal en tablas anchas. */
+            color: var(--text-light);
+        }
+
+        .order-table {
+            /* SELECTOR: Tabla de pedidos. */
+            width: 100%;
+            /* Ancho completo. */
+            border-collapse: collapse;
+            /* Colapsa bordes para evitar dobles líneas. */
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            min-width: 700px;
+            /* Ancho mínimo para evitar que se comprima demasiado. */
+        }
+        .order-table th {
+            /* SELECTOR: Celdas de encabezado. */
+            text-align: left;
+            padding: 0.8rem 0.6rem;
+            color: var(--golden-hour);
+            border-bottom: 2px solid rgba(212, 175, 55, 0.3);
+            font-weight: 600;
+        }
+        .order-table td {
+            /* SELECTOR: Celdas de datos. */
+            padding: 0.8rem 0.6rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            vertical-align: middle;
+        }
+        .order-table tr:hover td {
+            /* EFECTO HOVER: Resalta la fila al pasar el ratón. */
+            background: rgba(255, 107, 129, 0.04);
+        }
+
+        .badge {
+            /* SELECTOR: Insignia de estado. */
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: capitalize;
+            /* Primera letra mayúscula. */
+        }
+        /* COLORES PARA CADA ESTADO: */
+        .badge-pendiente { background: #f39c12; color: #1a1a1a; }
+        .badge-listo { background: #3498db; color: white; }
+        .badge-entregado { background: #2ecc71; color: #1a1a1a; }
+        .badge-cancelado { background: #e74c3c; color: white; }
+
+        .status-select {
+            /* SELECTOR: Selector de estado dentro de cada fila. */
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 30px;
+            padding: 0.3rem 0.8rem;
+            color: white;
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            cursor: pointer;
+        }
+        .status-select:focus {
+            outline: none;
+            border-color: var(--berry-lumina);
+        }
+
+        .btn-update-ajax {
+            /* SELECTOR: Botón para actualizar el estado mediante AJAX. */
+            background: rgba(255, 107, 129, 0.15);
+            border: 1px solid var(--accent-berry-pink);
+            padding: 0.25rem 1rem;
+            border-radius: 40px;
+            color: white;
+            cursor: pointer;
+            transition: 0.2s;
+            font-weight: 600;
+            font-size: 0.75rem;
+            font-family: var(--font-sans);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .btn-update-ajax:hover {
+            background: rgba(255, 107, 129, 0.3);
+            transform: scale(1.02);
+        }
+        .btn-update-ajax:disabled {
+            /* ESTADO DESHABILITADO: Cuando se está procesando. */
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .toast-notify {
+            /* SELECTOR: Notificación tipo toast que aparece en la parte inferior. */
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 28px;
+            border-radius: 60px;
+            color: white;
+            font-weight: 600;
+            z-index: 4000;
+            box-shadow: 0 6px 25px rgba(0,0,0,0.4);
+            font-family: var(--font-sans);
+            background: var(--berry-lumina);
+            animation: slideUp 0.3s ease;
+            max-width: 90%;
+            text-align: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+        .toast-notify.show {
+            /* CLASE PARA MOSTRAR: Hace visible el toast. */
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .toast-notify.error {
+            /* MODIFICADOR PARA ERROR: Fondo rojo. */
+            background: #e74c3c;
+        }
+        @keyframes slideUp {
+            /* ANIMACION DE APARICION: Desde abajo hacia arriba. */
+            from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+
+        .loading-spinner {
+            /* SELECTOR: Spinner de carga. */
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.8s ease infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .row-updated {
+            /* CLASE PARA ANIMAR FILA ACTUALIZADA. */
+            animation: glowFlash 0.6s ease;
+        }
+        @keyframes glowFlash {
+            /* ANIMACION DE DESTELLO DORADO. */
+            0% { background: rgba(212, 175, 55, 0); }
+            50% { background: rgba(212, 175, 55, 0.25); }
+            100% { background: transparent; }
+        }
+
+        .no-data {
+            /* SELECTOR: Mensaje cuando no hay datos. */
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-mist);
+        }
+
+        footer {
+            /* SELECTOR: Pie de página. */
+            text-align: center;
+            padding: 2rem 0 1rem;
+            font-size: 0.8rem;
+            opacity: 0.7;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            margin-top: 2rem;
+            color: var(--text-mist);
+        }
+
+        @media (max-width: 768px) {
+            /* MEDIA QUERY PARA PANTALLAS DE HASTA 768PX (tablets y móviles). */
+            .header { flex-direction: column; align-items: stretch; text-align: center; }
+            .header-buttons { justify-content: center; }
+            .filters-panel { flex-direction: column; align-items: stretch; border-radius: 30px; padding: 1rem; }
+            .search-wrapper { max-width: 100%; }
+            .status-filter select { width: 100%; }
+            .order-table { font-size: 0.75rem; min-width: 500px; }
+            .stats-grid { grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); }
+        }
+        @media (max-width: 480px) {
+            /* MEDIA QUERY PARA PANTALLAS MUY PEQUEÑAS (hasta 480px). */
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .order-table { font-size: 0.7rem; min-width: 400px; }
+        }
+    </style>
+    <!-- FIN DE LOS ESTILOS ESPECIFICOS. -->
+
+</head>
+<!-- FIN DE LA CABECERA. -->
+
+<body>
+<!-- INICIO DEL CUERPO DE LA PAGINA: Contiene todo el contenido visible. -->
+
+<div class="dashboard-container">
+<!-- CONTENEDOR PRINCIPAL DEL DASHBOARD: Agrupa todos los elementos de la interfaz. -->
+
+    <!-- ===== ENCABEZADO ===== -->
+    <div class="header">
+        <!-- ENCABEZADO: Muestra el título y los botones de navegación. -->
+        <h1>
+            <!-- TITULO CON ICONO: -->
+            <i class="fas fa-clipboard-list"></i>
+            <!-- Icono de lista. -->
+            Gestión de Pedidos · <span id="localNombre">Mi Local</span>
+            <!-- Texto del título y un span con el nombre del local (por defecto "Mi Local"). -->
+        </h1>
+        <div class="header-buttons">
+            <!-- BOTONES DE ACCION: -->
+            <a href="/dueno/dashboard" class="btn"><i class="fas fa-chart-pie"></i> Panel</a>
+            <!-- Enlace al panel de dueño. -->
+            <a href="/inicio" class="btn"><i class="fas fa-home"></i> Inicio</a>
+            <!-- Enlace a la página de inicio. -->
+            <a href="/logout" class="btn"><i class="fas fa-sign-out-alt"></i> Salir</a>
+            <!-- Enlace para cerrar sesión. -->
+        </div>
+    </div>
+
+    <!-- ===== ESTADÍSTICAS ===== -->
+    <div class="stats-grid" id="statsContainer">
+        <!-- CONTENEDOR DE TARJETAS DE ESTADISTICAS: Cada tarjeta muestra un conteo. -->
+        <div class="stat-card">
+            <h3><i class="fas fa-calendar-day"></i> Hoy</h3>
+            <!-- Título con icono de calendario. -->
+            <div class="stat-number" id="statsHoy">-</div>
+            <!-- Número de pedidos de hoy, se actualiza vía JS. -->
+        </div>
+        <div class="stat-card">
+            <h3><i class="fas fa-clock"></i> Pendientes</h3>
+            <div class="stat-number" id="statsPendientes">-</div>
+        </div>
+        <div class="stat-card">
+            <h3><i class="fas fa-check-circle"></i> Listos</h3>
+            <div class="stat-number" id="statsListos">-</div>
+        </div>
+        <div class="stat-card">
+            <h3><i class="fas fa-gem"></i> Entregados</h3>
+            <div class="stat-number" id="statsEntregados">-</div>
+        </div>
+        <div class="stat-card">
+            <h3><i class="fas fa-ban"></i> Cancelados</h3>
+            <div class="stat-number" id="statsCancelados">-</div>
+        </div>
+        <div class="stat-card">
+            <h3><i class="fas fa-coins"></i> Ingresos</h3>
+            <div class="stat-number revenue" id="statsIngresos">$0</div>
+            <!-- Muestra los ingresos totales de pedidos entregados, con clase revenue para color especial. -->
+        </div>
+    </div>
+
+    <!-- ===== FILTROS Y BÚSQUEDA ===== -->
+    <div class="filters-panel">
+        <!-- PANEL DE FILTROS: Contiene búsqueda, filtro por estado y botón sincronizar. -->
+        <div class="search-wrapper">
+            <i class="fas fa-search"></i>
+            <!-- Icono de lupa. -->
+            <input type="text" id="searchInput" placeholder="Buscar por código, cliente...">
+            <!-- Campo de texto para buscar pedidos por código o cliente. -->
+        </div>
+        <div class="status-filter">
+            <select id="statusFilter">
+                <!-- SELECTOR DE ESTADO: Filtra la tabla por estado. -->
+                <option value="all">Todos los estados</option>
+                <!-- Opción para mostrar todos. -->
+                <option value="pendiente">⏳ Pendiente</option>
+                <option value="listo">✅ Listo</option>
+                <option value="entregado">🏆 Entregado</option>
+                <option value="cancelado">❌ Cancelado</option>
+            </select>
+        </div>
+        <button class="refresh-btn" id="refreshBtn"><i class="fas fa-sync-alt"></i> Sincronizar</button>
+        <!-- Botón para recargar los datos manualmente. -->
+    </div>
+
+    <!-- ===== TABLA DE PEDIDOS ===== -->
+    <div class="table-royal">
+        <!-- CONTENEDOR DE LA TABLA CON ESTILO ROYAL. -->
+        <table class="order-table" id="ordersTable">
+            <!-- TABLA DE PEDIDOS: -->
+            <thead>
+                <!-- CABECERA DE LA TABLA: -->
+                <tr>
+                    <th>ID</th>
+                    <th>Código</th>
+                    <th>Cliente</th>
+                    <th>Total (MXN)</th>
+                    <th>Fecha</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="ordersTableBody">
+                <!-- CUERPO DE LA TABLA: Se llena dinámicamente con JavaScript. -->
+                <tr><td colspan="7" class="no-data">Cargando pedidos...</td></tr>
+                <!-- Mensaje inicial mientras se cargan los pedidos. -->
+            </tbody>
+        </table>
+    </div>
+
+    <footer>
+        <!-- PIE DE PAGINA: -->
+        <i class="fas fa-seedling"></i> Panel de Dueño · Pedidos gestionados con esencia del bosque
+    </footer>
+</div>
+
+<!-- ===== TOAST ===== -->
+<div id="toastMsg" class="toast-notify"></div>
+<!-- CONTENEDOR PARA NOTIFICACIONES TOAST: Inicialmente oculto, se muestra con mensajes. -->
+
+<!-- ===== JAVASCRIPT ===== -->
+<script>
+// INICIO DEL BLOQUE DE JAVASCRIPT: Toda la lógica de la página se ejecuta en este script.
+
+// SE USA UNA FUNCION AUTOEJECUTABLE (IIFE) PARA AISLAR EL ÁMBITO Y EVITAR CONTAMINAR EL ÁMBITO GLOBAL.
+// ESTO AYUDA A MANTENER EL CÓDIGO ORGANIZADO Y EVITAR COLISIONES DE VARIABLES.
+(function() {
+    'use strict';
+    // MODO ESTRICTO: Ayuda a detectar errores comunes y prohíbe ciertas sintaxis.
+
+    // ========== REFERENCIAS DOM ==========
+    // SE OBTIENEN REFERENCIAS A LOS ELEMENTOS DEL DOM QUE SE UTILIZARÁN FRECUENTEMENTE.
+    const tbody = document.getElementById('ordersTableBody');
+    // Referencia al cuerpo de la tabla donde se insertarán las filas de pedidos.
+    const searchInput = document.getElementById('searchInput');
+    // Referencia al campo de búsqueda.
+    const statusFilter = document.getElementById('statusFilter');
+    // Referencia al selector de filtro por estado.
+    const refreshBtn = document.getElementById('refreshBtn');
+    // Referencia al botón de refrescar.
+
+    // REFERENCIAS A LOS ELEMENTOS DE ESTADÍSTICAS:
+    const statsHoy = document.getElementById('statsHoy');
+    const statsPendientes = document.getElementById('statsPendientes');
+    const statsListos = document.getElementById('statsListos');
+    const statsEntregados = document.getElementById('statsEntregados');
+    const statsCancelados = document.getElementById('statsCancelados');
+    const statsIngresos = document.getElementById('statsIngresos');
+    // Cada uno corresponde a una tarjeta de estadística.
+
+    let toastTimeout = null;
+    // Variable para almacenar el temporizador del toast, para poder cancelarlo si es necesario.
+
+    // ========== TOAST ==========
+    // FUNCION PARA MOSTRAR UN MENSAJE TOAST EN LA PARTE INFERIOR DE LA PANTALLA.
+    function showToast(message, isError = false) {
+        // message: texto a mostrar, isError: booleano para indicar si es error (cambia el color).
+        const toast = document.getElementById('toastMsg');
+        // Obtiene el elemento toast.
+        toast.innerHTML = '<i class="fas ' + (isError ? 'fa-exclamation-triangle' : 'fa-leaf') + '"></i> ' + message;
+        // Construye el contenido del toast con un icono diferente según sea error o éxito.
+        toast.className = 'toast-notify show' + (isError ? ' error' : '');
+        // Asigna las clases: siempre 'toast-notify show', y si es error añade 'error'.
+        if (toastTimeout) clearTimeout(toastTimeout);
+        // Si hay un temporizador previo, lo cancela para evitar superposición.
+        toastTimeout = setTimeout(() => toast.classList.remove('show'), 3500);
+        // Establece un temporizador para ocultar el toast después de 3.5 segundos.
+    }
+
+    // ========== ESCAPAR HTML ==========
+    // FUNCION PARA ESCAPAR CARACTERES ESPECIALES Y EVITAR INYECCION XSS.
+    function escapeHtml(str) {
+        if (!str) return '';
+        // Si la cadena está vacía o es nula, retorna cadena vacía.
+        return str.replace(/[&<>]/g, function(m) {
+            // Reemplaza los caracteres &, <, > por sus entidades HTML.
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    // ========== CARGAR ESTADÍSTICAS ==========
+    // FUNCION PARA OBTENER ESTADÍSTICAS ADICIONALES DESDE EL ENDPOINT /api/owner/stats.
+    // ACTUALMENTE NO SE USA POR COMPLETO PORQUE LA MAYORÍA DE ESTADÍSTICAS SE CALCULAN DESDE LOS PEDIDOS.
+    // SE MANTIENE PARA POSIBLES USOS FUTUROS.
+    async function loadStats() {
+        try {
+            const res = await fetch('/api/owner/stats');
+            // Realiza una petición GET al endpoint de estadísticas.
+            if (!res.ok) throw new Error('Error al obtener estadísticas');
+            // Si la respuesta no es exitosa, lanza un error.
+            const data = await res.json();
+            // Parsea la respuesta JSON.
+            // Se espera que el endpoint devuelva datos como total_revenue, pending_orders, etc.
+            // Aquí solo se actualiza el campo de ingresos si está disponible.
+            if (data.total_revenue !== undefined) {
+                statsIngresos.innerText = '$' + data.total_revenue.toFixed(2);
+                // Actualiza el elemento de ingresos con el valor formateado.
+            }
+            // Otros campos no se usan porque se calculan desde los pedidos.
+        } catch (e) {
+            console.warn('Error al cargar estadísticas:', e);
+            // Captura cualquier error y lo muestra en consola sin interrumpir.
+        }
+    }
+
+    // ========== CARGAR PEDIDOS Y ACTUALIZAR ESTADÍSTICAS ==========
+    // FUNCION PRINCIPAL QUE CARGA LOS PEDIDOS DESDE /api/owner/orders, RENDERIZA LA TABLA Y ACTUALIZA LAS ESTADÍSTICAS.
+    async function loadOrders() {
+        try {
+            const res = await fetch('/api/owner/orders');
+            // Petición GET para obtener la lista de pedidos del local.
+            if (!res.ok) throw new Error('Error al cargar pedidos');
+            // Si falla, lanza error.
+            const orders = await res.json();
+            // Convierte la respuesta a JSON.
+
+            // ACTUALIZAR TABLA:
+            if (!orders.length) {
+                // Si no hay pedidos, muestra un mensaje en la tabla.
+                tbody.innerHTML = '<tr><td colspan="7" class="no-data">No hay pedidos para tu local.</td></tr>';
+                updateStatsFromOrders([]);
+                // Actualiza estadísticas con lista vacía.
+                return;
+            }
+
+            // CONSTRUIR LAS FILAS DE LA TABLA:
+            let html = '';
+            // Variable que acumulará el HTML de las filas.
+            orders.forEach(o => {
+                // Itera sobre cada pedido.
+                const estado = o.estado || 'pendiente';
+                // Obtiene el estado, si no tiene asigna 'pendiente'.
+                const badgeClass = 'badge-' + estado;
+                // Clase CSS para la insignia según el estado.
+                html += `
+                    <tr class="order-row" data-order-id="${o.id}" data-original-status="${estado}">
+                        <!-- Fila con atributos data para identificar el pedido y su estado original. -->
+                        <td>#${o.id}</td>
+                        <!-- ID del pedido. -->
+                        <td><strong>${escapeHtml(o.codigo)}</strong></td>
+                        <!-- Código del pedido escapado. -->
+                        <td>${escapeHtml(o.cliente)}</td>
+                        <!-- Nombre del cliente escapado. -->
+                        <td>$${o.total.toFixed(2)}</td>
+                        <!-- Total con dos decimales. -->
+                        <td>${o.fecha ? new Date(o.fecha).toLocaleDateString('es-MX') : '—'}</td>
+                        <!-- Fecha formateada en español, si existe; si no, un guión. -->
+                        <td>
+                            <span class="badge ${badgeClass}" data-status-value="${estado}">
+                                <!-- Insignia con clase dinámica y atributo data-status-value. -->
+                                <i class="fas ${estado === 'pendiente' ? 'fa-clock' : estado === 'listo' ? 'fa-check-circle' : estado === 'entregado' ? 'fa-gem' : 'fa-ban'}"></i>
+                                <!-- Icono según el estado. -->
+                                ${estado}
+                                <!-- Texto del estado. -->
+                            </span>
+                        </td>
+                        <td>
+                            <div style="display:flex; gap:0.4rem; flex-wrap:wrap; align-items:center;">
+                                <!-- Contenedor para el selector y el botón de actualización. -->
+                                <select class="status-select" data-id="${o.id}">
+                                    <!-- Selector de estado con opciones. -->
+                                    <option value="pendiente" ${estado === 'pendiente' ? 'selected' : ''}>⏳ Pendiente</option>
+                                    <option value="listo" ${estado === 'listo' ? 'selected' : ''}>✅ Listo</option>
+                                    <option value="entregado" ${estado === 'entregado' ? 'selected' : ''}>🏆 Entregado</option>
+                                    <option value="cancelado" ${estado === 'cancelado' ? 'selected' : ''}>❌ Cancelado</option>
+                                </select>
+                                <button class="btn-update-ajax" data-id="${o.id}"><i class="fas fa-feather-alt"></i> Actualizar</button>
+                                <!-- Botón para enviar la actualización. -->
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+            tbody.innerHTML = html;
+            // Inserta todo el HTML en el cuerpo de la tabla.
+
+            // ACTUALIZAR ESTADÍSTICAS A PARTIR DE LOS PEDIDOS:
+            updateStatsFromOrders(orders);
+            // Calcula y muestra los contadores.
+
+            // ASIGNAR EVENTOS A LOS BOTONES DE ACTUALIZACIÓN:
+            bindActionEvents();
+            // Vincula los manejadores de eventos a cada botón.
+
+        } catch (e) {
+            // MANEJO DE ERRORES:
+            console.error('Error al cargar pedidos:', e);
+            tbody.innerHTML = '<tr><td colspan="7" class="no-data">Error al cargar pedidos.</td></tr>';
+            // Muestra mensaje de error en la tabla.
+            showToast('Error al cargar pedidos', true);
+            // Muestra un toast de error.
+        }
+    }
+
+    // ========== ACTUALIZAR ESTADÍSTICAS DESDE LISTA DE PEDIDOS ==========
+    // FUNCION QUE RECIBE UN ARREGLO DE PEDIDOS Y CALCULA LOS CONTADORES PARA LAS TARJETAS.
+    function updateStatsFromOrders(orders) {
+        const hoy = new Date().toDateString();
+        // Obtiene la fecha actual en formato de cadena (ej. "Wed Jun 24 2026").
+        let hoyCount = 0;
+        let pendientes = 0, listos = 0, entregados = 0, cancelados = 0;
+        let ingresos = 0;
+
+        orders.forEach(o => {
+            // Itera sobre cada pedido.
+            const fecha = o.fecha ? new Date(o.fecha) : null;
+            // Convierte la fecha del pedido a objeto Date, o null si no existe.
+            if (fecha && fecha.toDateString() === hoy) hoyCount++;
+            // Si la fecha del pedido coincide con hoy, incrementa el contador de hoy.
+            const estado = o.estado || 'pendiente';
+            // Obtiene el estado.
+            if (estado === 'pendiente') pendientes++;
+            else if (estado === 'listo') listos++;
+            else if (estado === 'entregado') {
+                entregados++;
+                ingresos += o.total || 0;
+                // Suma el total al ingreso solo si está entregado.
+            } else if (estado === 'cancelado') cancelados++;
+        });
+
+        // ACTUALIZA LOS ELEMENTOS DEL DOM CON LOS VALORES CALCULADOS:
+        statsHoy.innerText = hoyCount;
+        statsPendientes.innerText = pendientes;
+        statsListos.innerText = listos;
+        statsEntregados.innerText = entregados;
+        statsCancelados.innerText = cancelados;
+        statsIngresos.innerText = '$' + ingresos.toFixed(2);
+    }
+
+    // ========== ACTUALIZAR ESTADO DE UN PEDIDO ==========
+    // FUNCION ASINCRONA QUE ENVÍA UNA PETICIÓN POST PARA CAMBIAR EL ESTADO DE UN PEDIDO.
+    async function updateOrderStatus(orderId, newStatus, button, selectElement, rowElement) {
+        // orderId: ID del pedido, newStatus: nuevo estado, button: botón clickeado, selectElement: selector de estado, rowElement: fila.
+        const originalStatus = rowElement.getAttribute('data-original-status');
+        // Obtiene el estado original almacenado en el atributo data.
+        if (originalStatus === newStatus) {
+            // Si el estado no cambia, muestra un mensaje y no hace nada.
+            showToast('El pedido ya está en estado "' + newStatus + '".', false);
+            return;
+        }
+
+        const originalBtnHTML = button.innerHTML;
+        // Guarda el HTML original del botón para restaurarlo después.
+        button.innerHTML = '<span class="loading-spinner"></span> Enviando...';
+        // Cambia el contenido del botón para mostrar un spinner y texto.
+        button.disabled = true;
+        // Deshabilita el botón para evitar múltiples envíos.
+
+        try {
+            const res = await fetch('/api/owner/order/' + orderId + '/status', {
+                // Construye la URL con el ID del pedido.
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                // Indica que se envía JSON.
+                body: JSON.stringify({ estado: newStatus })
+                // Envía el nuevo estado en el cuerpo de la petición.
+            });
+
+            if (!res.ok) {
+                // Si la respuesta no es exitosa, intenta obtener el mensaje de error.
+                let errorMsg = 'Error ' + res.status;
+                try {
+                    const errData = await res.json();
+                    errorMsg = errData.message || errorMsg;
+                } catch(e) {}
+                throw new Error(errorMsg);
+            }
+
+            const result = await res.json();
+            // Parsea la respuesta JSON.
+            if (result.success) {
+                // Si la operación fue exitosa:
+                // ACTUALIZAR BADGE:
+                const badge = rowElement.querySelector('.badge');
+                if (badge) {
+                    let iconClass = '';
+                    if (newStatus === 'pendiente') iconClass = 'fa-clock';
+                    else if (newStatus === 'listo') iconClass = 'fa-check-circle';
+                    else if (newStatus === 'entregado') iconClass = 'fa-gem';
+                    else iconClass = 'fa-ban';
+                    badge.innerHTML = '<i class="fas ' + iconClass + '"></i> ' + newStatus;
+                    // Cambia el icono y el texto.
+                    badge.className = 'badge badge-' + newStatus;
+                    // Actualiza la clase CSS.
+                    badge.setAttribute('data-status-value', newStatus);
+                    // Actualiza el atributo data.
+                }
+
+                if (selectElement) selectElement.value = newStatus;
+                // Sincroniza el selector con el nuevo estado.
+                rowElement.setAttribute('data-original-status', newStatus);
+                // Actualiza el atributo data-original-status.
+                rowElement.classList.add('row-updated');
+                // Agrega una clase para animar la fila.
+                setTimeout(() => rowElement.classList.remove('row-updated'), 800);
+                // Elimina la clase después de 800ms.
+
+                // RECARGAR PEDIDOS Y ESTADÍSTICAS PARA ACTUALIZAR CONTADORES:
+                await loadOrders();
+                // Vuelve a cargar toda la tabla, lo cual actualiza también las estadísticas.
+                showToast('✅ Pedido #' + orderId + ' actualizado a "' + newStatus + '".', false);
+                // Muestra mensaje de éxito.
+            } else {
+                throw new Error(result.message || 'Error en el servidor');
+            }
+        } catch (error) {
+            // MANEJO DE ERRORES:
+            console.error(error);
+            showToast('❌ ' + error.message, true);
+            // Muestra toast de error.
+            if (selectElement) selectElement.value = originalStatus;
+            // Restaura el selector al estado original.
+        } finally {
+            // SIEMPRE SE EJECUTA: Restaura el botón a su estado original.
+            button.innerHTML = originalBtnHTML;
+            button.disabled = false;
+        }
+    }
+
+    // ========== ASIGNAR EVENTOS A BOTONES DE ACTUALIZACIÓN ==========
+    // FUNCION QUE RECORRE TODOS LOS BOTONES .btn-update-ajax Y LES ASIGNA UN MANEJADOR DE CLICK.
+    function bindActionEvents() {
+        document.querySelectorAll('.btn-update-ajax').forEach(btn => {
+            // Para cada botón.
+            btn.removeEventListener('click', btn._listener);
+            // Elimina cualquier evento previo asociado (para evitar duplicados al recargar).
+            const handler = async (e) => {
+                // Define el manejador asíncrono.
+                e.preventDefault();
+                // Evita el comportamiento por defecto (si fuera un enlace).
+                const orderId = btn.getAttribute('data-id');
+                // Obtiene el ID del pedido del atributo data-id.
+                const row = btn.closest('.order-row');
+                // Encuentra la fila más cercana con clase order-row.
+                if (!row) return;
+                const select = row.querySelector('.status-select');
+                // Encuentra el selector de estado dentro de la fila.
+                if (!select) return;
+                const newStatus = select.value;
+                // Obtiene el valor seleccionado.
+                await updateOrderStatus(orderId, newStatus, btn, select, row);
+                // Llama a la función de actualización.
+            };
+            btn.addEventListener('click', handler);
+            // Asigna el evento click al botón.
+            btn._listener = handler;
+            // Guarda una referencia al manejador para poder eliminarlo después.
+        });
+    }
+
+    // ========== FILTROS ==========
+    // FUNCION QUE FILTRA LAS FILAS DE LA TABLA SEGÚN EL TEXTO DE BÚSQUEDA Y EL ESTADO SELECCIONADO.
+    function filterOrders() {
+        const searchTerm = searchInput.value.toLowerCase().trim();
+        // Obtiene el término de búsqueda en minúsculas y sin espacios.
+        const statusVal = statusFilter.value;
+        // Obtiene el valor del filtro de estado.
+        const rows = document.querySelectorAll('#ordersTableBody .order-row');
+        // Selecciona todas las filas de pedidos.
+        let visibleCount = 0;
+        // Contador de filas visibles.
+        rows.forEach(row => {
+            const codigo = row.querySelector('td:nth-child(2)')?.innerText.toLowerCase() || '';
+            // Obtiene el texto de la segunda celda (código) en minúsculas.
+            const cliente = row.querySelector('td:nth-child(3)')?.innerText.toLowerCase() || '';
+            // Obtiene el texto de la tercera celda (cliente) en minúsculas.
+            const badge = row.querySelector('.badge');
+            const estado = badge ? badge.getAttribute('data-status-value') || '' : '';
+            // Obtiene el estado desde el atributo data-status-value de la insignia.
+
+            let matchesStatus = true;
+            if (statusVal !== 'all') {
+                matchesStatus = estado === statusVal;
+                // Compara el estado de la fila con el filtro.
+            }
+            let matchesSearch = true;
+            if (searchTerm) {
+                matchesSearch = codigo.includes(searchTerm) || cliente.includes(searchTerm);
+                // Busca el término en código o cliente.
+            }
+            if (matchesStatus && matchesSearch) {
+                row.style.display = '';
+                // Muestra la fila.
+                visibleCount++;
+                // Incrementa el contador.
+            } else {
+                row.style.display = 'none';
+                // Oculta la fila.
+            }
+        });
+        // MANEJO DEL MENSAJE DE "NO HAY RESULTADOS":
+        const noDataRow = document.querySelector('#ordersTableBody .no-data');
+        if (noDataRow) noDataRow.style.display = 'none';
+        // Oculta cualquier mensaje previo de "no-data" que pudiera existir (por ejemplo, el de carga).
+        if (visibleCount === 0 && rows.length > 0) {
+            // Si no hay filas visibles pero hay filas en total, muestra un mensaje.
+            let msgRow = document.querySelector('#ordersTableBody .no-data-msg');
+            // Busca si ya existe un mensaje de "no se encontraron".
+            if (!msgRow) {
+                const tr = document.createElement('tr');
+                tr.className = 'no-data-msg';
+                tr.innerHTML = '<td colspan="7" class="no-data">No se encontraron pedidos con esos filtros.</td>';
+                tbody.appendChild(tr);
+                // Crea y añade la fila de mensaje.
+            }
+        } else {
+            // Si hay resultados, elimina el mensaje si existe.
+            const msgRow = document.querySelector('#ordersTableBody .no-data-msg');
+            if (msgRow) msgRow.remove();
+        }
+    }
+
+    // ========== REFRESH ==========
+    // EVENTO DEL BOTON REFRESCAR: Recarga los pedidos.
+    refreshBtn.addEventListener('click', async () => {
+        showToast('♻️ Sincronizando...', false);
+        await loadOrders();
+        showToast('✅ Datos actualizados', false);
+    });
+
+    // ========== EVENTOS DE FILTRO ==========
+    // Se asigna el evento 'input' al campo de búsqueda y 'change' al filtro de estado para que ejecuten filterOrders.
+    searchInput.addEventListener('input', filterOrders);
+    statusFilter.addEventListener('change', filterOrders);
+
+    // ========== CARGA INICIAL ==========
+    // Se cargan los pedidos al iniciar la página.
+    loadOrders();
+
+    // RECARGA AUTOMATICA CADA 30 SEGUNDOS:
+    setInterval(loadOrders, 30000);
+    // Cada 30 segundos se vuelven a cargar los pedidos para mantener los datos actualizados.
+
+    // OBTENER NOMBRE DEL LOCAL: NO SE IMPLEMENTA EN ESTE EJEMPLO, PERO SE PODRÍA MEJORAR.
+    // El span con id 'localNombre' se deja con "Mi Local" por defecto.
+    // Se podría hacer un fetch a /api/owner/stats para obtener el nombre real.
+
+    console.log('📋 Panel de pedidos del dueño cargado');
+    // Mensaje en consola para indicar que el script se ejecutó correctamente.
+
+})();
+// FIN DE LA FUNCION AUTOEJECUTABLE.
+</script>
+<!-- FIN DEL SCRIPT JAVASCRIPT. -->
+
+</body>
+<!-- FIN DEL CUERPO DEL DOCUMENTO. -->
+
+</html>
+<!-- FIN DEL DOCUMENTO HTML. -->

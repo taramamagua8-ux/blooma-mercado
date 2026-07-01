@@ -1,0 +1,57 @@
+<!DOCTYPE html>   <!-- Declara que este documento usa HTML5 -->
+    <html>            <!-- Comienza el documento HTML -->
+    <head>
+    <!-- ==========================================================
+        TÍTULO DE LA PESTAÑA
+        ========================================================== -->
+    <!-- El título "Acceso denegado" aparece en la pestaña del
+        navegador, indicando claramente el problema. -->
+    <title>Acceso denegado</title>
+    <!-- ==========================================================
+        FAVICON (el icono pequeño en la pestaña)
+        ========================================================== -->
+    <!-- Muestra el icono de la fresa (🍓) en la pestaña del
+        navegador. Se usa url_for para localizar el archivo
+        dentro de la carpeta 'static/img/'. -->
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/iconic.png') }}">
+    <!-- ==========================================================
+        ESTILOS EN LÍNEA (directamente en el HTML)
+        ========================================================== -->
+    <!-- En lugar de usar un archivo CSS externo, se aplican
+        estilos directamente en el atributo 'style' de la
+        etiqueta <body>. Esto es suficiente para esta página
+        sencilla, y asegura que se vea bien sin depender de
+        otros archivos. -->
+    </head>
+    <!-- ==========================================================
+    CUERPO DE LA PÁGINA
+    ========================================================== -->
+    <!-- Se aplican estilos en línea para:
+    - font-family: Arial → una fuente limpia y legible.
+    - text-align: center → todo el texto centrado.
+    - padding: 50px → espacio alrededor del contenido para
+    que no esté pegado a los bordes.
+    -->
+    <body style="font-family:Arial; text-align:center; padding:50px;">
+    <!-- ==========================================================
+        MENSAJE PRINCIPAL
+        ========================================================== -->
+    <!-- Título de nivel 2 (h2) que muestra el mensaje principal.
+        Incluye el emoji 🚫 (prohibido) para dar un aviso visual
+        inmediato y amigable. -->
+    <h2>🚫 Acceso no autorizado</h2>
+    <!-- Párrafo que explica de forma clara y sencilla por qué
+        el usuario está viendo esta página. -->
+    <p>No tienes permisos para ver esta página.</p>
+    <!-- ==========================================================
+        ENLACE PARA VOLVER A LA PÁGINA DE INICIO
+        ========================================================== -->
+    <!-- Este enlace permite al usuario regresar a la página
+        principal de la aplicación.
+        - href="/inicio" → ruta que Flask maneja para mostrar
+        la página de inicio.
+        - El texto "Volver" es claro y directo.
+    -->
+    <a href="/inicio">Volver</a>
+    </body>
+    </html>

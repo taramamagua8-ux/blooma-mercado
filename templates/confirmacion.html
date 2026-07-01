@@ -1,0 +1,531 @@
+<!DOCTYPE html> <!-- Indica que este documento usa la versión más reciente de HTML (HTML5) -->
+<html lang="es"> <!-- Inicia el documento HTML y especifica que el idioma es español -->
+<head> <!-- Cabecera del documento: contiene información que no se ve en la página -->
+    <meta charset="UTF-8"> <!-- Define que los caracteres se mostrarán correctamente (acentos, ñ, etc.) -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"> <!-- Hace que la página se vea bien en móviles y tablets -->
+    <title>Blooma · Pedido confirmado 🍓</title> <!-- Título que aparece en la pestaña del navegador -->
+    
+    <!-- Conexión con Google Fonts para obtener fuentes bonitas -->
+    <link rel="preconnect" href="https://fonts.googleapis.com"> <!-- Pre-conexión para cargar más rápido -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> <!-- Permite descargar las fuentes -->
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Montserrat:wght@200;400;500;600&family=Playfair+Display:wght@400;500;700;800&family=Cinzel:wght@400;700&display=swap" rel="stylesheet"> <!-- Descarga varios estilos de letra para usarlos en la página -->
+    
+    <!-- Conexión con Font Awesome: librería de iconos (como el de check, casita, etc.) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- Archivo de estilos globales de Blooma (colores, fuentes, etc.) -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/blooma_global.css') }}">
+    
+    <!-- Icono que aparece en la pestaña del navegador (favicon) -->
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/iconic.png') }}">
+    
+    <style> /* Aquí empiezan los estilos personalizados solo para esta página */
+        /* Tarjeta principal de confirmación: el recuadro blanco/transparente */
+
+/* Estilos adicionales para mejorar el contraste sobre fondo oscuro */
+.confirmation-card p {
+    color: #f0f0f0; /* Texto claro para el párrafo de agradecimiento */
+}
+
+.detail-value {
+    color: #ffffff; /* Valores de los detalles en blanco puro */
+    font-family: monospace;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+footer {
+    color: rgba(255, 255, 255, 0.7); /* Color claro y sin opacidad extra */
+    text-align: center;
+    margin-top: 2rem;
+    font-size: 0.7rem;
+    /* Se elimina la propiedad opacity: 0.7 que había */
+}
+        
+        .confirmation-card {
+            max-width: 700px; /* Ancho máximo de 700 píxeles */
+            margin: 2rem auto; /* Centrado automático y espacio superior de 2rem */
+            background: rgba(10, 5, 20, 0.75); /* Fondo oscuro semi-transparente (75% opaco) */
+            backdrop-filter: blur(16px); /* Efecto de desenfoque detrás de la tarjeta (vidrio esmerilado) */
+            border-radius: 48px; /* Bordes muy redondeados */
+            border: 1px solid rgba(255, 107, 129, 0.4); /* Borde rosa semi-transparente */
+            padding: 2rem; /* Espacio interno de 2rem */
+            text-align: center; /* Todo el texto centrado */
+            animation: fadeUp 0.5s ease-out; /* Animación de entrada: aparece desde abajo */
+        }
+        
+        @keyframes fadeUp { /* Define cómo será la animación de entrada */
+            from { opacity: 0; transform: translateY(20px); } /* Empieza invisible y 20px abajo */
+            to { opacity: 1; transform: translateY(0); } /* Termina visible en su posición normal */
+        }
+        
+        /* Icono de verificación (el check grande) */
+        .check-icon {
+            font-size: 4rem; /* Tamaño grande de 4 rem (unidad relativa al texto) */
+            color: #2ecc71; /* Color verde */
+            filter: drop-shadow(0 0 10px #2ecc71aa); /* Sombra verde alrededor del icono */
+            margin-bottom: 0.5rem; /* Espacio abajo de 0.5rem */
+        }
+        
+        /* Los detalles del pedido (recuadro con la información) */
+        .order-details {
+            background: rgba(0,0,0,0.5); /* Fondo negro semi-transparente (50% opaco) */
+            border-radius: 32px; /* Bordes redondeados */
+            padding: 1.5rem; /* Espacio interno */
+            margin: 1.5rem 0; /* Margen arriba y abajo */
+            text-align: left; /* El texto alineado a la izquierda dentro del recuadro */
+        }
+        
+        /* Cada fila de información (ej: "Código: 12345") */
+        .detail-row {
+            display: flex; /* Usa flexbox para poner los elementos en fila */
+            justify-content: space-between; /* Separa el label del valor (uno a la izq, otro a la der) */
+            padding: 0.6rem 0; /* Espacio arriba y abajo de 0.6rem */
+            border-bottom: 1px solid rgba(255, 255, 255, 0.212); /* Línea separadora muy tenue */
+            font-family: var(--font-sans); /* Usa la fuente sans-serif definida en el archivo global */
+        }
+        
+        /* La etiqueta de la izquierda (ej: "Código de pedido") */
+        .detail-label {
+            font-weight: 600; /* Texto en negrita (600 es seminegrita) */
+            color: var(--golden-hour); /* Color dorado definido en el archivo global */
+            letter-spacing: 0.5px; /* Separación entre letras */
+        }
+        
+        /* El valor de la derecha (ej: "ABC123") */
+        .detail-value {
+            font-family: monospace; /* Fuente de ancho fijo (como de máquina de escribir) */
+            font-size: 1rem; /* Tamaño normal de texto */
+            font-weight: 500; /* Peso medio de la fuente */
+        }
+        
+        /* Grupo de botones (Volver al mercado / Mis pedidos) */
+        .btn-group {
+            display: flex; /* Flexbox para alinear los botones */
+            gap: 1rem; /* Espacio de 1rem entre botones */
+            justify-content: center; /* Centrar los botones */
+            flex-wrap: wrap; /* Si no caben, que se bajen a la siguiente línea */
+            margin-top: 1.5rem; /* Espacio arriba */
+        }
+        
+        /* Estilo general de los botones */
+        .btn {
+            background: rgba(255,107,129,0.2); /* Fondo rosa semi-transparente */
+            border: 1px solid var(--berry-lumina); /* Borde del color rosa definido en global */
+            padding: 0.8rem 1.8rem; /* Espacio interno: arriba/abajo 0.8rem, laterales 1.8rem */
+            border-radius: 40px; /* Bordes muy redondeados (casi ovalados) */
+            color: white; /* Texto blanco */
+            text-decoration: none; /* Quita el subrayado de los enlaces */
+            transition: 0.2s; /* Transición suave de 0.2 segundos al pasar el mouse */
+            font-weight: 600; /* Texto seminegrita */
+            display: inline-flex; /* Muestra como elemento flexible en línea */
+            align-items: center; /* Centra verticalmente el contenido */
+            gap: 0.5rem; /* Espacio entre el icono y el texto */
+        }
+        
+        /* Botón principal (fondo de color rosa) */
+        .btn-primary {
+            background: var(--berry-lumina); /* Fondo rosa definido en global */
+            color: #0a0514; /* Texto oscuro (casi negro) */
+            border: none; /* Sin borde */
+        }
+        
+        /* Efecto hover (cuando pasas el mouse) para el botón principal */
+        .btn-primary:hover {
+            background: #ff8fa3; /* Rosa más claro */
+            transform: scale(1.02); /* Se agranda un 2% */
+        }
+        
+        /* Botón con borde (estilo contorno) */
+        .btn-outline {
+            border-color: var(--lilac-mystic); /* Borde de color lila */
+        }
+        
+        /* Efecto hover para botón de contorno */
+        .btn-outline:hover {
+            background: rgba(194,168,230,0.3); /* Fondo lila semi-transparente */
+        }
+        
+        /* Pie de página (footer) */
+        footer {
+            text-align: center; /* Texto centrado */
+            margin-top: 2rem; /* Espacio arriba de 2rem */
+            font-size: 0.7rem; /* Texto pequeño (70% del tamaño normal) */
+            opacity: 0.7; /* Transparencia del 70% para que se vea más tenue */
+        }
+        
+        /* Estilos para pantallas pequeñas (móviles de menos de 560px) */
+        @media (max-width: 560px) {
+            .confirmation-card { padding: 1.2rem; margin: 1rem; } /* Menos espacio en móviles */
+            .detail-row { flex-direction: column; gap: 0.3rem; } /* Los detalles se apilan verticalmente */
+            .detail-value { font-size: 0.85rem; } /* Texto más pequeño */
+        }
+    </style>
+</head>
+<body> <!-- Empieza el cuerpo de la página, lo que el usuario ve -->
+    
+    <!-- Lienzo (canvas) para el fondo cósmico animado con estrellas -->
+    <canvas id="cosmicCanvas" style="position: fixed; top:0; left:0; width:100%; height:100%; z-index:-1; pointer-events: none;"></canvas>
+    
+    <!-- Tarjeta principal que contiene la confirmación del pedido -->
+    <div class="confirmation-card">
+        
+        <!-- Icono grande de check verde (confirmación) -->
+        <div class="check-icon">
+            <i class="fas fa-check-circle"></i> <!-- Icono de Font Awesome de círculo con check -->
+        </div>
+        
+        <!-- Título principal -->
+        <h1 style="font-family: var(--font-title); color: var(--golden-hour); margin: 0.5rem 0;">
+            🍇 ¡Pedido confirmado! 🍓
+        </h1>
+        
+        <!-- Mensaje de agradecimiento -->
+        <p style="font-size: 1rem; margin-bottom: 1rem;">
+            Tu pedido ha sido recibido por el local. <br>
+            <i class="fas fa-leaf" style="color: var(--berry-lumina);"></i> Gracias por confiar en los comercios de Melchor Ocampo.
+        </p>
+        
+        <!-- Recuadro con los detalles del pedido -->
+        <div class="order-details">
+            
+            <!-- Fila: Código de pedido -->
+            <div class="detail-row">
+                <span class="detail-label"><i class="fas fa-hashtag"></i> Código de pedido</span>
+                <span class="detail-value">{{ pedido.codigo }}</span> <!-- Datos que vienen de la base de datos -->
+            </div>
+            
+            <!-- Fila: Nombre del local/negocio -->
+            <div class="detail-row">
+                <span class="detail-label"><i class="fas fa-store"></i> Local / Negocio</span>
+                <span class="detail-value">{{ pedido.local_nombre }}</span>
+            </div>
+            
+            <!-- Fila: Total a pagar -->
+            <div class="detail-row">
+                <span class="detail-label"><i class="fas fa-coins"></i> Total a pagar (MXN)</span>
+                <span class="detail-value">${{ "%.2f"|format(pedido.total) }}</span> <!-- Formato con dos decimales -->
+            </div>
+            
+            <!-- Fila: Fecha del pedido -->
+            <div class="detail-row">
+                <span class="detail-label"><i class="far fa-calendar-alt"></i> Fecha del pedido</span>
+                <span class="detail-value">{{ pedido.fecha.strftime('%d/%m/%Y %H:%M') if pedido.fecha else pedido.fecha }}</span>
+            </div>
+            
+            <!-- Fila: Fecha de recogida (solo si existe) -->
+            {% if pedido.fecha_recogida %}
+            <div class="detail-row">
+                <span class="detail-label"><i class="fas fa-calendar-week"></i> Fecha de recogida</span>
+                <span class="detail-value">{{ pedido.fecha_recogida }}</span>
+            </div>
+            {% endif %}
+            
+            <!-- Fila: Hora de recogida (solo si existe) -->
+            {% if pedido.hora_recogida %}
+            <div class="detail-row">
+                <span class="detail-label"><i class="far fa-clock"></i> Hora de recogida</span>
+                <span class="detail-value">{{ pedido.hora_recogida }}</span>
+            </div>
+            {% endif %}
+            
+            <!-- Fila: Estado actual del pedido (pendiente, listo, entregado, etc.) -->
+            <div class="detail-row">
+                <span class="detail-label"><i class="fas fa-chart-line"></i> Estado actual</span>
+                <span class="detail-value">
+                    <span class="status-badge status-{{ pedido.estado }}"> <!-- Etiqueta que cambia según el estado -->
+                        <!-- Icono según el estado -->
+                        <i class="fas {% if pedido.estado == 'pendiente' %}fa-clock{% elif pedido.estado == 'listo' %}fa-check-circle{% elif pedido.estado == 'entregado' %}fa-gem{% else %}fa-ban{% endif %}"></i>
+                        {{ pedido.estado|capitalize }} <!-- Muestra el estado con la primera letra en mayúscula -->
+                    </span>
+                </span>
+            </div>
+        </div>
+        
+        <!-- Grupo de botones para navegar -->
+        <div class="btn-group">
+            <!-- Botón para volver al mercado (página principal) -->
+            <a href="{{ url_for('index') }}" class="btn btn-outline">
+                <i class="fas fa-home"></i> Volver al mercado
+            </a>
+            
+            <!-- Botón para ir a la lista de mis pedidos -->
+            <a href="{{ url_for('mis_pedidos') }}" class="btn btn-primary">
+                <i class="fas fa-box"></i> Mis pedidos
+            </a>
+        </div>
+        
+        <!-- Pie de página con información adicional -->
+        <footer>
+            <i class="fas fa-seedling"></i> Recuerda que el pago es en efectivo al momento de recoger tu pedido.<br>
+            ¿Alguna duda? Contáctanos a <a href="mailto:blooma.xoko@gmail.com" style="color: var(--accent-berry-pink);">blooma.xoko@gmail.com</a>
+        </footer>
+    </div>
+    
+    <!-- Script de JavaScript que crea el fondo animado con estrellas y constelaciones -->
+    <script>
+        (function(){  // Función que se ejecuta automáticamente para no contaminar el espacio global
+            
+            // Obtiene el canvas (lienzo) del fondo cósmico
+            const canvas = document.getElementById('cosmicCanvas');
+            if (!canvas) return; // Si no existe, no hace nada
+            
+            let ctx = canvas.getContext('2d'); // Herramienta para dibujar en el canvas
+            let width = window.innerWidth, height = window.innerHeight; // Tamaño de la pantalla
+            let mouseX = width/2, mouseY = height/2; // Posición del mouse (inicia en el centro)
+            let mouseInside = true; // Si el mouse está dentro de la pantalla
+            
+            // Configuración de la interacción del mouse
+            const MOUSE_RADIUS = 170; // Radio de influencia del mouse
+            const PUSH_FORCE = 0.4; // Qué tanto se mueven las estrellas al acercar el mouse
+            const DAMPING = 0.96; // Fricción: qué tan rápido vuelven las estrellas a su lugar
+            
+            let stars = [], connections = []; // Arreglos para guardar estrellas y conexiones
+            
+            // Constelaciones predefinidas (conjuntos de estrellas y líneas que las conectan)
+            const constellationGroups = [
+                { name: "Cassiopeia", points: [[0.10,0.20],[0.19,0.26],[0.28,0.20],[0.37,0.26],[0.46,0.20],[0.24,0.32],[0.33,0.33]], links: [[0,1],[1,2],[2,3],[3,4],[1,3],[2,5],[5,6],[6,3]] },
+                { name: "UrsaMajor", points: [[0.52,0.12],[0.60,0.18],[0.68,0.15],[0.76,0.21],[0.84,0.19],[0.91,0.24],[0.84,0.28],[0.77,0.26],[0.69,0.23]], links: [[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,8],[8,2],[3,7]] },
+                { name: "Orion", points: [[0.18,0.66],[0.25,0.71],[0.32,0.66],[0.29,0.78],[0.21,0.78],[0.36,0.75],[0.27,0.84],[0.33,0.83],[0.40,0.70]], links: [[0,1],[1,2],[3,4],[1,3],[1,4],[5,1],[6,3],[7,6],[8,2],[5,8]] }
+            ];
+            
+            // Colores para las estrellas de constelaciones
+            const starColorsConst = ["#ff6b81","#c2a8e6","#B89CFF","#ff9ff3","#7A5AE0"]; 
+            // Colores para las estrellas de fondo
+            const starColorsBg = ["#6F8AFF","#5A72E0","#7A68D9","#8A72F0"];
+            
+            // Función que devuelve un color aleatorio de una paleta dada
+            function getStarColor(isConst) { 
+                let pal = isConst ? starColorsConst : starColorsBg; 
+                return pal[Math.floor(Math.random() * pal.length)]; 
+            }
+            
+            // Función que crea todas las estrellas y conexiones según el tamaño de la pantalla
+            function regenerateStarsAndConnections(w, h) {
+                stars = []; // Vacía el arreglo de estrellas
+                connections = []; // Vacía el arreglo de conexiones
+                
+                // Crea 220 estrellas de fondo
+                for (let i = 0; i < 220; i++) stars.push({ 
+                    origX: Math.random() * w, // Posición X aleatoria en la pantalla
+                    origY: Math.random() * h, // Posición Y aleatoria en la pantalla
+                    offsetX:0, offsetY:0, // Desplazamiento (empieza en 0)
+                    size: 1 + Math.random() * 2, // Tamaño entre 1 y 3
+                    baseSize:1+Math.random()*2, // Tamaño base
+                    color: getStarColor(false), // Color aleatorio de fondo
+                    isConst: false, // No es de constelación
+                    twinkleSpeed: 0.002+Math.random()*0.005, // Velocidad de parpadeo
+                    twinklePhase: Math.random()*Math.PI*2 // Fase inicial del parpadeo
+                });
+                
+                // Crea 50 estrellas de constelaciones
+                for (let i=0;i<50;i++) stars.push({ 
+                    origX: Math.random() * w, 
+                    origY: Math.random() * h, 
+                    offsetX:0, offsetY:0, 
+                    size: 2+Math.random()*2.5, // Tamaño más grande
+                    baseSize:2+Math.random()*2.2, 
+                    color: getStarColor(true), // Color de constelación
+                    isConst: true, 
+                    twinkleSpeed:0.002+Math.random()*0.006, 
+                    twinklePhase: Math.random()*Math.PI*2 
+                });
+                
+                let starIdx = stars.length; // Índice para agregar estrellas de constelaciones
+                
+                // Agrega las estrellas de las constelaciones predefinidas
+                for (let grp of constellationGroups) {
+                    let indices = []; // Guardará los índices de las estrellas de esta constelación
+                    for (let pt of grp.points) { 
+                        let origX = pt[0] * w, origY = pt[1] * h; // Calcula posición en píxeles
+                        stars.push({ 
+                            origX, origY, 
+                            offsetX:0, offsetY:0, 
+                            size: 3+Math.random()*1.8, // Tamaño grande
+                            baseSize:3, 
+                            color: starColorsConst[Math.floor(Math.random()*starColorsConst.length)], 
+                            isConst: true, 
+                            twinkleSpeed:0.003, 
+                            twinklePhase: Math.random()*Math.PI*2 
+                        });
+                        indices.push(starIdx++); // Guarda el índice de la estrella creada
+                    }
+                    
+                    // Crea las líneas (conexiones) entre estrellas de la constelación
+                    for (let link of grp.links) 
+                        if (indices[link[0]] !== undefined && indices[link[1]] !== undefined) 
+                            connections.push({ 
+                                fromIdx: indices[link[0]], 
+                                toIdx: indices[link[1]], 
+                                pulsePhase: Math.random()*Math.PI*2 
+                            });
+                }
+            }
+            
+            // Función que actualiza cómo el mouse mueve las estrellas
+            function updateMouseInteraction() { 
+                if(!mouseInside) return; // Si el mouse no está dentro, no hace nada
+                for (let star of stars) { // Para cada estrella
+                    let curX = star.origX + star.offsetX, curY = star.origY + star.offsetY; // Posición actual
+                    let dx = curX - mouseX, dy = curY - mouseY; // Distancia al mouse
+                    let dist = Math.hypot(dx, dy); // Distancia total (teorema de Pitágoras)
+                    
+                    if (dist < MOUSE_RADIUS) { // Si la estrella está dentro del radio de influencia
+                        let intensity = 1 - (dist / MOUSE_RADIUS); // Intensidad: 1 cerca, 0 lejos
+                        let angle = Math.atan2(dy, dx); // Ángulo desde la estrella al mouse
+                        let pushMag = PUSH_FORCE * intensity; // Fuerza del empujón
+                        star.offsetX += Math.cos(angle) * pushMag; // Mueve la estrella en X
+                        star.offsetY += Math.sin(angle) * pushMag; // Mueve la estrella en Y
+                    } else { 
+                        // Si está lejos, vuelve lentamente a su posición original
+                        star.offsetX *= DAMPING; 
+                        star.offsetY *= DAMPING; 
+                    }
+                } 
+            }
+            
+            // Arreglo y control para las estrellas fugaces
+            let shootingStars = [], lastShoot = 0;
+            
+            // Función que crea una estrella fugaz
+            function spawnShootingStar() { 
+                let now = Date.now(); // Tiempo actual en milisegundos
+                if (now - lastShoot > 4200) { // Cada 4.2 segundos crea una nueva
+                    lastShoot = now; 
+                    let startX = Math.random() * width, startY = Math.random() * height * 0.3; // Posición inicial
+                    let angle = -0.5 + Math.random() * 1.0; // Ángulo de caída
+                    let speed = 7 + Math.random() * 10; // Velocidad aleatoria
+                    shootingStars.push({ 
+                        x: startX, y: startY, 
+                        vx: Math.cos(angle)*speed, vy: Math.sin(angle)*speed, // Velocidad en X e Y
+                        length: 35+Math.random()*25, // Longitud de la estela
+                        life:1.0, // Vida: 1.0 (completa)
+                        color: `hsl(${250+Math.random()*50}, 85%, 70%)` // Color aleatorio
+                    }); 
+                } 
+            }
+            
+            // Función que actualiza las estrellas fugaces
+            function updateShootingStars(){ 
+                for(let i=0;i<shootingStars.length;i++){ 
+                    let s=shootingStars[i]; 
+                    s.x+=s.vx; s.y+=s.vy; // Mueve la estrella
+                    s.life-=0.012; // Reduce su vida
+                    // Si sale de la pantalla o se desvanece, la elimina
+                    if(s.x<-100||s.x>width+100||s.y<-100||s.y>height+100||s.life<=0) 
+                        shootingStars.splice(i--,1); 
+                } 
+            }
+            
+            // Función que dibuja las líneas de las constelaciones
+            function drawConstellationLines(nowTime) { 
+                for (let conn of connections) { 
+                    let a = stars[conn.fromIdx], b = stars[conn.toIdx]; // Estrella origen y destino
+                    if(!a||!b) continue; // Si no existen, salta
+                    
+                    let x1=a.origX+a.offsetX, y1=a.origY+a.offsetY; // Posición de la primera
+                    let x2=b.origX+b.offsetX, y2=b.origY+b.offsetY; // Posición de la segunda
+                    
+                    let alpha = 0.4 + 0.2 * Math.sin(nowTime * 0.003 + conn.pulsePhase); // Parpadeo
+                    ctx.beginPath(); // Empieza a dibujar
+                    ctx.moveTo(x1,y1); // Punto inicial
+                    ctx.lineTo(x2,y2); // Punto final
+                    ctx.lineWidth=1.3; // Grosor de la línea
+                    ctx.strokeStyle=`rgba(194, 168, 230, ${alpha})`; // Color lila con transparencia
+                    ctx.shadowBlur=4; // Sombra
+                    ctx.stroke(); // Dibuja la línea
+                } 
+                ctx.shadowBlur=0; // Resetea la sombra
+            }
+            
+            let globalAnim = 0; // Contador de fotogramas (para animaciones)
+            
+            // Función que dibuja todas las estrellas y el resplandor del mouse
+            function drawStarsAndNebula() { 
+                for(let star of stars){ // Para cada estrella
+                    let x=star.origX+star.offsetX, y=star.origY+star.offsetY; // Posición actual
+                    let tw=0.7+0.5*Math.sin(globalAnim*star.twinkleSpeed+star.twinklePhase); // Parpadeo
+                    let sz=star.baseSize*(star.isConst? (0.8+tw*0.3):(0.75+tw*0.25)); // Tamaño con parpadeo
+                    
+                    ctx.shadowBlur=star.isConst? 8:4; // Más sombra si es constelación
+                    ctx.beginPath(); 
+                    ctx.arc(x,y,Math.max(1,sz),0,Math.PI*2); // Dibuja un círculo (estrella)
+                    ctx.fillStyle=star.color; // Color de la estrella
+                    ctx.fill(); // Rellena el círculo
+                } 
+                ctx.shadowBlur=0; // Resetea la sombra
+                
+                // Efecto de resplandor alrededor del mouse
+                if(mouseInside){ 
+                    let grad=ctx.createRadialGradient(mouseX,mouseY,20,mouseX,mouseY,200); 
+                    grad.addColorStop(0,"rgba(255,107,129,0.15)"); // Centro: rosa suave
+                    grad.addColorStop(1,"rgba(80,50,160,0)"); // Borde: transparente
+                    ctx.fillStyle=grad; 
+                    ctx.fillRect(0,0,width,height); // Dibuja el resplandor
+                } 
+            }
+            
+            // Función que dibuja las estrellas fugaces
+            function drawShootingStarsCanvas(){ 
+                for(let s of shootingStars){ 
+                    let endX=s.x-s.vx*s.length*0.6, endY=s.y-s.vy*s.length*0.6; // Punto final de la estela
+                    ctx.beginPath(); 
+                    ctx.moveTo(s.x,s.y); 
+                    ctx.lineTo(endX,endY); 
+                    ctx.lineWidth=2.2*s.life; // Grosor según la vida
+                    ctx.strokeStyle=`rgba(255,180,220,${s.life})`; // Color según la vida
+                    ctx.stroke(); 
+                    
+                    // Punto brillante en la cabeza
+                    ctx.beginPath(); 
+                    ctx.arc(s.x,s.y,2.2*s.life,0,Math.PI*2); 
+                    ctx.fillStyle=`rgba(255,220,170,${s.life})`; 
+                    ctx.fill(); 
+                } 
+            }
+            
+            // Función que ajusta el canvas al tamaño de la pantalla
+            function resizeCanvas() { 
+                width = window.innerWidth; 
+                height = window.innerHeight; 
+                canvas.width = width; 
+                canvas.height = height; 
+                regenerateStarsAndConnections(width, height); // Recrea estrellas al tamaño nuevo
+            }
+            
+            // Bucle principal de animación (se ejecuta 60 veces por segundo)
+            function animateFrame() { 
+                ctx.clearRect(0,0,width,height); // Borra el canvas
+                updateMouseInteraction(); // Actualiza la interacción del mouse
+                updateShootingStars(); // Mueve las estrellas fugaces
+                spawnShootingStar(); // Crea nuevas estrellas fugaces
+                drawStarsAndNebula(); // Dibuja estrellas y resplandor
+                drawConstellationLines(globalAnim); // Dibuja líneas de constelaciones
+                drawShootingStarsCanvas(); // Dibuja estrellas fugaces
+                globalAnim++; // Incrementa el contador de fotogramas
+                requestAnimationFrame(animateFrame); // Pide el siguiente fotograma
+            }
+            
+            // Evento que reacciona cuando la pantalla cambia de tamaño
+            window.addEventListener('resize', resizeCanvas);
+            
+            // Evento que rastrea el movimiento del mouse
+            document.addEventListener('mousemove', (e) => { 
+                mouseX = e.clientX; 
+                mouseY = e.clientY; 
+                mouseInside = true; 
+            });
+            
+            // Evento cuando el mouse sale de la pantalla
+            document.addEventListener('mouseleave', () => { 
+                mouseInside = false; 
+            });
+            
+            // Inicializa todo: ajusta el tamaño y empieza la animación
+            resizeCanvas(); 
+            animateFrame();
+            
+        })(); // Fin de la función auto-ejecutable
+    </script>
+</body>
+</html> <!-- Fin del documento HTML -->

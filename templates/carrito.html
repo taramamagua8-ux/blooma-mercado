@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<!-- 
+    Este es un documento HTML (HyperText Markup Language), 
+    que es el lenguaje básico para crear páginas web.
+    Todo el contenido visible e invisible de la página está dentro de este archivo.
+-->
+<html lang="es">
+<!-- 
+    La etiqueta <html> envuelve todo el contenido de la página web.
+    lang="es" le indica al navegador que el contenido principal está en español.
+-->
+
+<head>
+    <!-- 
+        La sección <head> contiene información sobre la página que no se ve directamente,
+        como configuraciones, estilos, fuentes y el título que aparece en la pestaña del navegador.
+    -->
+    
+    <meta charset="UTF-8">
+    <!-- 
+        meta charset="UTF-8" establece el conjunto de caracteres que puede usar la página,
+        permitiendo usar letras con acentos, ñ y caracteres especiales correctamente.
+    -->
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <!-- 
+        Esto hace que la página se vea bien en dispositivos móviles.
+        "width=device-width" ajusta el ancho al tamaño de la pantalla.
+        "initial-scale=1.0" establece el nivel de zoom inicial.
+        "user-scalable=yes" permite que los usuarios hagan zoom con los dedos.
+    -->
+    
+    <title>Blooma · Mi Carrito 🛒</title>
+    <!-- 
+        <title> es el texto que aparece en la pestaña del navegador.
+        Aquí muestra "Blooma · Mi Carrito" con un emoji de carrito de compras.
+    -->
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <!-- 
+        Esto le dice al navegador que se va a conectar a Google Fonts (un servicio de fuentes).
+        "preconnect" ayuda a que la conexión sea más rápida.
+    -->
+    
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- 
+        Otra conexión a Google Fonts, esta vez con "crossorigin" que es para seguridad
+        cuando se cargan recursos de otros sitios.
+    -->
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Montserrat:wght@200;400;600&family=Playfair+Display:wght@400;700&family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+    <!-- 
+        Este enlace carga fuentes (tipos de letra) desde Google Fonts.
+        Las fuentes son: Cormorant Garamond, Montserrat, Playfair Display y Cinzel,
+        en diferentes grosores (300, 400, 600, etc.).
+    -->
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- 
+        Carga Font Awesome, una biblioteca de iconos (como el carrito, la basura, etc.).
+        Así podemos usar iconos bonitos sin tener que descargar imágenes.
+    -->
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/blooma_global.css') }}">
+    <!-- 
+        Carga un archivo CSS (hoja de estilos) que está en el servidor.
+        Este archivo contiene los estilos generales de todo el sitio web.
+    -->
+    
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/iconic.png') }}">
+    <!-- 
+        Establece el ícono que aparece en la pestaña del navegador (el favicon).
+        Es la pequeña imagen que ves al lado del título de la página.
+    -->
+    
+    <style>
+        /* ===== Estilos específicos del carrito ===== */
+        /* 
+            Aquí comienza el CSS (Cascading Style Sheets), que es el lenguaje
+            que da estilo y diseño a la página (colores, tamaños, posiciones).
+        */
+        
+        .carrito-wrapper {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        /* 
+            .carrito-wrapper es un "contenedor" que agrupa todo el carrito.
+            max-width: 1000px -> no se estira más de 1000 píxeles de ancho.
+            margin: 2rem auto -> margen de 2 rem (unidad relativa) arriba/abajo, y centrado horizontal.
+            padding: 0 1rem -> espacio interno de 1 rem a los lados.
+        */
+        
+        .carrito-title {
+            font-family: var(--font-title);
+            font-size: 2rem;
+            text-align: center;
+            color: var(--golden-hour);
+            margin-bottom: 2rem;
+        }
+        /* 
+            .carrito-title es el título "Tu Carrito".
+            font-family: var(--font-title) -> usa la fuente definida como "título" en el CSS global.
+            font-size: 2rem -> tamaño de letra de 2 rem.
+            text-align: center -> texto centrado.
+            color: var(--golden-hour) -> color dorado definido en el CSS global.
+            margin-bottom: 2rem -> espacio abajo de 2 rem.
+        */
+        
+        .carrito-title i {
+            color: var(--berry-lumina);
+            margin-right: 0.5rem;
+        }
+        /* 
+            Para los iconos (i) dentro del título:
+            color: var(--berry-lumina) -> color rosa/berry definido en el CSS global.
+            margin-right: 0.5rem -> espacio a la derecha de 0.5 rem.
+        */
+        
+        .carrito-table-wrapper {
+            background: rgba(10, 5, 20, 0.55);
+            backdrop-filter: blur(12px);
+            border-radius: 42px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 107, 129, 0.2);
+            overflow-x: auto;
+            color: var(--text-light);
+        }
+        /* 
+            .carrito-table-wrapper es el contenedor de la tabla del carrito.
+            background: rgba(10, 5, 20, 0.7) -> fondo oscuro semitransparente (color negro azulado con 70% opacidad).
+            backdrop-filter: blur(12px) -> aplica un efecto de desenfoque al fondo (efecto vidrio esmerilado).
+            border-radius: 32px -> bordes redondeados de 32 píxeles.
+            padding: 1.5rem -> espacio interno de 1.5 rem.
+            border: 1px solid... -> borde fino de color rosa con transparencia.
+            overflow-x: auto -> permite desplazarse horizontalmente si la tabla es muy ancha.
+            color: var(--text-light) -> texto de color claro definido globalmente.
+        */
+        
+        .carrito-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: var(--font-sans);
+            font-size: 0.9rem;
+            min-width: 550px;
+        }
+        /* 
+            .carrito-table es la tabla que muestra los productos.
+            width: 100% -> ocupa todo el ancho del contenedor.
+            border-collapse: collapse -> junta los bordes de las celdas.
+            font-family: var(--font-sans) -> usa la fuente sans-serif definida globalmente.
+            font-size: 0.9rem -> tamaño de letra de 0.9 rem.
+            min-width: 550px -> ancho mínimo para que no se comprima demasiado.
+        */
+        
+        .carrito-table th {
+            text-align: left;
+            padding: 0.8rem 0.6rem;
+            color: var(--golden-hour);
+            border-bottom: 2px solid rgba(212, 175, 55, 0.3);
+            font-weight: 600;
+        }
+        /* 
+            th = "table header" (encabezados de columna).
+            text-align: left -> texto alineado a la izquierda.
+            padding: 0.8rem 0.6rem -> espacio interno arriba/abajo 0.8 rem, izquierda/derecha 0.6 rem.
+            color: var(--golden-hour) -> color dorado.
+            border-bottom: 2px solid... -> borde inferior dorado semitransparente.
+            font-weight: 600 -> texto en negrita (600 es como "seminegrita").
+        */
+        
+        .carrito-table td {
+            padding: 0.8rem 0.6rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            vertical-align: middle;
+        }
+        /* 
+            td = "table data" (celdas de datos).
+            padding: 0.8rem 0.6rem -> espacio interno.
+            border-bottom: 1px solid... -> línea separadora muy sutil blanca.
+            vertical-align: middle -> alinea el contenido verticalmente al centro.
+        */
+        
+        .carrito-table tr:last-child td {
+            border-bottom: none;
+        }
+        /* 
+            La última fila (tr) de la tabla no tiene borde inferior.
+        */
+        
+        .producto-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        /* 
+            .producto-info: el contenedor de la información del producto (imagen + nombre).
+            display: flex -> usa un diseño flexible (los elementos se ponen en fila).
+            align-items: center -> alinea verticalmente al centro.
+            gap: 1rem -> espacio de 1 rem entre la imagen y el nombre.
+        */
+        
+        .producto-imagen {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 12px;
+            background: #1a1425;
+            flex-shrink: 0;
+        }
+        /* 
+            .producto-imagen: la imagen del producto.
+            width: 60px, height: 60px -> tamaño de 60 por 60 píxeles.
+            object-fit: cover -> la imagen se recorta para llenar el espacio sin deformarse.
+            border-radius: 12px -> esquinas redondeadas.
+            background: #1a1425 -> color de fondo oscuro por si la imagen no carga.
+            flex-shrink: 0 -> evita que la imagen se encoja si falta espacio.
+        */
+        
+        .sin-imagen {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #1a1425;
+            border-radius: 12px;
+            color: #666;
+            font-size: 1.8rem;
+            flex-shrink: 0;
+        }
+        /* 
+            .sin-imagen: se muestra cuando un producto no tiene imagen.
+            Es similar a la imagen pero con un icono 📷 (cámara) y fondo oscuro.
+            display: flex, align-items, justify-content -> centran el icono.
+            color: #666 -> gris oscuro para el icono.
+            font-size: 1.8rem -> tamaño grande para el icono.
+        */
+        
+        .producto-nombre {
+            font-weight: 600;
+            color: #f0ece6;
+        }
+        /* 
+            .producto-nombre: el nombre del producto.
+            font-weight: 600 -> negrita suave.
+            color: #f0ece6 -> color crema/blanco.
+        */
+        
+        .cantidad-control {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        /* 
+            .cantidad-control: el área donde se ajusta la cantidad.
+            display: flex -> diseño en fila (botón - input - botón).
+            align-items: center -> centrado vertical.
+            gap: 0.5rem -> espacio entre elementos.
+        */
+        
+        .cantidad-control input {
+            width: 65px;
+            padding: 0.3rem 0.5rem;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 30px;
+            color: white;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        /* 
+            .cantidad-control input: el recuadro donde se escribe la cantidad.
+            width: 65px -> ancho fijo de 65 píxeles.
+            padding: 0.3rem 0.5rem -> espacio interno.
+            background: rgba(0,0,0,0.5) -> fondo negro semitransparente.
+            border: 1px solid... -> borde blanco muy sutil.
+            border-radius: 30px -> bordes muy redondeados (forma de píldora).
+            color: white -> texto blanco.
+            text-align: center -> el número centrado.
+            font-size: 0.9rem -> tamaño de letra.
+        */
+        
+        .cantidad-control input:focus {
+            outline: none;
+            border-color: var(--berry-lumina);
+        }
+        /* 
+            Cuando el input está enfocado (el usuario hace clic en él):
+            outline: none -> quita el borde azul predeterminado.
+            border-color: var(--berry-lumina) -> cambia el borde a rosa/berry.
+        */
+        
+        .btn-accion {
+            background: transparent;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: 0.15s;
+            color: #aaa;
+            padding: 0.2rem 0.5rem;
+            border-radius: 30px;
+        }
+        /* 
+            .btn-accion: botones para aumentar/disminuir/eliminar.
+            background: transparent -> fondo transparente.
+            border: none -> sin borde.
+            font-size: 1.2rem -> tamaño de letra.
+            cursor: pointer -> el cursor cambia a mano (indica que es clickeable).
+            transition: 0.15s -> animación suave de 0.15 segundos al cambiar estado.
+            color: #aaa -> gris claro.
+            padding: 0.2rem 0.5rem -> espacio interno.
+            border-radius: 30px -> bordes redondeados.
+        */
+        
+        .btn-accion:hover {
+            color: var(--berry-lumina);
+            background: rgba(255, 107, 129, 0.1);
+        }
+        /* 
+            Cuando el mouse pasa por encima del botón:
+            color: var(--berry-lumina) -> cambia a rosa.
+            background: rgba(255,107,129,0.1) -> fondo rosa muy sutil.
+        */
+        
+        .btn-accion.eliminar:hover {
+            color: #e74c3c;
+            background: rgba(231, 76, 60, 0.1);
+        }
+        /* 
+            Botón de eliminar cuando el mouse pasa por encima:
+            color: #e74c3c -> rojo intenso.
+            background: rgba(231,76,60,0.1) -> fondo rojo muy sutil.
+        */
+        
+        .total-row {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--golden-hour);
+        }
+        /* 
+            .total-row: la fila final con el total.
+            font-size: 1.1rem -> letra un poco más grande.
+            font-weight: 700 -> negrita fuerte.
+            color: var(--golden-hour) -> color dorado.
+        */
+        
+        .total-row td {
+            padding-top: 1.2rem;
+            border-top: 2px solid var(--accent-berry-pink);
+        }
+        /* 
+            La fila del total tiene:
+            padding-top: 1.2rem -> espacio arriba.
+            border-top: 2px solid... -> borde superior rosa para separarlo.
+        */
+        
+        .carrito-vacio {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-mist);
+        }
+        /* 
+            .carrito-vacio: el mensaje que se muestra cuando no hay productos.
+            text-align: center -> texto centrado.
+            padding: 3rem 1rem -> mucho espacio interno.
+            color: var(--text-mist) -> color gris/neblina definido globalmente.
+        */
+        
+        .carrito-vacio i {
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+        /* 
+            Icono en carrito vacío:
+            font-size: 3rem -> muy grande.
+            display: block -> se comporta como bloque, ocupa toda la línea.
+            margin-bottom: 1rem -> espacio abajo.
+            opacity: 0.5 -> medio transparente.
+        */
+        
+        .carrito-vacio a {
+            color: var(--accent-berry-pink);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        /* 
+            Enlace "Seguir comprando" en carrito vacío:
+            color: var(--accent-berry-pink) -> rosa.
+            text-decoration: none -> sin subrayado.
+            font-weight: 600 -> negrita suave.
+        */
+        
+        .carrito-vacio a:hover {
+            text-decoration: underline;
+        }
+        /* 
+            Cuando el mouse pasa por el enlace: se subraya.
+        */
+        
+        .acciones-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        /* 
+            .acciones-footer: la parte inferior con los botones de acción.
+            display: flex -> diseño flexible.
+            justify-content: space-between -> los botones se separan a los extremos.
+            align-items: center -> centrado vertical.
+            flex-wrap: wrap -> si no caben, se envuelven a la siguiente línea.
+            gap: 1rem -> espacio entre elementos.
+            margin-top: 1.5rem -> espacio arriba.
+        */
+        
+        .btn-seguir-comprando {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 0.6rem 1.5rem;
+            border-radius: 40px;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        /* 
+            .btn-seguir-comprando: botón para volver a la tienda.
+            background: rgba(255,255,255,0.05) -> fondo blanco muy sutil.
+            border: 1px solid... -> borde blanco transparente.
+            padding: 0.6rem 1.5rem -> espacio interno.
+            border-radius: 40px -> bordes muy redondeados.
+            color: white -> texto blanco.
+            text-decoration: none -> sin subrayado.
+            font-weight: 600 -> negrita.
+            transition: 0.2s -> animación suave.
+            display: inline-flex -> diseño flexible en línea.
+            align-items: center -> centra el icono y texto.
+            gap: 0.5rem -> espacio entre icono y texto.
+        */
+        
+        .btn-seguir-comprando:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+        /* 
+            Al pasar el mouse:
+            background más visible, y se eleva 2 píxeles.
+        */
+        
+        .btn-checkout {
+            background: var(--berry-lumina);
+            border: none;
+            padding: 0.8rem 2.5rem;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            color: #0a0514;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        /* 
+            .btn-checkout: el botón de "Continuar con el pedido".
+            background: var(--berry-lumina) -> rosa brillante.
+            border: none -> sin borde.
+            padding: 0.8rem 2.5rem -> espacio interno generoso.
+            border-radius: 60px -> muy redondeado.
+            font-weight: 700 -> negrita fuerte.
+            font-size: 1rem -> tamaño normal.
+            cursor: pointer -> cursor de mano.
+            color: #0a0514 -> texto oscuro (contrasta con el fondo rosa).
+            transition: 0.2s -> animación suave.
+            display: inline-flex -> diseño flexible.
+            align-items: center -> centrado.
+            gap: 0.8rem -> espacio entre icono y texto.
+        */
+        
+        .btn-checkout:hover {
+            background: #ff8fa3;
+            transform: scale(1.02);
+            box-shadow: 0 8px 25px rgba(255, 107, 129, 0.3);
+        }
+        /* 
+            Al pasar el mouse:
+            fondo rosa más claro, se agranda un 2% y tiene sombra.
+        */
+        
+        .btn-checkout:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        /* 
+            Cuando el botón está deshabilitado:
+            opacidad al 50%, cursor de "no permitido", sin animación.
+        */
+        
+        /* Toast */
+        .toast-msg {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 28px;
+            border-radius: 60px;
+            color: white;
+            font-weight: 600;
+            z-index: 4000;
+            box-shadow: 0 6px 25px rgba(0,0,0,0.4);
+            font-family: var(--font-sans);
+            background: var(--berry-lumina);
+            animation: slideUp 0.3s ease;
+            max-width: 90%;
+            text-align: center;
+        }
+        /* 
+            .toast-msg: las notificaciones que aparecen en la parte inferior.
+            position: fixed -> se queda fijo al hacer scroll.
+            bottom: 30px -> pegado al fondo a 30 píxeles.
+            left: 50%, transform: translateX(-50%) -> centrado horizontal.
+            padding: 12px 28px -> espacio interno.
+            border-radius: 60px -> muy redondeado.
+            color: white -> texto blanco.
+            font-weight: 600 -> negrita.
+            z-index: 4000 -> está por encima de casi todo.
+            box-shadow: 0 6px 25px... -> sombra con difuminado.
+            font-family: var(--font-sans) -> fuente sans-serif.
+            background: var(--berry-lumina) -> fondo rosa.
+            animation: slideUp 0.3s ease -> animación de entrada.
+            max-width: 90% -> no ocupa más del 90% de la pantalla.
+            text-align: center -> texto centrado.
+        */
+        
+        .toast-msg.error {
+            background: #e74c3c;
+        }
+        /* 
+            Si el toast es de error: fondo rojo.
+        */
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+        /* 
+            @keyframes define una animación llamada "slideUp".
+            "from" es el estado inicial: invisible y 20 píxeles más abajo.
+            "to" es el estado final: visible y en su posición normal.
+            Esto hace que el mensaje "suba" desde abajo.
+        */
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .carrito-title { font-size: 1.5rem; }
+            .carrito-table-wrapper { padding: 0.8rem; }
+            .carrito-table { font-size: 0.8rem; min-width: 400px; }
+            .producto-imagen, .sin-imagen { width: 45px; height: 45px; }
+            .cantidad-control input { width: 50px; }
+            .acciones-footer { flex-direction: column; align-items: stretch; }
+            .btn-checkout, .btn-seguir-comprando { justify-content: center; }
+        }
+        /* 
+            @media (max-width: 768px): Estilos para pantallas de tablet o teléfonos.
+            Cuando la pantalla es de 768 píxeles o menos, se aplican estos cambios:
+            - Título más pequeño.
+            - Menos espacio en el contenedor.
+            - Tabla y fuentes más pequeñas.
+            - Imágenes más pequeñas.
+            - Los botones se ponen en columna y se estiran.
+        */
+        
+        @media (max-width: 480px) {
+            .carrito-table { font-size: 0.7rem; min-width: 320px; }
+            .producto-nombre { font-size: 0.8rem; }
+            .producto-imagen, .sin-imagen { width: 35px; height: 35px; }
+            .cantidad-control input { width: 40px; font-size: 0.7rem; padding: 0.2rem; }
+            .btn-accion { font-size: 1rem; }
+        }
+        /* 
+            @media (max-width: 480px): Pantallas muy pequeñas (teléfonos pequeños).
+            Se reduce aún más el tamaño de todo para que quepa en pantallas muy estrechas.
+        */
+    </style>
+</head>
+
+<body>
+<!-- 
+    <body> es donde está todo el contenido visible de la página web.
+    Todo lo que el usuario ve y con lo que interactúa está aquí dentro.
+-->
+
+<div class="app-wrapper">
+    <!-- 
+        .app-wrapper es un contenedor principal que agrupa todo el contenido de la página.
+        Ayuda a estructurar y dar estilo a toda la aplicación.
+    -->
+    
+    <header class="site-header">
+        <!-- 
+            <header> es la parte superior de la página (el encabezado).
+            class="site-header" se usa para darle estilo con CSS.
+        -->
+        
+        <a href="/inicio" class="logo">🍓 BLOOMA · MERCADO MELCHOR OCAMPO</a>
+        <!-- 
+            <a> es un enlace. Al hacer clic, lleva a la página de inicio "/inicio".
+            class="logo" le da estilo de logo.
+            El texto muestra un emoji de fresa y el nombre del sitio.
+        -->
+        
+        <div class="header-actions">
+            <!-- 
+                .header-actions agrupa los botones de acción del encabezado (Perfil y Carrito).
+            -->
+            
+            <a href="/perfil" class="icon-action" title="Perfil">
+                <!-- 
+                    Enlace a la página de perfil "/perfil".
+                    title="Perfil" es un texto que aparece al pasar el mouse.
+                -->
+                <span class="icon-symbol">👤</span>
+                <!-- 
+                    <span> es un contenedor en línea. Aquí muestra un emoji de persona.
+                -->
+                <span class="icon-label">Perfil</span>
+                <!-- 
+                    Texto "Perfil" que aparece al lado del icono.
+                -->
+            </a>
+            
+            <div class="cart-icon" onclick="window.location.href='/carrito'">
+                <!-- 
+                    .cart-icon es el botón del carrito.
+                    onclick="window.location.href='/carrito'" significa que al hacer clic,
+                    el navegador navega a la página "/carrito".
+                -->
+                <span class="cart-symbol">🛒</span>
+                <!-- 
+                    Icono del carrito (emoji de carrito de compras).
+                -->
+                <span class="cart-count" id="cart-count-header">0</span>
+                <!-- 
+                    .cart-count es el número que muestra cuántos productos hay en el carrito.
+                    id="cart-count-header" identifica este elemento para actualizarlo con JavaScript.
+                    Inicialmente muestra "0".
+                -->
+                <span class="icon-label">Carrito</span>
+                <!-- 
+                    Texto "Carrito" al lado del icono.
+                -->
+            </div>
+        </div>
+    </header>
+
+    <div class="carrito-wrapper">
+        <!-- 
+            .carrito-wrapper es el contenedor principal del contenido del carrito.
+        -->
+        
+        <h1 class="carrito-title"><i class="fas fa-shopping-basket"></i> Tu Carrito</h1>
+        <!-- 
+            <h1> es el título principal de la página.
+            class="carrito-title" le da estilo.
+            <i class="fas fa-shopping-basket"> es un icono de Font Awesome (una canasta de compras).
+            Luego el texto "Tu Carrito".
+        -->
+
+        <div id="carrito-contenido">
+            <!-- 
+                id="carrito-contenido" es un contenedor que JavaScript usará para mostrar los productos del carrito.
+                Inicialmente muestra un mensaje de carga.
+            -->
+            <div style="text-align:center; padding:3rem;">
+                <!-- 
+                    <div style="text-align:center; padding:3rem;"> es un contenedor con estilos en línea.
+                    text-align:center -> texto centrado.
+                    padding:3rem -> espacio interno grande.
+                -->
+                <i class="fas fa-spinner fa-spin fa-2x" style="color:var(--golden-hour);"></i>
+                <!-- 
+                    Icono de "spinner" (rueda girando) de Font Awesome.
+                    fa-spin hace que gire, fa-2x lo hace más grande.
+                    color:var(--golden-hour) -> color dorado.
+                -->
+                <p>Cargando tu carrito...</p>
+                <!-- 
+                    Mensaje de carga.
+                -->
+            </div>
+        </div>
+
+        <div class="acciones-footer" id="accionesFooter" style="display:none;">
+            <!-- 
+                .acciones-footer es el área con los botones de acción (seguir comprando y checkout).
+                id="accionesFooter" identifica este elemento para JavaScript.
+                style="display:none;" hace que inicialmente esté oculto.
+                Se mostrará solo cuando el carrito tenga productos.
+            -->
+            
+            <a href="/inicio" class="btn-seguir-comprando">
+                <!-- 
+                    Enlace a la página de inicio "/inicio" con estilo de botón.
+                -->
+                <i class="fas fa-arrow-left"></i> Seguir comprando
+                <!-- 
+                    Icono de flecha izquierda y texto "Seguir comprando".
+                -->
+            </a>
+            
+            <button id="btnCheckout" class="btn-checkout">
+                <!-- 
+                    <button> es un botón que el usuario puede presionar.
+                    id="btnCheckout" lo identifica para JavaScript.
+                    class="btn-checkout" le da estilo de botón principal.
+                -->
+                Continuar con el pedido <i class="fas fa-arrow-right"></i>
+                <!-- 
+                    Texto y icono de flecha derecha.
+                -->
+            </button>
+        </div>
+    </div>
+
+    <footer style="text-align:center; padding:2rem 0 1rem; font-size:0.8rem; opacity:0.7; border-top:1px solid rgba(255,255,255,0.05);">
+        <!-- 
+            <footer> es el pie de página.
+            Tiene estilos en línea para centrar texto, espaciado, tamaño de fuente, transparencia y un borde superior sutil.
+        -->
+        <i class="fas fa-seedling"></i> Mercado Melchor Ocampo
+        <!-- 
+            Icono de planta (hoja) y el nombre del mercado.
+        -->
+    </footer>
+</div>
+
+<!-- Toast para notificaciones -->
+<div id="toastContainer"></div>
+<!-- 
+    <div id="toastContainer">: contenedor donde JavaScript colocará los mensajes emergentes (toasts).
+    Está vacío inicialmente, los mensajes se agregan dinámicamente.
+-->
+
+<script>
+    // ==================== FUNCIONES PRINCIPALES ====================
+    // 
+    // El <script> contiene código JavaScript, que es un lenguaje de programación
+    // que hace que la página sea interactiva (responda a clics, actualice contenido, etc.).
+    // Todo lo que está entre <script> y script es instrucciones que el navegador ejecuta.
+    //
+
+    // Mostrar toast
+    function showToast(msg, isError = false) {
+        // 
+        // Esta función crea y muestra un mensaje emergente en la pantalla.
+        // msg: el texto del mensaje.
+        // isError: si es true, el mensaje se muestra en rojo (error).
+        //
+        
+        const container = document.getElementById('toastContainer');
+        // Busca el contenedor de toasts en el HTML (el div con id="toastContainer").
+        
+        const toast = document.createElement('div');
+        // Crea un nuevo elemento <div> en la memoria.
+        
+        toast.className = 'toast-msg' + (isError ? ' error' : '');
+        // Le asigna la clase CSS "toast-msg" y si es error, también "error".
+        // Esto define cómo se ve visualmente (colores, bordes, etc.).
+        
+        toast.innerText = msg;
+        // Coloca el texto del mensaje dentro del nuevo elemento.
+        
+        container.appendChild(toast);
+        // Agrega el nuevo elemento al contenedor de toasts en la página.
+        
+        setTimeout(() => {
+            // setTimeout ejecuta una función después de un tiempo (en milisegundos).
+            toast.style.opacity = '0';
+            // Hace que el toast se vuelva transparente.
+            toast.style.transition = '0.3s';
+            // Animación suave de 0.3 segundos para que se desvanezca.
+            setTimeout(() => toast.remove(), 300);
+            // Después de 300 milisegundos (0.3 segundos), elimina el toast del HTML.
+        }, 3000);
+        // Espera 3000 milisegundos (3 segundos) antes de comenzar a desvanecerlo.
+    }
+
+    // Actualizar contador del carrito (header)
+    async function actualizarContadorHeader() {
+        // 
+        // Esta función consulta al servidor cuántos productos hay en el carrito
+        // y actualiza el número que aparece al lado del icono del carrito.
+        // async significa que esta función puede esperar respuestas del servidor.
+        // 
+        
+        try {
+            // try es una manera de intentar hacer algo y capturar errores si ocurren.
+            
+            const res = await fetch('/api/carrito');
+            // fetch es una función que hace una solicitud a una URL (como visitar una página).
+            // '/api/carrito' es una dirección en el servidor que devuelve los datos del carrito.
+            // await significa "espera a que el servidor responda".
+            // res es la respuesta del servidor.
+            
+            if (!res.ok) return;
+            // Si la respuesta no es exitosa (res.ok es false), salimos de la función.
+            
+            const data = await res.json();
+            // Convertimos la respuesta del servidor a formato JSON (datos que JavaScript puede entender).
+            // data ahora contiene los datos del carrito.
+            
+            let total = 0;
+            // Inicializamos un contador en 0.
+            
+            if (data.items) total = data.items.reduce((acc, i) => acc + i.cantidad, 0);
+            // Si data.items existe, usamos .reduce para sumar todas las cantidades.
+            // acc es el acumulador, i es cada item, sumamos i.cantidad.
+            
+            document.getElementById('cart-count-header').innerText = total;
+            // Buscamos el elemento con id="cart-count-header" y cambiamos su texto al total calculado.
+            
+        } catch(e) { /* silencioso */ }
+        // Si ocurre un error (catch), no hacemos nada (silencioso).
+        // Esto evita que la página se rompa si hay problemas de conexión.
+    }
+
+    // Cargar carrito completo
+    async function cargarCarrito() {
+        // 
+        // Esta función carga todo el contenido del carrito y lo muestra en la página.
+        // Es la función más importante de esta página.
+        // 
+        
+        const container = document.getElementById('carrito-contenido');
+        // Busca el contenedor donde se mostrará el carrito.
+        
+        const footer = document.getElementById('accionesFooter');
+        // Busca el contenedor de los botones de acción.
+        
+        try {
+            const res = await fetch('/api/carrito');
+            // Pide al servidor los datos del carrito.
+            
+            if (res.status === 401) {
+                // Si el servidor responde con código 401 (No autorizado - no ha iniciado sesión).
+                window.location.href = '/login';
+                // Redirige al usuario a la página de inicio de sesión.
+                return;
+            }
+            
+            const data = await res.json();
+            // Convierte la respuesta en datos que JavaScript puede usar.
+            
+            // Si está vacío
+            if (!data.items || data.items.length === 0) {
+                // Si no hay items o la lista está vacía...
+                
+                container.innerHTML = `
+                    <div class="carrito-vacio">
+                        <i class="fas fa-seedling"></i>
+                        <p>🍃 Tu carrito está vacío.</p>
+                        <a href="/inicio">✨ Seguir comprando ✨</a>
+                    </div>
+                `;
+                // innerHTML reemplaza todo el contenido del contenedor con este HTML.
+                // Muestra un mensaje de carrito vacío con un icono, texto y un enlace para volver.
+                
+                footer.style.display = 'none';
+                // Oculta los botones de acción (porque no hay productos para continuar).
+                
+                document.getElementById('cart-count-header').innerText = '0';
+                // Actualiza el contador del header a 0.
+                
+                return;
+                // Sale de la función.
+            }
+
+            // Construir tabla
+            let html = `<div class="carrito-table-wrapper">
+                <table class="carrito-table">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Precio</th>
+                            <th>Cantidad</th>
+                            <th>Subtotal</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+            // 
+            // html es un string que va a contener todo el código HTML de la tabla.
+            // Comienza con el contenedor de la tabla, luego la tabla, luego los encabezados.
+            // Los encabezados son: Producto, Precio, Cantidad, Subtotal y una columna vacía para el botón de eliminar.
+            // 
+            
+            let totalGeneral = 0;
+            // Variable para acumular el total de todo el carrito.
+            
+            for (let item of data.items) {
+                // for ... of es un bucle que recorre cada item en data.items.
+                // item es un producto en el carrito.
+                
+                const subtotal = item.precio * item.cantidad;
+                // Calcula el subtotal de este producto (precio × cantidad).
+                
+                totalGeneral += subtotal;
+                // Suma el subtotal al total general.
+                
+                const imgHtml = item.imagen_url ? 
+                    `<img src="${item.imagen_url}" class="producto-imagen" alt="${item.nombre}" loading="lazy">` : 
+                    `<div class="sin-imagen">📷</div>`;
+                // 
+                // Si el producto tiene imagen (item.imagen_url existe y no está vacío),
+                // crea una etiqueta <img> con la imagen y class="producto-imagen".
+                // Si no tiene imagen, muestra un div con icono de cámara.
+                // loading="lazy" hace que la imagen se cargue solo cuando sea visible, para ahorrar datos.
+                // 
+                
+                html += `
+                    <tr data-itemid="${item.id}">
+                        <td>
+                            <div class="producto-info">
+                                ${imgHtml}
+                                <span class="producto-nombre">${escapeHtml(item.nombre)}</span>
+                            </div>
+                        </td>
+                        <td>$${item.precio.toFixed(2)}</td>
+                        <td>
+                            <div class="cantidad-control">
+                                <button class="btn-accion decrement" data-id="${item.id}" aria-label="Disminuir">−</button>
+                                <input type="number" class="cantidad-input" data-id="${item.id}" value="${item.cantidad}" min="1" max="${item.stock}">
+                                <button class="btn-accion increment" data-id="${item.id}" aria-label="Aumentar">+</button>
+                            </div>
+                        </td>
+                        <td class="subtotal-cell">$${subtotal.toFixed(2)}</td>
+                        <td>
+                            <button class="btn-accion eliminar" data-id="${item.id}" aria-label="Eliminar producto" title="Eliminar">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+                // 
+                // Aquí se crea una fila de la tabla para cada producto.
+                // data-itemid, data-id: atributos personalizados que guardan el ID del producto.
+                // aria-label: texto para lectores de pantalla (accesibilidad).
+                // toFixed(2): muestra el precio con 2 decimales ($9.99).
+                // Los botones + y - tienen clases para que JavaScript pueda encontrarlos.
+                // input es un campo numérico donde se puede escribir la cantidad.
+                // 
+            }
+            
+            html += `
+                <tr class="total-row">
+                    <td colspan="3"><strong>Total</strong></td>
+                    <td colspan="2"><strong>$${totalGeneral.toFixed(2)}</strong></td>
+                </tr>
+            `;
+            // 
+            // Añade una fila final con el total de todo el carrito.
+            // colspan: hace que la celda ocupe varias columnas.
+            // 
+            
+            html += `</tbody></table></div>`;
+            // Cierra la tabla y el contenedor.
+            
+            container.innerHTML = html;
+            // Reemplaza el contenido del contenedor del carrito con la tabla que acabamos de construir.
+            
+            footer.style.display = 'flex';
+            // Muestra los botones de acción (porque hay productos).
+            
+            // Actualizar contador del header
+            let totalCantidad = data.items.reduce((acc, i) => acc + i.cantidad, 0);
+            // Calcula el número total de productos (suma de cantidades).
+            document.getElementById('cart-count-header').innerText = totalCantidad;
+            // Actualiza el contador en el header.
+
+            // ===== EVENTOS DE LOS CONTROLES =====
+            // 
+            // Ahora hay que decirle a la página qué hacer cuando el usuario interactúa con los botones.
+            // "Eventos" son acciones como hacer clic, escribir, etc.
+            // 
+
+            // Input de cantidad (cambio manual)
+            document.querySelectorAll('.cantidad-input').forEach(input => {
+                // querySelectorAll encuentra TODOS los elementos con clase "cantidad-input".
+                // forEach ejecuta una función para cada uno de ellos.
+                
+                input.addEventListener('change', async (e) => {
+                    // addEventListener: "escucha" el evento 'change' (cuando el usuario cambia el valor).
+                    // async: esta función puede esperar respuestas.
+                    // e: el evento que ocurrió.
+                    
+                    const id = parseInt(input.dataset.id);
+                    // Obtiene el ID del producto desde el atributo data-id.
+                    
+                    let newQty = parseInt(input.value);
+                    // Obtiene el valor que el usuario escribió y lo convierte a número.
+                    
+                    if (isNaN(newQty) || newQty < 1) newQty = 1;
+                    // Si no es un número o es menor que 1, lo cambia a 1.
+                    
+                    const maxStock = parseInt(input.max) || 999;
+                    // Obtiene el stock máximo del producto (max) o 999 si no hay.
+                    
+                    if (newQty > maxStock) {
+                        // Si el usuario pide más de lo que hay en stock...
+                        showToast(`Solo hay ${maxStock} unidades disponibles`, true);
+                        // Muestra un mensaje de error.
+                        input.value = maxStock;
+                        // Corrige el valor al máximo disponible.
+                        newQty = maxStock;
+                    }
+                    
+                    await actualizarCantidad(id, newQty);
+                    // Llama a la función que actualiza la cantidad en el servidor.
+                    // await espera a que termine.
+                });
+            });
+
+            // Botones + y -
+            document.querySelectorAll('.increment').forEach(btn => {
+                // Para todos los botones con clase "increment" (el botón +)...
+                
+                btn.addEventListener('click', async (e) => {
+                    // Escucha el evento 'click' (cuando se presiona el botón).
+                    e.preventDefault();
+                    // Evita que el botón haga algo por defecto (como enviar un formulario).
+                    
+                    const id = parseInt(btn.dataset.id);
+                    // Obtiene el ID del producto.
+                    
+                    const input = btn.closest('.cantidad-control').querySelector('.cantidad-input');
+                    // Encuentra el input de cantidad dentro del mismo grupo.
+                    // closest busca el contenedor más cercano con la clase dada.
+                    
+                    let val = parseInt(input.value);
+                    // Obtiene el valor actual.
+                    if (isNaN(val)) val = 1;
+                    // Si no es número, lo pone en 1.
+                    
+                    const maxStock = parseInt(input.max) || 999;
+                    // Stock máximo.
+                    
+                    if (val >= maxStock) {
+                        // Si ya está en el máximo...
+                        showToast(`Máximo ${maxStock} unidades`, false);
+                        // Muestra un mensaje.
+                        return;
+                        // Sale de la función.
+                    }
+                    
+                    input.value = val + 1;
+                    // Aumenta el valor en el input en 1.
+                    await actualizarCantidad(id, val + 1);
+                    // Envía la nueva cantidad al servidor.
+                });
+            });
+
+            document.querySelectorAll('.decrement').forEach(btn => {
+                // Para todos los botones con clase "decrement" (el botón -)...
+                
+                btn.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    
+                    const id = parseInt(btn.dataset.id);
+                    const input = btn.closest('.cantidad-control').querySelector('.cantidad-input');
+                    let val = parseInt(input.value);
+                    if (isNaN(val)) val = 1;
+                    
+                    if (val <= 1) {
+                        // Si la cantidad es 1 o menos...
+                        if (confirm('¿Deseas eliminar este producto del carrito?')) {
+                            // confirm muestra un cuadro de diálogo con OK/Cancelar.
+                            await actualizarCantidad(id, 0);
+                            // Si confirma, pone la cantidad a 0 (lo elimina).
+                        }
+                        return;
+                        // Sale de la función.
+                    }
+                    
+                    input.value = val - 1;
+                    // Disminuye la cantidad en 1.
+                    await actualizarCantidad(id, val - 1);
+                    // Envía la nueva cantidad al servidor.
+                });
+            });
+
+            // Botón eliminar (basura)
+            document.querySelectorAll('.eliminar').forEach(btn => {
+                // Para todos los botones de eliminar (icono de basura)...
+                
+                btn.addEventListener('click', async (e) => {
+                    const id = parseInt(btn.dataset.id);
+                    if (confirm('¿Eliminar este producto del carrito?')) {
+                        // Pregunta si está seguro.
+                        await actualizarCantidad(id, 0);
+                        // Si confirma, elimina el producto (cantidad 0).
+                    }
+                });
+            });
+
+        } catch (error) {
+            // Si ocurre cualquier error durante la carga...
+            console.error('Error al cargar carrito:', error);
+            // Muestra el error en la consola del navegador (para desarrolladores).
+            
+            container.innerHTML = `
+                <div class="carrito-vacio">
+                    <i class="fas fa-exclamation-triangle" style="color:#e74c3c;"></i>
+                    <p>⚠️ Error al cargar el carrito. Intenta de nuevo más tarde.</p>
+                    <a href="/inicio">Volver al inicio</a>
+                </div>
+            `;
+            // Muestra un mensaje de error amigable para el usuario.
+            
+            footer.style.display = 'none';
+            // Oculta los botones de acción.
+        }
+    }
+
+    // ===== ACTUALIZAR CANTIDAD EN EL BACKEND =====
+    async function actualizarCantidad(productoId, nuevaCantidad) {
+        // 
+        // Esta función envía al servidor la nueva cantidad para un producto específico.
+        // productoId: el ID del producto que se está modificando.
+        // nuevaCantidad: la cantidad que se quiere establecer.
+        // 
+        
+        try {
+            const res = await fetch('/api/carrito/actualizar', {
+                // Hace una solicitud POST a esta URL del servidor.
+                method: 'POST',
+                // method: 'POST' significa que estamos enviando datos al servidor.
+                headers: { 'Content-Type': 'application/json' },
+                // headers: le dice al servidor que estamos enviando datos JSON.
+                body: JSON.stringify({ id: productoId, cantidad: nuevaCantidad })
+                // body: los datos que enviamos, convertidos a formato JSON.
+            });
+            
+            if (res.ok) {
+                // Si la respuesta fue exitosa...
+                
+                await cargarCarrito();
+                // Recarga el carrito para reflejar los cambios.
+                await actualizarContadorHeader();
+                // Actualiza el contador del header.
+                
+                if (nuevaCantidad === 0) {
+                    showToast('Producto eliminado del carrito');
+                    // Mensaje de eliminación.
+                } else {
+                    showToast('Cantidad actualizada');
+                    // Mensaje de actualización.
+                }
+            } else {
+                // Si la respuesta no fue exitosa...
+                const error = await res.json();
+                // Intenta obtener el mensaje de error del servidor.
+                showToast(error.message || 'Error al actualizar', true);
+                // Muestra el error.
+                await cargarCarrito();
+                // Recarga para restaurar un estado consistente.
+            }
+        } catch (e) {
+            // Si hay un error de conexión...
+            showToast('Error de conexión', true);
+            // Muestra mensaje de error.
+            await cargarCarrito();
+            // Recarga el carrito.
+        }
+    }
+
+    // ===== BOTÓN CHECKOUT =====
+    document.getElementById('btnCheckout')?.addEventListener('click', () => {
+        // 
+        // Busca el botón con id="btnCheckout".
+        // ?. significa "si existe, entonces..." (protege por si el botón no está).
+        // addEventListener escucha el evento 'click'.
+        // 
+        
+        window.location.href = '/checkout';
+        // Redirige al usuario a la página de checkout (finalizar compra).
+    });
+
+    // ===== UTILITY =====
+    function escapeHtml(str) {
+        // 
+        // Esta función previene ataques de seguridad (inyección de código HTML).
+        // Convierte caracteres especiales como < > & en su versión segura.
+        // 
+        
+        if (!str) return '';
+        // Si el string está vacío, devuelve string vacío.
+        
+        return str.replace(/[&<>]/g, function(m) {
+            // Reemplaza cada uno de estos caracteres...
+            if (m === '&') return '&amp;';
+            // & se convierte en &amp;
+            if (m === '<') return '&lt;';
+            // < se convierte en &lt;
+            if (m === '>') return '&gt;';
+            // > se convierte en &gt;
+            return m;
+        });
+    }
+
+    // ===== INICIALIZACIÓN =====
+    cargarCarrito();
+    // Llama a la función para cargar el carrito cuando la página se abre.
+    
+    actualizarContadorHeader();
+    // Actualiza el contador del header.
+
+    // Actualizar contador cada 30 segundos (por si se modifica en otra pestaña)
+    setInterval(actualizarContadorHeader, 30000);
+    // 
+    // setInterval ejecuta una función cada cierto tiempo (en milisegundos).
+    // Cada 30 segundos, vuelve a consultar el servidor para actualizar el contador.
+    // Esto mantiene el contador sincronizado si el usuario tiene varias pestañas abiertas.
+    // 
+</script>
+</body>
+</html>

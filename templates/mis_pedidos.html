@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<!-- ===================================================================== -->
+<!-- BLOQUE: DECLARACIÓN DEL TIPO DE DOCUMENTO Y ESTRUCTURA PRINCIPAL     -->
+<!-- ===================================================================== -->
+<!-- La siguiente línea define que este documento es HTML5, lo que permite -->
+<!-- usar las últimas características del lenguaje y asegura un renderizado -->
+<!-- estándar en todos los navegadores modernos.                           -->
+<!DOCTYPE html>
+<!-- ===================================================================== -->
+<!-- ETIQUETA HTML: Contiene todo el contenido de la página.               -->
+<!-- El atributo lang="es" indica que el idioma principal es español,      -->
+<!-- útil para motores de búsqueda, lectores de pantalla y traducción.     -->
+<!-- ===================================================================== -->
+<html lang="es"> <!-- Inicio de la etiqueta raíz html -->
+
+<!-- ===================================================================== -->
+<!-- CABECERA (HEAD): Contiene metadatos, títulos, enlaces a fuentes y     -->
+<!-- hojas de estilo. No se muestra directamente en la página, pero es     -->
+<!-- esencial para el comportamiento y la presentación.                    -->
+<!-- ===================================================================== -->
+<head> <!-- Inicio de la cabecera -->
+
+    <!-- ================================================================= -->
+    <!-- METADATOS BÁSICOS                                                -->
+    <!-- ================================================================= -->
+
+    <!-- meta charset="UTF-8": Define la codificación de caracteres como  -->
+    <!-- UTF-8, que soporta todos los caracteres internacionales, incluye -->
+    <!-- emojis y acentos. Es obligatorio para evitar problemas de codificación. -->
+    <meta charset="UTF-8">
+
+    <!-- meta name="viewport": Controla el viewport en dispositivos móviles. -->
+    <!-- width=device-width ajusta el ancho al ancho del dispositivo.      -->
+    <!-- initial-scale=1.0 establece el nivel de zoom inicial.             -->
+    <!-- user-scalable=yes permite que el usuario pueda hacer zoom.        -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+    <!-- Título de la página: se muestra en la pestaña del navegador.      -->
+    <!-- Incluye el nombre "Blooma" y emojis de frutas para darle estilo.  -->
+    <title>Blooma · Mis Pedidos 🍓🫐</title>
+
+    <!-- ================================================================= -->
+    <!-- FUENTES DE GOOGLE                                                -->
+    <!-- ================================================================= -->
+
+    <!-- link rel="preconnect": Establece una conexión temprana con el    -->
+    <!-- dominio de Google Fonts para mejorar el tiempo de carga.          -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <!-- Segundo preconnect para el dominio que sirve las fuentes.         -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- link href: Carga las familias tipográficas desde Google Fonts.    -->
+    <!-- Se combinan varias fuentes: Cormorant Garamond (serif, estilos),  -->
+    <!-- Montserrat (sans-serif), Playfair Display (serif) y Cinzel.       -->
+    <!-- Cada una con pesos y estilos específicos para usar en la página.  -->
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Montserrat:wght@200;400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- ================================================================= -->
+    <!-- HOJA DE ESTILOS GLOBAL DE BLOOMA                                 -->
+    <!-- ================================================================= -->
+
+    <!-- link rel="stylesheet": Enlaza el archivo CSS global de Blooma.   -->
+    <!-- Se usa "url_for" de Flask para generar la ruta dinámica al       -->
+    <!-- archivo estático, que se encuentra en static/css/blooma_global.css. -->
+    <!-- Este archivo contiene los estilos base, colores, tipografías,    -->
+    <!-- layout y componentes reutilizables.                              -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/blooma_global.css') }}">
+
+    <!-- ================================================================= -->
+    <!-- FAVICON                                                         -->
+    <!-- ================================================================= -->
+
+    <!-- link rel="shortcut icon": Define el ícono que aparece en la      -->
+    <!-- pestaña del navegador. Se usa url_for para apuntar al archivo    -->
+    <!-- "iconic.png" dentro de la carpeta static/img/.                   -->
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/iconic.png') }}">
+
+</head> <!-- Fin de la cabecera -->
+
+<!-- ===================================================================== -->
+<!-- CUERPO (BODY): Contiene todo el contenido visible de la página.       -->
+<!-- ===================================================================== -->
+<body> <!-- Inicio del cuerpo -->
+
+    <!-- ================================================================= -->
+    <!-- CONTENEDOR PRINCIPAL: .app-wrapper                                -->
+    <!-- Es el contenedor que envuelve toda la aplicación, usado para      -->
+    <!-- aplicar estilos de fondo, márgenes, animaciones, etc.            -->
+    <!-- ================================================================= -->
+    <div class="app-wrapper"> <!-- Inicio del wrapper principal -->
+
+        <!-- ============================================================= -->
+        <!-- ENCABEZADO (HEADER)                                           -->
+        <!-- ============================================================= -->
+        <!-- BLOQUE: ENCABEZADO DEL SITIO CON LOGO Y NAVEGACIÓN           -->
+        <!-- ============================================================= -->
+        <!-- header class="site-header": Contiene el logo y los enlaces de -->
+        <!-- navegación principales. Se aplica una clase para estilizarlo. -->
+        <header class="site-header"> <!-- Inicio del header -->
+
+            <!-- ========================================================= -->
+            <!-- LOGO: Enlace a la página de inicio                        -->
+            <!-- ========================================================= -->
+            <!-- a class="logo": Enlace que lleva al inicio ("/").         -->
+            <!-- Contiene un ícono de fresa, el nombre "BLOOMA · MERCADO  -->
+            <!-- MELCHOR OCAMPO" y un subtítulo "Historial".              -->
+            <a href="/" class="logo"> <!-- Inicio del enlace logo -->
+                <!-- span: Muestra el emoji de fresa como parte del logo. -->
+                <span>🍓</span>
+                <!-- div: Agrupa el nombre y el subtítulo.                 -->
+                <div>
+                    BLOOMA · MERCADO MELCHOR OCAMPO
+                    <!-- small: Muestra el subtítulo "✦ Historial✦" con   -->
+                    <!-- tamaño de fuente reducido y en bloque.           -->
+                    <small style="display:block; font-size:9px;">✦ Historial✦</small>
+                </div>
+            </a> <!-- Fin del enlace logo -->
+
+            <!-- ========================================================= -->
+            <!-- ENLACES DE NAVEGACIÓN                                     -->
+            <!-- ========================================================= -->
+            <!-- div class="nav-links": Contiene los enlaces a Inicio,     -->
+            <!-- Carrito, Perfil y un ícono de carrito con contador.       -->
+            <div class="nav-links"> <!-- Inicio de nav-links -->
+
+                <!-- Enlace a la página de inicio ("/") con icono de casa. -->
+                <a href="/"><span>🏠</span> Inicio</a>
+
+                <!-- Enlace a la página del carrito ("/carrito") con icono -->
+                <!-- de carrito de compras.                                -->
+                <a href="/carrito"><span>🛒</span> Mi carrito</a>
+
+                <!-- Enlace a la página de perfil ("/perfil") con icono   -->
+                <!-- de usuario.                                           -->
+                <a href="/perfil"><span>👤</span> Mi perfil</a>
+
+                <!-- div class="cart-icon": Ícono de carrito que también  -->
+                <!-- actúa como botón para redirigir al carrito. Tiene un  -->
+                <!-- contador (span.cart-count) que muestra la cantidad    -->
+                <!-- de productos en el carrito.                           -->
+                <div class="cart-icon" id="cartIconBtn" title="Carrito"> <!-- Inicio cart-icon -->
+                    🛒
+                    <!-- span.cart-count: Muestra el número de artículos.  -->
+                    <!-- Se actualiza dinámicamente con JavaScript.        -->
+                    <span class="cart-count" id="cart-count">0</span>
+                </div> <!-- Fin cart-icon -->
+
+            </div> <!-- Fin de nav-links -->
+
+        </header> <!-- Fin del header -->
+
+        <!-- ============================================================= -->
+        <!-- TÍTULO DE LA PÁGINA                                           -->
+        <!-- ============================================================= -->
+        <!-- BLOQUE: TÍTULO PRINCIPAL Y SUBTÍTULO                         -->
+        <!-- ============================================================= -->
+        <!-- div class="page-title": Título principal de la sección        -->
+        <!-- "MIS PEDIDOS" con un emoji de pergamino.                     -->
+        <div class="page-title">📜 MIS PEDIDOS •</div>
+
+        <!-- div con estilo inline: Subtítulo descriptivo con emojis que   -->
+        <!-- refuerza la temática del mercado y la honestidad.             -->
+        <div style="text-align: center;">
+            <span class="subhead">✨ Cada pedido guarda la esencia del campo y la honestidad de nuestros locatarios ✨</span>
+        </div>
+
+        <!-- ============================================================= -->
+        <!-- SECCIÓN DE FILTROS                                            -->
+        <!-- ============================================================= -->
+        <!-- BLOQUE: FILTROS PARA BUSCAR Y FILTRAR PEDIDOS                -->
+        <!-- ============================================================= -->
+        <!-- div class="filter-section": Contiene los controles de filtrado-->
+        <!-- (búsqueda por texto, filtro por estado y estadística).       -->
+        <div class="filter-section"> <!-- Inicio filter-section -->
+
+            <!-- ========================================================= -->
+            <!-- CAJA DE BÚSQUEDA                                          -->
+            <!-- ========================================================= -->
+            <!-- div class="search-box": Agrupa el campo de entrada y el   -->
+            <!-- botón de búsqueda.                                        -->
+            <div class="search-box"> <!-- Inicio search-box -->
+
+                <!-- input type="text": Campo para ingresar texto de       -->
+                <!-- búsqueda (código, local o producto).                  -->
+                <!-- id="orderSearchInput" se usa para referenciarlo en JS.-->
+                <!-- placeholder: Texto de ayuda dentro del campo.         -->
+                <input type="text" id="orderSearchInput" placeholder="Buscar por código, local o producto...">
+
+                <!-- button id="searchOrderBtn": Botón que al hacer clic   -->
+                <!-- ejecuta la búsqueda. Clase "btn" para estilos.        -->
+                <button id="searchOrderBtn" class="btn">🔍 Buscar</button>
+
+            </div> <!-- Fin search-box -->
+
+            <!-- ========================================================= -->
+            <!-- FILTRO POR ESTADO                                         -->
+            <!-- ========================================================= -->
+            <!-- div class="status-filter": Contiene un selector desplegable-->
+            <!-- para filtrar por estado del pedido.                       -->
+            <div class="status-filter"> <!-- Inicio status-filter -->
+
+                <!-- select id="statusFilterSelect": Desplegable con       -->
+                <!-- opciones de estado.                                   -->
+                <select id="statusFilterSelect"> <!-- Inicio select -->
+
+                    <!-- option value="all": Muestra todos los pedidos.    -->
+                    <option value="all">🍓 Todos los estados</option>
+                    <!-- option value="pendiente": Filtra por pendiente.   -->
+                    <option value="pendiente">⏳ Pendiente</option>
+                    <!-- option value="completado": Filtra por completado. -->
+                    <option value="completado">✅ Completado</option>
+                    <!-- option value="enviado": Filtra por enviado/listo. -->
+                    <option value="enviado">📦 Enviado / Listo</option>
+                    <!-- option value="cancelado": Filtra por cancelado.   -->
+                    <option value="cancelado">❌ Cancelado</option>
+
+                </select> <!-- Fin select -->
+
+            </div> <!-- Fin status-filter -->
+
+            <!-- ========================================================= -->
+            <!-- ESTADÍSTICA DE PEDIDOS                                    -->
+            <!-- ========================================================= -->
+            <!-- div class="stats-badge": Muestra el total de pedidos que  -->
+            <!-- coinciden con los filtros actuales.                       -->
+            <div class="stats-badge" id="orderStats"> <!-- Inicio stats-badge -->
+                📊 Total: <!-- Texto fijo -->
+                <!-- span id="totalOrdersCount": Aquí se inserta el número -->
+                <!-- de pedidos visibles, actualizado por JS.              -->
+                <span id="totalOrdersCount">0</span> pedidos
+            </div> <!-- Fin stats-badge -->
+
+        </div> <!-- Fin filter-section -->
+
+        <!-- ============================================================= -->
+        <!-- TABLA DE PEDIDOS                                              -->
+        <!-- ============================================================= -->
+        <!-- BLOQUE: TABLA QUE MUESTRA LOS PEDIDOS EN FORMATO DE LISTA    -->
+        <!-- ============================================================= -->
+        <!-- div class="orders-table-wrapper": Contenedor para la tabla    -->
+        <!-- con desplazamiento horizontal si es necesario en móviles.     -->
+        <div class="orders-table-wrapper"> <!-- Inicio orders-table-wrapper -->
+
+            <!-- ========================================================= -->
+            <!-- TABLA: orders-table                                       -->
+            <!-- ========================================================= -->
+            <!-- table class="orders-table": Tabla con los datos de los    -->
+            <!-- pedidos. id="pedidosTable" para referencia en JS.         -->
+            <table class="orders-table" id="pedidosTable"> <!-- Inicio tabla -->
+
+                <!-- THEAD: Cabecera de la tabla con los nombres de las    -->
+                <!-- columnas.                                             -->
+                <thead> <!-- Inicio thead -->
+                    <tr> <!-- Inicio fila de cabecera -->
+                        <th>Código Pedido</th> <!-- Columna: código -->
+                        <th>Total</th>         <!-- Columna: total -->
+                        <th>Fecha</th>         <!-- Columna: fecha -->
+                        <th>Estado</th>        <!-- Columna: estado -->
+                        <th>Local</th>         <!-- Columna: local -->
+                        <th>Recogida (fecha/hora)</th> <!-- Columna: fecha/hora de recogida -->
+                    </tr> <!-- Fin fila de cabecera -->
+                </thead> <!-- Fin thead -->
+
+                <!-- TBODY: Cuerpo de la tabla, donde se renderizan las    -->
+                <!-- filas de pedidos mediante Jinja2.                     -->
+                <tbody id="pedidosTableBody"> <!-- Inicio tbody -->
+
+                    <!-- ================================================= -->
+                    <!-- BLOQUE JINJA2: CONDICIONAL PARA PEDIDOS          -->
+                    <!-- ================================================= -->
+                    <!-- Se usa la sintaxis de Jinja2 para iterar sobre la -->
+                    <!-- variable "pedidos" que viene del backend.        -->
+                    <!-- Si existen pedidos (length > 0), se renderizan   -->
+                    <!-- filas; de lo contrario, se muestra un mensaje.   -->
+
+                    <!-- ETIQUETA JINJA2: "if pedidos and pedidos|length > 0" -->
+                    <!-- Verifica que la lista de pedidos exista y no esté vacía.-->
+                    <!-- El operador "and" asegura que pedidos no sea None.-->
+                    <!-- El filtro "length" obtiene la cantidad de elementos.-->
+                    {% if pedidos and pedidos|length > 0 %} <!-- Inicio if -->
+
+                        <!-- BUCLE FOR: Itera sobre cada pedido "p" en la -->
+                        <!-- lista "pedidos".                              -->
+                        {% for p in pedidos %} <!-- Inicio for -->
+
+                            <!-- FILA DE TABLA: Cada pedido se representa -->
+                            <!-- con una fila <tr>.                       -->
+                            <!-- Se asignan atributos data-* para facilitar -->
+                            <!-- el filtrado en el cliente (JS).           -->
+                            <!-- data-estado: estado del pedido en minúsculas. -->
+                            <!-- data-codigo: código del pedido.           -->
+                            <!-- data-local: nombre del local.             -->
+                            <tr data-estado="{{ p.estado|lower }}"
+                                data-codigo="{{ p.codigo }}"
+                                data-local="{{ p.local_nombre }}"> <!-- Inicio fila del pedido -->
+
+                                <!-- CELDA 1: Código del pedido. -->
+                                <!-- Se muestra en negrita con <strong>. -->
+                                <td><strong>{{ p.codigo }}</strong></td>
+
+                                <!-- CELDA 2: Total del pedido. -->
+                                <!-- Se aplica la clase "precio-pedido" para -->
+                                <!-- estilos y se formatea con dos decimales. -->
+                                <!-- El filtro "format" de Jinja2 aplica -->
+                                <!-- el formato "%.2f" al valor "p.total".   -->
+                                <td class="precio-pedido">${{ "%.2f"|format(p.total) }}</td>
+
+                                <!-- CELDA 3: Fecha del pedido. -->
+                                <td>{{ p.fecha }}</td>
+
+                                <!-- CELDA 4: Estado del pedido. -->
+                                <!-- Se muestra el estado tal cual viene del -->
+                                <!-- backend, pero luego JS lo transforma   -->
+                                <!-- en una etiqueta visual (badge).        -->
+                                <td class="estado-cell">{{ p.estado }}</td>
+
+                                <!-- CELDA 5: Nombre del local. -->
+                                <td>{{ p.local_nombre }}</td>
+
+                                <!-- CELDA 6: Fecha y hora de recogida. -->
+                                <!-- Se concatenan p.fecha_recogida y       -->
+                                <!-- p.hora_recogida si existen, de lo      -->
+                                <!-- contrario se muestra una cadena vacía. -->
+                                <td>
+                                    {{ p.fecha_recogida if p.fecha_recogida else '' }}
+                                    {{ p.hora_recogida if p.hora_recogida else '' }}
+                                </td>
+
+                            </tr> <!-- Fin fila del pedido -->
+
+                        {% endfor %} <!-- Fin for -->
+
+                    <!-- BLOQUE ELSE: Si no hay pedidos, se muestra un     -->
+                    <!-- mensaje en una fila especial.                     -->
+                    {% else %} <!-- Inicio else -->
+
+                        <!-- FILA para "no hay pedidos". -->
+                        <!-- id="noOrdersRow" para identificarla en JS.   -->
+                        <!-- colspan="6" para que ocupe todas las columnas. -->
+                        <tr id="noOrdersRow"> <!-- Inicio fila sin pedidos -->
+                            <td colspan="6" style="text-align:center; padding: 50px;">
+                                ✨ Aún no has realizado ningún pedido. ✨<br>
+                                <!-- Enlace a la página de inicio para     -->
+                                <!-- explorar el mercado.                  -->
+                                <a href="/" style="color: var(--accent-berry-pink); font-weight: 600;">
+                                    Explora nuestro mercado y descubre productos únicos 🍓
+                                </a>
+                            </td>
+                        </tr> <!-- Fin fila sin pedidos -->
+
+                    {% endif %} <!-- Fin del condicional Jinja2 -->
+
+                </tbody> <!-- Fin tbody -->
+
+            </table> <!-- Fin tabla -->
+
+        </div> <!-- Fin orders-table-wrapper -->
+
+        <!-- ============================================================= -->
+        <!-- MENSAJE DE SIN RESULTADOS                                     -->
+        <!-- ============================================================= -->
+        <!-- BLOQUE: MENSAJE QUE SE MUESTRA CUANDO NINGÚN PEDIDO COINCIDE  -->
+        <!-- CON LOS FILTROS APLICADOS.                                    -->
+        <!-- ============================================================= -->
+        <!-- div id="noResultsMessage": Inicialmente oculto (display none). -->
+        <!-- Se muestra mediante JavaScript cuando no hay coincidencias.   -->
+        <div id="noResultsMessage" style="display: none; text-align: center; padding: 30px; background: rgba(0,0,0,0.05); border-radius: 48px; margin: 20px 0;">
+            🍂 No encontramos pedidos con esos criterios. Prueba otro filtro o código 🍇
+        </div>
+
+        <!-- ============================================================= -->
+        <!-- PIE DE PÁGINA (FOOTER)                                        -->
+        <!-- ============================================================= -->
+        <!-- BLOQUE: FOOTER CON ENLACES INFORMATIVOS Y COPYRIGHT          -->
+        <!-- ============================================================= -->
+        <footer> <!-- Inicio footer -->
+
+            <!-- div: Contenedor de enlaces en línea. -->
+            <div style="display:flex; justify-content:center; gap:30px; margin-bottom:20px; flex-wrap:wrap;">
+                <!-- Enlaces ficticios (no tienen href real) para propósitos -->
+                <!-- informativos.                                          -->
+                <a href="#">Sobre el mercado</a>
+                <a href="#">Política de privacidad</a>
+                <a href="#">Contacto</a>
+            </div>
+
+            <!-- div: Texto de copyright con el año, nombre del mercado,   -->
+            <!-- Blooma y un eslogan.                                      -->
+            <div>© 2026 MERCADO MELCHOR OCAMPO · Blooma · Entrega de esencias del bosque 🌿</div>
+
+        </footer> <!-- Fin footer -->
+
+    </div> <!-- Fin del wrapper principal -->
+
+    <!-- ================================================================= -->
+    <!-- JAVASCRIPT                                                        -->
+    <!-- ================================================================= -->
+    <!-- BLOQUE: CÓDIGO JAVASCRIPT PARA MANEJAR FILTROS, BADGES, CONTADOR -->
+    <!-- DEL CARRITO, ANIMACIONES Y COMPORTAMIENTO DINÁMICO.              -->
+    <!-- ================================================================= -->
+    <script> <!-- Inicio del script JavaScript -->
+
+        // ================================================================
+        // EVENTO DOMContentLoaded: Se ejecuta cuando el DOM está completamente
+        // cargado y listo para ser manipulado. Esto asegura que todos los
+        // elementos existan antes de asignar eventos o modificarlos.
+        // ================================================================
+        document.addEventListener('DOMContentLoaded', () => { // Inicio del manejador
+
+            // ------------------------------------------------------------
+            // REFERENCIAS A ELEMENTOS DEL DOM
+            // ------------------------------------------------------------
+            // select para filtrar por estado.
+            const filterSelect = document.getElementById('statusFilterSelect');
+            // input de búsqueda de texto.
+            const searchInput = document.getElementById('orderSearchInput');
+            // botón de búsqueda.
+            const searchBtn = document.getElementById('searchOrderBtn');
+            // div para mensaje de "sin resultados".
+            const noResultsDiv = document.getElementById('noResultsMessage');
+            // span donde se muestra el total de pedidos visibles.
+            const totalOrdersSpan = document.getElementById('totalOrdersCount');
+
+            // ------------------------------------------------------------
+            // FUNCIÓN: applyStatusBadges
+            // ------------------------------------------------------------
+            // DESCRIPCIÓN: Transforma el texto del estado en una etiqueta
+            // visual (badge) con colores según el estado (completado,
+            // pendiente, listo/enviado, cancelado, etc.). También agrega
+            // un atributo data-estado-raw a la fila para facilitar el
+            // filtrado posterior.
+            // ------------------------------------------------------------
+            function applyStatusBadges() {
+                // Obtiene todas las filas del cuerpo de la tabla.
+                const allRows = document.querySelectorAll('#pedidosTableBody tr');
+                // Si no hay filas, sale de la función.
+                if (allRows.length === 0) return;
+
+                // Itera sobre cada fila.
+                allRows.forEach(row => {
+                    // Si la fila es la de "no hay pedidos", la salta.
+                    if (row.id === 'noOrdersRow') return;
+
+                    // Busca la celda que contiene el estado (clase estado-cell).
+                    const estadoCell = row.querySelector('.estado-cell');
+                    // Si no existe, sale de la iteración.
+                    if (!estadoCell) return;
+
+                    // Obtiene el texto del estado y lo convierte a minúsculas.
+                    let estadoTexto = estadoCell.innerText.trim().toLowerCase();
+
+                    // Crea un nuevo elemento <span> para el badge.
+                    let badgeSpan = document.createElement('span');
+                    // Añade la clase base "status-badge" (definida en CSS global).
+                    badgeSpan.classList.add('status-badge');
+
+                    // Asigna una clase adicional según el estado para el color.
+                    // Si contiene "completado" o "entregado": clase status-entregado.
+                    if (estadoTexto.includes('completado') || estadoTexto.includes('entregado')) {
+                        badgeSpan.classList.add('status-entregado');
+                    }
+                    // Si contiene "pendiente": clase status-pendiente.
+                    else if (estadoTexto.includes('pendiente')) {
+                        badgeSpan.classList.add('status-pendiente');
+                    }
+                    // Si contiene "listo" o "enviado": clase status-listo.
+                    else if (estadoTexto.includes('listo') || estadoTexto.includes('enviado')) {
+                        badgeSpan.classList.add('status-listo');
+                    }
+                    // Si contiene "cancelado": clase status-cancelado.
+                    else if (estadoTexto.includes('cancelado')) {
+                        badgeSpan.classList.add('status-cancelado');
+                    }
+                    // Para cualquier otro estado: clase status-default.
+                    else {
+                        badgeSpan.classList.add('status-default');
+                    }
+
+                    // Coloca el texto original del estado dentro del badge.
+                    badgeSpan.innerText = estadoCell.innerText.trim();
+
+                    // Limpia la celda de estado (elimina el texto plano).
+                    estadoCell.innerText = '';
+                    // Agrega el badge como hijo de la celda.
+                    estadoCell.appendChild(badgeSpan);
+
+                    // Almacena el estado en minúsculas en un atributo data-* de la fila,
+                    // para usarlo en el filtrado sin depender del contenido visual.
+                    row.setAttribute('data-estado-raw', estadoTexto);
+                });
+            }
+
+            // ------------------------------------------------------------
+            // FUNCIÓN: updateTotalOrdersCount
+            // ------------------------------------------------------------
+            // DESCRIPCIÓN: Actualiza el contador de pedidos visibles
+            // (aquellos que no están ocultos por los filtros). Además,
+            // muestra u oculta el mensaje de "sin resultados".
+            // ------------------------------------------------------------
+            function updateTotalOrdersCount() {
+                // Filtra las filas del tbody que no sean la de "no hay pedidos"
+                // y cuyo estilo display no sea "none" (es decir, visibles).
+                const visibleRows = Array.from(document.querySelectorAll('#pedidosTableBody tr')).filter(row => {
+                    return row.style.display !== 'none' && row.id !== 'noOrdersRow';
+                });
+                // Cuenta cuántas filas visibles hay.
+                const total = visibleRows.length;
+                // Actualiza el span con el número total.
+                totalOrdersSpan.innerText = total;
+
+                // Si no hay filas visibles pero hay filas reales (excluyendo la de "no hay pedidos"),
+                // muestra el mensaje de "sin resultados". De lo contrario, lo oculta.
+                if (total === 0 && document.querySelector('#pedidosTableBody tr:not(#noOrdersRow)')) {
+                    noResultsDiv.style.display = 'block';
+                } else {
+                    noResultsDiv.style.display = 'none';
+                }
+            }
+
+            // ------------------------------------------------------------
+            // FUNCIÓN: filterOrders
+            // ------------------------------------------------------------
+            // DESCRIPCIÓN: Aplica los filtros de estado y texto de búsqueda
+            // a todas las filas de pedidos. Oculta las que no coinciden y
+            // muestra las que sí. También maneja la visibilidad del mensaje
+            // de "no hay pedidos" original.
+            // ------------------------------------------------------------
+            function filterOrders() {
+                // Obtiene el valor seleccionado en el filtro de estado.
+                const statusValue = filterSelect.value;
+                // Obtiene el término de búsqueda en minúsculas y sin espacios al inicio/final.
+                const searchTerm = searchInput.value.trim().toLowerCase();
+                // Obtiene todas las filas del tbody.
+                const rows = document.querySelectorAll('#pedidosTableBody tr');
+                // Bandera para saber si al menos una fila es visible.
+                let anyVisible = false;
+
+                // Itera sobre cada fila.
+                rows.forEach(row => {
+                    // Salta la fila de "no hay pedidos" porque no se debe filtrar.
+                    if (row.id === 'noOrdersRow') return;
+
+                    // Obtiene el estado en crudo (almacenado en data-estado-raw).
+                    let estadoRaw = (row.getAttribute('data-estado-raw') || '').toLowerCase();
+                    // Obtiene el código (atributo data-codigo).
+                    const codigo = (row.getAttribute('data-codigo') || '').toLowerCase();
+                    // Obtiene el nombre del local (atributo data-local).
+                    const local = (row.getAttribute('data-local') || '').toLowerCase();
+                    // Obtiene el texto de la celda de total (para búsqueda).
+                    const totalText = row.querySelector('.precio-pedido')?.innerText.toLowerCase() || '';
+
+                    // -----------------------------------------------------------------
+                    // FILTRO POR ESTADO
+                    // -----------------------------------------------------------------
+                    let matchesStatus = true; // Por defecto coincide.
+                    if (statusValue !== 'all') { // Si no se selecciona "todos los estados".
+                        if (statusValue === 'pendiente' && !estadoRaw.includes('pendiente')) {
+                            matchesStatus = false; // No coincide con pendiente.
+                        }
+                        else if (statusValue === 'completado' && !(estadoRaw.includes('completado') || estadoRaw.includes('entregado'))) {
+                            matchesStatus = false; // No coincide con completado/entregado.
+                        }
+                        else if (statusValue === 'enviado' && !(estadoRaw.includes('listo') || estadoRaw.includes('enviado'))) {
+                            matchesStatus = false; // No coincide con enviado/listo.
+                        }
+                        else if (statusValue === 'cancelado' && !estadoRaw.includes('cancelado')) {
+                            matchesStatus = false; // No coincide con cancelado.
+                        }
+                    }
+
+                    // -----------------------------------------------------------------
+                    // FILTRO POR TEXTO (BÚSQUEDA)
+                    // -----------------------------------------------------------------
+                    let matchesSearch = true; // Por defecto coincide.
+                    if (searchTerm !== '') { // Si hay término de búsqueda.
+                        // Busca el término en código, local o total.
+                        matchesSearch = codigo.includes(searchTerm) || local.includes(searchTerm) || totalText.includes(searchTerm);
+                    }
+
+                    // -----------------------------------------------------------------
+                    // APLICAR FILTROS: mostrar u ocultar la fila
+                    // -----------------------------------------------------------------
+                    if (matchesStatus && matchesSearch) {
+                        row.style.display = ''; // Muestra la fila (quita display none).
+                        anyVisible = true;      // Al menos una fila visible.
+                    } else {
+                        row.style.display = 'none'; // Oculta la fila.
+                    }
+                });
+
+                // -----------------------------------------------------------------
+                // MANEJO DE LA FILA "NO HAY PEDIDOS"
+                // -----------------------------------------------------------------
+                // Obtiene la fila especial de "no hay pedidos".
+                const noOrdersOriginal = document.getElementById('noOrdersRow');
+                // Cuenta cuántas filas reales (no la de "no hay pedidos") existen en el DOM.
+                const hasRealRows = document.querySelectorAll('#pedidosTableBody tr:not(#noOrdersRow)').length > 0;
+
+                // Si existe la fila de "no hay pedidos".
+                if (noOrdersOriginal) {
+                    // Si no hay filas reales, muestra la fila de "no hay pedidos"
+                    // y marca anyVisible como true para que no aparezca el mensaje de "sin resultados".
+                    if (!hasRealRows) {
+                        noOrdersOriginal.style.display = ''; // Muestra la fila.
+                        anyVisible = true;
+                    }
+                    // Si hay filas reales pero ninguna visible (anyVisible false),
+                    // oculta la fila de "no hay pedidos" (porque se mostrará el mensaje "sin resultados").
+                    else if (!anyVisible && hasRealRows) {
+                        noOrdersOriginal.style.display = 'none';
+                    }
+                    // En cualquier otro caso (hay filas reales y al menos una visible),
+                    // oculta la fila de "no hay pedidos".
+                    else {
+                        noOrdersOriginal.style.display = 'none';
+                    }
+                }
+
+                // Actualiza el contador de pedidos visibles.
+                updateTotalOrdersCount();
+            }
+
+            // ------------------------------------------------------------
+            // EJECUCIÓN INICIAL: aplicar badges y preparar datos
+            // ------------------------------------------------------------
+            applyStatusBadges(); // Convierte los estados en badges visuales.
+
+            // Itera nuevamente sobre las filas para asegurar que los atributos
+            // data-* estén correctamente establecidos (por si no se hizo antes).
+            document.querySelectorAll('#pedidosTableBody tr').forEach(row => {
+                if (row.id === 'noOrdersRow') return; // Salta la fila especial.
+
+                // Obtiene el badge dentro de la celda de estado.
+                const badge = row.querySelector('.status-badge');
+                if (badge) {
+                    // Extrae el texto del badge y lo guarda como data-estado-raw.
+                    let estadoText = badge.innerText.trim().toLowerCase();
+                    row.setAttribute('data-estado-raw', estadoText);
+                }
+
+                // Obtiene el código de la primera celda (columna 0).
+                const codigoCell = row.cells[0]?.innerText.trim();
+                if (codigoCell) row.setAttribute('data-codigo', codigoCell);
+
+                // Obtiene el local de la quinta celda (columna 4).
+                const localCell = row.cells[4]?.innerText.trim();
+                if (localCell) row.setAttribute('data-local', localCell);
+            });
+
+            // ------------------------------------------------------------
+            // ASIGNACIÓN DE EVENTOS A LOS CONTROLES DE FILTRO
+            // ------------------------------------------------------------
+            // Cuando cambia el filtro de estado, se ejecuta filterOrders.
+            filterSelect.addEventListener('change', filterOrders);
+            // Cuando se hace clic en el botón de búsqueda, se ejecuta filterOrders.
+            searchBtn.addEventListener('click', filterOrders);
+            // Cuando se presiona una tecla en el campo de búsqueda y es "Enter",
+            // se ejecuta filterOrders.
+            searchInput.addEventListener('keyup', (e) => { if (e.key === 'Enter') filterOrders(); });
+
+            // Inicializa el contador de pedidos visibles.
+            updateTotalOrdersCount();
+
+            // ------------------------------------------------------------
+            // FUNCIÓN: updateCartCounter (contador del carrito)
+            // ------------------------------------------------------------
+            // DESCRIPCIÓN: Obtiene los datos del carrito desde la API
+            // y actualiza el contador en el ícono del carrito.
+            // ------------------------------------------------------------
+            async function updateCartCounter() {
+                try {
+                    // Realiza una petición GET a la API del carrito.
+                    const res = await fetch('/api/carrito');
+                    // Si la respuesta no es ok (ej. 401 no autorizado), lanza error.
+                    if (!res.ok) throw new Error('No autorizado');
+                    // Convierte la respuesta a JSON.
+                    const data = await res.json();
+
+                    let total = 0;
+                    // Si la respuesta tiene un arreglo "items", suma las cantidades.
+                    if (data.items) {
+                        total = data.items.reduce((acc, i) => acc + i.cantidad, 0);
+                    }
+                    // Si la respuesta tiene "total_items", usa ese valor.
+                    else if (data.total_items) {
+                        total = data.total_items;
+                    }
+
+                    // Busca el span del contador y actualiza su texto.
+                    const cartSpan = document.getElementById('cart-count');
+                    if (cartSpan) cartSpan.innerText = total;
+                } catch(e) {
+                    // Si hay error (ej. usuario no autenticado), solo muestra advertencia.
+                    console.warn("Carrito no disponible o usuario no cliente:", e);
+                }
+            }
+
+            // Llama a updateCartCounter para cargar el contador al inicio.
+            updateCartCounter();
+
+            // ------------------------------------------------------------
+            // EVENTO CLICK EN EL ÍCONO DEL CARRITO
+            // ------------------------------------------------------------
+            // Cuando se hace clic en el div con id "cartIconBtn", redirige a /carrito.
+            document.getElementById('cartIconBtn').addEventListener('click', () => {
+                window.location.href = '/carrito';
+            });
+
+            // ------------------------------------------------------------
+            // CREACIÓN DE UN TOOLTIP INFORMATIVO
+            // ------------------------------------------------------------
+            // Función que agrega un pequeño mensaje de ayuda sobre los filtros.
+            const addTooltipHint = () => {
+                // Busca el contenedor de la tabla.
+                const wrapperTable = document.querySelector('.orders-table-wrapper');
+                // Si existe y no tiene ya un tooltip, lo crea.
+                if (wrapperTable && !wrapperTable.querySelector('.info-tooltip')) {
+                    // Crea un div para el hint.
+                    const infoHint = document.createElement('div');
+                    // Estilos inline para posicionarlo y darle formato.
+                    infoHint.style.textAlign = 'right';
+                    infoHint.style.fontSize = '11px';
+                    infoHint.style.marginBottom = '8px';
+                    infoHint.style.opacity = '0.7';
+                    // Contenido del hint.
+                    infoHint.innerHTML = '💡 Haz clic en los filtros para encontrar tus pedidos más rápido ✨';
+                    // Agrega una clase para posible estilizado.
+                    infoHint.classList.add('info-tooltip');
+                    // Inserta el hint antes del primer hijo del wrapper (la tabla).
+                    wrapperTable.insertBefore(infoHint, wrapperTable.firstChild);
+                    // Después de 4 segundos, reduce la opacidad para que no moleste.
+                    setTimeout(() => { infoHint.style.opacity = '0.4'; }, 4000);
+                }
+            };
+            // Ejecuta la función después de medio segundo para que el DOM esté listo.
+            setTimeout(addTooltipHint, 500);
+
+        }); // Fin del manejador DOMContentLoaded
+
+        // ================================================================
+        // EVENTO window.load: ANIMACIÓN DE ENTRADA
+        // ================================================================
+        // Se ejecuta cuando todos los recursos (imágenes, estilos, etc.) han cargado.
+        window.addEventListener('load', () => { // Inicio del evento load
+
+            // Busca el contenedor principal .app-wrapper.
+            const wrapper = document.querySelector('.app-wrapper');
+            // Si existe, aplica una animación CSS mediante la propiedad animation.
+            if (wrapper) wrapper.style.animation = 'fadeSlideUp 0.6s ease-out';
+
+            // Crea un elemento <style> para definir la animación @keyframes
+            // si no existe ya. Esto asegura que la animación esté disponible.
+            const styleAnim = document.createElement('style');
+            // Define los keyframes para una entrada suave (fade y desplazamiento).
+            styleAnim.textContent = `
+                @keyframes fadeSlideUp {
+                    0% { opacity: 0; transform: translateY(18px); }
+                    100% { opacity: 1; transform: translateY(0); }
+                }
+                .app-wrapper { animation: fadeSlideUp 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1); }
+            `;
+            // Agrega el estilo al <head> del documento.
+            document.head.appendChild(styleAnim);
+
+        }); // Fin del evento load
+
+    </script> <!-- Fin del script JavaScript -->
+
+</body> <!-- Fin del cuerpo -->
+</html> <!-- Fin de la etiqueta html -->

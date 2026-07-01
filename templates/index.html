@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<!-- ======================================================================== 
+    DECLARACIÓN DEL TIPO DE DOCUMENTO Y CONFIGURACIÓN INICIAL
+    ======================================================================== -->
+<!-- 
+  La línea <!DOCTYPE html> le dice al navegador que este archivo está escrito 
+  en HTML5, la versión más moderna y estándar de HTML. Esto asegura que el 
+  navegador interprete el código correctamente y no entre en un modo de 
+  compatibilidad anticuado.
+-->
+<html lang="es">
+<!-- 
+  La etiqueta <html> es la raíz de todo el documento. El atributo lang="es" 
+  indica que el contenido principal está en español, lo cual ayuda a los 
+  navegadores y a los lectores de pantalla a manejar el idioma adecuadamente.
+-->
+<head>
+    <!-- 
+      <head> contiene toda la información sobre la página que no se muestra 
+      directamente en el área principal, pero que es fundamental para su 
+      funcionamiento: metadatos, títulos, enlaces a fuentes y estilos, etc.
+    -->
+
+    <meta charset="UTF-8">
+    <!-- 
+      Meta etiqueta que define la codificación de caracteres como UTF-8. 
+      Esto permite usar correctamente acentos, letras especiales y emojis 
+      como 🍓🫐. Sin esto, los caracteres especiales podrían verse extraños.
+    -->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <!-- 
+      Esta meta etiqueta es crucial para que la página se vea bien en 
+      dispositivos móviles. 
+      - width=device-width: el ancho de la página se ajusta al ancho de la 
+        pantalla del dispositivo.
+      - initial-scale=1.0: la página se carga con un nivel de zoom normal 
+        (sin ampliar ni reducir).
+      - user-scalable=yes: permite que el usuario pueda hacer zoom con los 
+        dedos para ver mejor los detalles.
+    -->
+
+    <title>Blooma · Mercado Melchor Ocampo | Productos Frescos y Artesanales 🍓🫐</title>
+    <!-- 
+      <title> es el texto que aparece en la pestaña del navegador. También 
+      es el título que usan los motores de búsqueda y los marcadores. Aquí se 
+      incluye el nombre del proyecto "Blooma", el mercado y algunos emojis 
+      para darle un toque visual.
+    -->
+
+    <!-- ================================================================== 
+        ENLACES A FUENTES DE GOOGLE FONTS (tipografías personalizadas)
+        ================================================================== -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <!-- 
+      <link rel="preconnect"> establece una conexión anticipada con el 
+      servidor de Google Fonts para que la descarga de las fuentes sea más 
+      rápida. Esto mejora el rendimiento de carga.
+    -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- 
+      Segundo preconnect, ahora al dominio que sirve los archivos estáticos 
+      de las fuentes. El atributo "crossorigin" indica que la petición es 
+      de origen cruzado (CORS).
+    -->
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Montserrat:wght@200;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+    <!-- 
+      Aquí se importan varias fuentes de Google para darle un estilo 
+      elegante y variado al sitio:
+      - Cormorant Garamond: una fuente serif con distintos pesos (300, 400, 
+        600 y cursiva).
+      - Montserrat: una fuente sans-serif con pesos 200, 400 y 600.
+      - Playfair Display: otra serif con pesos 400, 700 y cursiva.
+      - Cinzel: una fuente decorativa con pesos 400 y 700.
+      Estas fuentes se usarán en diferentes partes del diseño (títulos, 
+      textos, menús) para darle personalidad.
+    -->
+
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/iconic.png') }}">
+    <!-- 
+      Favicon: el pequeño icono que aparece en la pestaña del navegador. 
+      La expresión {{ url_for('static', filename='img/iconic.png') }} es un 
+      comando especial de Flask (el motor de plantillas) que genera la ruta 
+      correcta hacia la carpeta 'static' donde se guardan imágenes, CSS y 
+      otros archivos fijos. En este caso, apunta a 'img/iconic.png'.
+    -->
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <!-- 
+      Aquí se enlaza la hoja de estilos principal de la página. styles.css 
+      contiene todos los colores, tamaños, posiciones y efectos visuales. 
+      Al estar en la carpeta static, Flask lo servirá correctamente.
+    -->
+
+<style>.search-bar-header {
+    display: none !important;
+}</style>
+
+</head>
+<!-- 
+  Fin del bloque <head>. A partir de aquí empieza el cuerpo visible de la 
+  página, todo lo que el usuario ve en su pantalla.
+-->
+
+<body>
+<!-- 
+  <body> contiene todo el contenido visible de la página. Aquí se estructuran 
+  todos los elementos que verá el usuario: encabezados, menús, productos, 
+  imágenes, etc.
+-->
+
+<!-- ================================================================== 
+    CONTENEDOR PRINCIPAL DE LA APLICACIÓN (app-wrapper)
+    ================================================================== -->
+<div class="app-wrapper">
+    <!-- 
+      Este <div> con clase "app-wrapper" envuelve todo el contenido de la 
+      página. Actúa como un contenedor principal para aplicar estilos 
+      generales, como márgenes, fondos o efectos de sombra. 
+    -->
+
+    <!-- ============================================================== 
+        DECORACIONES DE PERSONAJES (elementos flotantes con emojis)
+        ============================================================== -->
+    <div class="char-decor char-ajolote" title="Ajolote Cranberry"></div>
+    <!-- 
+      Estos <div> son elementos decorativos que representan personajes 
+      (ajolote, búho, pollito, etc.). La clase "char-decor" les da un 
+      estilo común (posición absoluta, tamaño, animación) y cada clase 
+      específica (char-ajolote, char-buho) los coloca en un lugar 
+      determinado y les asigna un emoji o imagen de fondo. 
+      El atributo title muestra un texto emergente al pasar el ratón por 
+      encima.
+    -->
+
+    <div class="char-decor char-buho" title="Búho Black Raspberry"></div>
+    <div class="char-decor char-pollito" title="Pollito Cereza"></div>
+    <div class="char-decor char-gato-frambuesa" title="Gato Frambuesa"></div>
+    <div class="char-decor char-gato-arandano" title="Gato Arándano"></div>
+    <div class="char-decor char-vaca" title="Vaca Mora"></div>
+
+    <!-- ============================================================== 
+        DECORACIONES DE ESQUINAS (frutas en las cuatro esquinas)
+        ============================================================== -->
+    <div class="costado-decor izq-superior-berry"></div>
+    <!-- 
+      Estos <div> representan adornos en las esquinas de la pantalla, 
+      probablemente imágenes de frutas (fresas, arándanos, uvas) que 
+      refuerzan la temática frutal del mercado. Cada clase los posiciona 
+      en una esquina diferente.
+    -->
+    <div class="costado-decor izq-inferior-fresa"></div>
+    <div class="costado-decor der-superior-arandano"></div>
+    <div class="costado-decor der-inferior-uva"></div>
+
+    <!-- ============================================================== 
+        ENCABEZADO DEL SITIO (header)
+        ============================================================== -->
+    <header class="site-header">
+        <!-- 
+          <header> es el encabezado principal de la página. Contiene el 
+          logotipo, la barra de búsqueda, el panel del dueño (si aplica) 
+          y los botones de acceso rápido (perfil, carrito, etc.).
+        -->
+
+        <a href="/inicio" class="logo">
+            <!-- 
+              Enlace que lleva a la página de inicio. La clase "logo" se 
+              usa para darle estilo al bloque del logotipo.
+            -->
+            <span class="logo-icon">🍓</span>
+            <!-- 
+              <span> con un emoji de fresa como icono del logotipo.
+            -->
+            <div class="logo-text-container">
+                <!-- 
+                  Contenedor para el texto del logotipo (título y 
+                  subtítulos). Se usa un <div> para agruparlos.
+                -->
+                <h1 class="logo-title">BLOOMA</h1>
+                <!-- 
+                  Título principal de la marca, con clase "logo-title" 
+                  para darle un estilo tipográfico especial.
+                -->
+                <h2 class="logo-title" style="font-size: 0.9rem; letter-spacing: 1px;">MERCADO MELCHOR OCAMPO</h2>
+                <!-- 
+                  Subtítulo que especifica el nombre del mercado. Se 
+                  utiliza la misma clase pero con estilos en línea para 
+                  ajustar el tamaño y el espaciado entre letras.
+                -->
+                <small class="logo-subtitle">✦ Esencia natural y productos de calidad ✦</small>
+                <!-- 
+                  Pequeña frase de eslogan. La etiqueta <small> indica 
+                  que es un texto secundario.
+                -->
+            </div>
+        </a>
+
+        <div class="search-bar-header">
+            <!-- 
+              Barra de búsqueda principal que aparece en el encabezado.
+            -->
+            <input type="text" id="headerSearchInput" placeholder="Buscar fresas, mermeladas, miel, artesanías...">
+            <!-- 
+              Campo de texto donde el usuario escribe lo que quiere 
+              buscar. El atributo placeholder muestra un texto de ayuda 
+              dentro del campo.
+            -->
+            <button onclick="buscarProductos()">🔍</button>
+            <!-- 
+              Botón que al hacer clic ejecuta la función JavaScript 
+              "buscarProductos()" para realizar la búsqueda.
+            -->
+        </div>
+
+        <!-- ========================================================== 
+            PANEL DEL DUEÑO (se muestra solo si el usuario es dueño)
+            ========================================================== -->
+        {% if session.rol == 'dueno' and local_dueno %}
+        <!-- 
+          Esto es un bloque de código Jinja (el motor de plantillas de 
+          Flask). La condición verifica si el usuario tiene el rol 
+          'dueno' y si existe la variable 'local_dueno' (que contiene 
+          los datos del negocio del dueño). Solo si se cumplen ambas, 
+          se renderiza el siguiente bloque HTML.
+        -->
+        <div style="display: flex; gap: 0.6rem; flex-wrap: wrap;">
+            <a href="/dueno/dashboard" class="btn-owner">📊 Panel</a>
+            <a href="/dueno/multimedia" class="btn-owner" style="background: var(--berry-lumina); color: #0a0514;">🎬 Multimedia</a>
+            <a href="/local/{{ local_dueno.codigo }}" class="btn-owner-outline">🔍 Ver Público</a>
+            <a href="/dueno/pedidos" class="btn-owner">📋 Pedidos</a>
+        </div>
+        {% endif %}
+        <!-- 
+          Fin del bloque condicional de Jinja.
+        -->
+
+        <div class="header-actions">
+            <!-- 
+              Este <div> agrupa los botones de acción del encabezado: 
+              perfil, negocio (si es dueño), administración (si es 
+              admin), feedback, cerrar sesión, etc.
+            -->
+
+            {% if session.usuario_id %}
+            <!-- 
+              Si el usuario ha iniciado sesión (existe 'usuario_id' en la 
+              sesión), se muestran los enlaces correspondientes. De lo 
+              contrario, se muestra solo el enlace de "Entrar".
+            -->
+                <a href="/perfil" class="icon-action" title="Mi perfil">
+                    <!-- 
+                      Enlace a la página de perfil del usuario.
+                    -->
+                    <span class="icon-symbol">👤</span>
+                    <!-- 
+                      Icono representativo (silueta de persona).
+                    -->
+                    <span class="icon-label">Perfil</span>
+                    <!-- 
+                      Texto descriptivo que aparece debajo del icono.
+                    -->
+                </a>
+
+                {% if session.rol == 'admin' %}
+                <!-- 
+                  Si el rol es 'admin', se muestran varios enlaces de 
+                  administración: pedidos, solicitudes, panel admin y 
+                  gestión completa.
+                -->
+                    <a href="/admin/pedidos" class="icon-action" title="Gestión de pedidos">
+                        <span class="icon-symbol">📦</span>
+                        <span class="icon-label">Pedidos</span>
+                    </a>
+                    <a href="/admin/solicitudes" class="icon-action" title="Solicitudes de dueño">
+                        <span class="icon-symbol">📝</span>
+                        <span class="icon-label">Solicitudes</span>
+                    </a>
+                    <a href="/admin/panel" class="icon-action" title="Panel Admin">
+                        <span class="icon-symbol">⚙️</span>
+                        <span class="icon-label">Admin</span>
+                    </a>
+                    <a href="/admin/gestion" class="icon-action" title="Gestión completa">
+                        <span class="icon-symbol">🏢</span>
+                        <span class="icon-label">Gestión</span>
+                    </a>
+                {% endif %}
+
+                {% if session.rol != 'admin' %}
+                <!-- 
+                  Si el usuario no es admin, se le muestra el enlace para 
+                  enviar feedback (comentarios o sugerencias).
+                -->
+                    <a href="/feedback" class="icon-action" title="Enviar comentario o sugerencia">
+                        <span class="icon-symbol">💬</span>
+                        <span class="icon-label">Feedback</span>
+                    </a>
+                {% endif %}
+
+                <a href="/logout" class="icon-action" title="Cerrar sesión">
+                    <!-- 
+                      Enlace para cerrar sesión (logout).
+                    -->
+                    <span class="icon-symbol">🚪</span>
+                    <span class="icon-label">Salir</span>
+                </a>
+
+            {% else %}
+            <!-- 
+              Si el usuario NO ha iniciado sesión, se muestra 
+              exclusivamente el enlace para iniciar sesión.
+            -->
+                <a href="/login" class="icon-action" title="Iniciar sesión">
+                    <span class="icon-symbol">🔐</span>
+                    <span class="icon-label">Entrar</span>
+                </a>
+            {% endif %}
+
+            {% if session.rol == 'empleado' %}
+            <!-- 
+              Si el usuario es empleado, se muestra un enlace a su panel 
+              de negocio.
+            -->
+                <a href="/empleado/dashboard" class="icon-action">
+                    <span class="icon-symbol">👔</span>
+                    <span class="icon-label">Mi negocio</span>
+                </a>
+            {% endif %}
+
+            <div class="cart-icon" id="cartButton" title="Mi carrito">
+                <!-- 
+                  Este <div> representa el icono del carrito de compras. 
+                  Al hacer clic (manejado por JavaScript) abrirá el 
+                  carrito.
+                -->
+                <span class="cart-symbol">🛒</span>
+                <span class="cart-count" id="cart-count">0</span>
+                <!-- 
+                  Este <span> muestra la cantidad de productos en el 
+                  carrito. Inicialmente es 0 y se actualiza con 
+                  JavaScript.
+                -->
+                <span class="icon-label">Carrito</span>
+            </div>
+        </div>
+        <!-- Fin de header-actions -->
+
+    </header>
+    <!-- Fin de site-header -->
+
+    <!-- ============================================================== 
+        MENSAJES FLASH (notificaciones temporales)
+        ============================================================== -->
+    {% with mensajes = get_flashed_messages() %}
+    <!-- 
+      Jinja: obtiene todos los mensajes flash (mensajes temporales que 
+      se envían desde el servidor, por ejemplo, "Producto agregado al 
+      carrito").
+    -->
+        {% if mensajes %}
+        <!-- Si hay mensajes, se muestra un contenedor. -->
+        <div class="flash-messages">
+            {% for msg in mensajes %}
+            <!-- 
+              Bucle que recorre cada mensaje y lo muestra en un 
+              <div> individual.
+            -->
+            <div class="flash-message">{{ msg }}</div>
+            <!-- 
+              Cada mensaje se envuelve en un <div> con clase 
+              "flash-message" para darle estilo.
+            -->
+            {% endfor %}
+        </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- ============================================================== 
+        NAVEGACIÓN FRUTAL (categorías principales)
+        ============================================================== -->
+    <div class="nav-frutal">
+        <!-- 
+          Contenedor de la barra de navegación secundaria que muestra 
+          las categorías principales (Comida, Cosméticos, Mascotas, 
+          Dulcería) y un botón para ver todos los productos.
+        -->
+        <nav class="sub-nav">
+            <!-- 
+              <nav> define una sección de navegación.
+            -->
+
+            <!-- Categoría COMIDA -->
+            <a href="#" class="nav-categoria" data-categoria="comida">
+                <!-- 
+                  Enlace que abre un modal mostrando los locales de la 
+                  categoría "comida". El atributo data-categoria guarda 
+                  el nombre para que JavaScript sepa qué mostrar.
+                -->
+                <span>🍽️</span> COMIDA
+            </a>
+
+            <!-- Categoría COSMÉTICOS -->
+            <a href="#" class="nav-categoria" data-categoria="cosmeticos">
+                <span>💄</span> COSMÉTICOS
+            </a>
+
+            <!-- Categoría MASCOTAS -->
+            <a href="#" class="nav-categoria" data-categoria="mascotas">
+                <span>🐾</span> MASCOTAS
+            </a>
+
+            <!-- Categoría DULCERÍA -->
+            <a href="#" class="nav-categoria" data-categoria="dulceria">
+                <span>🍬</span> DULCERÍA
+            </a>
+
+            <!-- Botón "TODOS LOS PRODUCTOS" -->
+            <button id="btnTodosProductos" style="background: var(--berry-lumina); color: #000000; border-radius: 40px; padding: 0.4rem 1.2rem; border: none; cursor: pointer;">
+                <!-- 
+                  Botón que redirige a una página donde se listan todos 
+                  los productos. Tiene estilos en línea para destacar 
+                  visualmente.
+                -->
+                <span>🍇</span> TODOS LOS PRODUCTOS
+            </button>
+        </nav>
+    </div>
+
+    <!-- ============================================================== 
+        BANNER PRINCIPAL (carrusel de imágenes)
+        ============================================================== -->
+    <section class="banner-principal">
+        <!-- 
+          Sección que contiene el carrusel de banners (imágenes 
+          promocionales). 
+        -->
+        <div class="carousel-wrapper" id="mainCarousel">
+            <!-- 
+              Contenedor que agrupa todas las diapositivas del carrusel. 
+              El id "mainCarousel" se usa para controlarlo con JavaScript.
+            -->
+            <div class="slide"><img src="{{ url_for('static', filename='img/banners/banner1.jpg') }}" alt="Cosecha de berries"></div>
+            <!-- 
+              Cada <div class="slide"> contiene una imagen. La imagen se 
+              carga desde la carpeta static/img/banners/. El atributo 
+              alt describe la imagen para accesibilidad.
+            -->
+            <div class="slide"><img src="{{ url_for('static', filename='img/banners/banner2.jpg') }}" alt="Productos locales"></div>
+            <div class="slide"><img src="{{ url_for('static', filename='img/banners/banner3.jpg') }}" alt="Miel y mermeladas"></div>
+            <div class="slide"><img src="{{ url_for('static', filename='img/banners/banner4.jpg') }}" alt="Artesanías frutales"></div>
+            <div class="slide"><img src="{{ url_for('static', filename='img/banners/banner5.jpg') }}" alt="Experiencia Blooma"></div>
+        </div>
+
+        <div class="banner-nav">
+            <!-- 
+              Contenedor para los botones de navegación del carrusel 
+              (flechas izquierda y derecha).
+            -->
+            <div class="nav-btn" id="prevBanner">❮</div>
+            <!-- 
+              Botón para ir a la diapositiva anterior.
+            -->
+            <div class="nav-btn" id="nextBanner">❯</div>
+            <!-- 
+              Botón para ir a la siguiente diapositiva.
+            -->
+        </div>
+
+        <div class="banner-indicators" id="bannerInd">
+            <!-- 
+              Este contenedor mostrará los indicadores (puntos) que 
+              representan cada diapositiva. Se generarán con JavaScript.
+            -->
+        </div>
+    </section>
+
+    <!-- ============================================================== 
+        SECCIÓN DE DEPARTAMENTOS / CATEGORÍAS (dept-section)
+        ============================================================== -->
+    <section class="dept-section">
+        <!-- 
+          Sección que presenta las categorías con un diseño de iconos 
+          circulares.
+        -->
+        <h2 class="dept-title">🌿 Explore nuestras secciones 🌸</h2>
+        <!-- 
+          Título de la sección con emojis decorativos.
+        -->
+
+        <div class="dept-grid" id="nuevosDeptGrid">
+            <!-- 
+              Cuadrícula que contiene cada departamento. 
+            -->
+            <div class="dept-item" data-categoria="comida">
+                <!-- 
+                  Cada elemento es un departamento. Al hacer clic (manejado 
+                  por JavaScript) abrirá el modal correspondiente.
+                -->
+                <div class="dept-circle">🍽️</div>
+                <!-- 
+                  Círculo con el emoji representativo.
+                -->
+                <p class="dept-name">Comida<br><span style="font-size:10px;">2 establecimientos</span></p>
+                <!-- 
+                  Nombre y número de establecimientos. El <br> hace un 
+                  salto de línea.
+                -->
+            </div>
+            <div class="dept-item" data-categoria="cosmeticos">
+                <div class="dept-circle">💄</div>
+                <p class="dept-name">Cosméticos & Belleza<br><span style="font-size:10px;">2 establecimientos</span></p>
+            </div>
+            <div class="dept-item" data-categoria="mascotas">
+                <div class="dept-circle">🐾</div>
+                <p class="dept-name">Mascotas<br><span style="font-size:10px;">1 establecimiento</span></p>
+            </div>
+            <div class="dept-item" data-categoria="dulceria">
+                <div class="dept-circle">🍬</div>
+                <p class="dept-name">Dulcería<br><span style="font-size:10px;">1 establecimiento</span></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================== 
+        BUSCADOR POR CÓDIGO DE ESTABLECIMIENTO
+        ============================================================== -->
+    <section class="buscador-container" id="searchSection">
+        <!-- 
+          Sección que permite buscar un establecimiento por su código.
+        -->
+        <label>🔎 Buscar establecimiento por código (ej. LOC-COM-01, LOC-MAS-01)</label>
+        <!-- 
+          Etiqueta descriptiva para el campo de búsqueda.
+        -->
+
+        <div class="search-group" style="display: flex; gap: 12px; background: rgba(0,0,0,0.6); border-radius: 60px; padding: 6px; border: 1px solid var(--accent-berry-pink); margin: 12px 0;">
+            <!-- 
+              Contenedor del campo de texto y botón de búsqueda, con 
+              estilos que le dan un aspecto moderno y frutal.
+            -->
+            <input type="text" id="buscar-input" placeholder="Código: LOC-COM-01, LOC-BEY-02, LOC-MAS-01..." style="flex:1; background:transparent; border:none; padding:12px 20px; color:white;">
+            <!-- 
+              Campo de texto donde el usuario escribe el código. 
+            -->
+            <button id="buscar-btn" style="background:var(--accent-berry-pink); color:#02010a; font-weight:bold; border:none; border-radius:40px; padding:0 32px; cursor:pointer;">BUSCAR</button>
+            <!-- 
+              Botón para ejecutar la búsqueda. Al hacer clic se activa 
+              el script correspondiente.
+            -->
+        </div>
+
+        <div id="search-results" style="margin-top: 15px; text-align: center; font-family: var(--font-sans); font-size: 12px;"></div>
+        <!-- 
+          Este <div> se llenará con los resultados de la búsqueda 
+          mediante JavaScript. 
+        -->
+    </section>
+
+    <!-- ============================================================== 
+        TABLERO DE ANUNCIOS Y OFERTAS
+        ============================================================== -->
+    <section class="tablero-container">
+        <!-- 
+          Sección que contiene dos cajas: una para avisos importantes y 
+          otra para ofertas especiales, ambas con carruseles internos.
+        -->
+        <div class="anuncio-box">
+            <!-- 
+              Caja de avisos importantes.
+            -->
+            <div class="anuncio-header">
+                <h3>📢 AVISOS IMPORTANTES</h3>
+                <span>✧</span>
+            </div>
+            <div id="carrusel-especiales" class="carrusel-slide"></div>
+            <!-- 
+              Contenedor donde se mostrarán los avisos en forma de 
+              carrusel.
+            -->
+            <div class="controles-anuncio" id="dots-especiales"></div>
+            <!-- 
+              Indicadores (puntos) para el carrusel de avisos.
+            -->
+        </div>
+
+        <div class="anuncio-box">
+            <!-- 
+              Caja de ofertas especiales.
+            -->
+            <div class="anuncio-header">
+                <h3>🔥 OFERTAS ESPECIALES</h3>
+                <span>✧</span>
+            </div>
+            <div id="carrusel-ofertas" class="carrusel-slide"></div>
+            <div class="controles-anuncio" id="dots-ofertas"></div>
+        </div>
+    </section>
+
+    <!-- ============================================================== 
+        CONTENIDO PRINCIPAL: SIDEBAR + LISTA DE PRODUCTOS
+        ============================================================== -->
+    <div class="main-content-grid">
+        <!-- 
+          Cuadrícula que divide la página en dos columnas: una barra 
+          lateral (sidebar) y el contenido principal (main).
+        -->
+
+        <aside class="sidebar-lunar">
+            <!-- 
+              Barra lateral con enlaces a las secciones del mercado.
+            -->
+            <h3 style="font-family: var(--font-sans); font-size: 10px; letter-spacing: 4px; color: var(--accent-berry-pink); margin-bottom: 28px;">📌 SECCIONES DEL MERCADO</h3>
+            <!-- 
+              Título de la barra lateral con estilos en línea.
+            -->
+
+            <div class="cat-item" data-sidebar="comida">
+                <!-- 
+                  Cada elemento es una categoría. Al hacer clic (con 
+                  JavaScript) se puede filtrar o mostrar productos.
+                -->
+                <span>🍽️</span> Alimentos del mercado
+                <button class="ver-locales-btn" data-categoria="comida">🔍</button>
+                <!-- 
+                  Botón que abre el modal de locales de esa categoría.
+                -->
+            </div>
+
+            <div class="cat-item" data-sidebar="cosmeticos">
+                <span>💄</span> Cosmética 
+                <button class="ver-locales-btn" data-categoria="cosmeticos">🔍</button>
+            </div>
+
+            <div class="cat-item" data-sidebar="mascotas">
+                <span>🐾</span> Snacks y accesorios para mascotas
+                <button class="ver-locales-btn" data-categoria="mascotas">🔍</button>
+            </div>
+
+            <div class="cat-item" data-sidebar="dulceria">
+                <span>🍬</span> Dulcería 
+                <button class="ver-locales-btn" data-categoria="dulceria">🔍</button>
+            </div>
+
+            <div style="margin-top: 40px; padding: 22px; background: rgba(255,107,129,0.05); border-radius: 28px; border: 1px solid rgba(255,107,129,0.2); font-size: 13px; text-align: center;">
+                <!-- 
+                  Un pequeño bloque de texto decorativo al final del 
+                  sidebar, recordando la temática del mercado.
+                -->
+                Productos frescos, mermeladas artesanales y tradición local 🌿🍓
+            </div>
+        </aside>
+
+        <main>
+            <!-- 
+              Contenido principal: muestra listas de productos (descuentos 
+              y destacados).
+            -->
+
+            <div class="section-header">
+                <h2>🍒 Productos en Descuento</h2>
+                <span>⚡</span>
+            </div>
+            <!-- 
+              Encabezado de la sección de descuentos.
+            -->
+
+            <div class="product-grid" id="discountGrid">
+                <div style="text-align:center; grid-column:1/-1;">Cargando productos...</div>
+            </div>
+            <!-- 
+              Cuadrícula donde se mostrarán los productos con descuento. 
+              Inicialmente muestra un mensaje de carga.
+            -->
+
+            <div class="section-header">
+                <h2>⭐ Productos Destacados Blooma</h2>
+                <span>✧ ✧ ✧</span>
+            </div>
+            <!-- 
+              Encabezado de la sección de productos destacados.
+            -->
+
+            <div class="product-grid" id="popularGrid">
+                <div style="text-align:center; grid-column:1/-1;">Cargando productos destacados...</div>
+            </div>
+            <!-- 
+              Cuadrícula para productos destacados, con mensaje de carga 
+              inicial.
+            -->
+
+            <div style="text-align: center; margin: 2rem 0;">
+                <!-- 
+                  Botón que lleva a la página que lista todos los 
+                  productos por local.
+                -->
+                <a href="/todos-productos" class="btn-ver-todos">🍓 Ver todos los productos por local 🍇</a>
+            </div>
+        </main>
+    </div>
+    <!-- Fin de main-content-grid -->
+
+    <!-- ============================================================== 
+        SECCIÓN DE REVISTA / INFORMACIÓN (journal-section)
+        ============================================================== -->
+    <section class="journal-section">
+        <!-- 
+          Sección con dos tarjetas que brindan información sobre el 
+          mercado y el equipo de desarrollo.
+        -->
+        <div class="journal-card">
+            <h4>Acerca del Mercado Ocampo</h4>
+            <p>Mercado Melchor Ocampo: tradición, frescura y apoyo a productores locales. Disfrute de una experiencia única de sabores con nuestra comunidad basada en principios equitativos.</p>
+            <a href="#" style="color: var(--accent-berry-pink); font-family: var(--font-sans); font-size: 12px; text-decoration: none; font-weight: 600;">Leer más →</a>
+        </div>
+
+        <div class="journal-card">
+            <h4>Sobre Nosotros · Blooma Devs</h4>
+            <p>Somos un equipo de desarrollo creative dedicado a ofrecer trabajos de alta calidad con una estética única. Desarrollado con dedicación y equidad para la comunidad.</p>
+        </div>
+    </section>
+
+    <!-- ============================================================== 
+        SECCIÓN MULTIMEDIA: GIF + VIDEO lado a lado
+        ============================================================== -->
+    <div class="media-row">
+        <!-- 
+          Fila que contiene dos elementos multimedia: un GIF animado y 
+          un video, mostrados uno al lado del otro.
+        -->
+        <div class="media-item gif-item">
+            <div class="media-container">
+                <img src="/static/video/mercado.gif" alt="Animación GIF" class="media-gif">
+                <!-- 
+                  Imagen en formato GIF que muestra una animación 
+                  relacionada con el mercado.
+                -->
+            </div>
+        </div>
+
+        <div class="media-item video-item">
+            <div class="media-container">
+                <video class="media-video" autoplay loop muted playsinline controls>
+                    <!-- 
+                      Elemento <video> que reproduce un archivo de video 
+                      (frutosdelbosque.mp4) en bucle, sin sonido, y con 
+                      controles de reproducción.
+                    -->
+                    <source src="/static/video/frutosdelbosque.mp4" type="video/mp4">
+                    <!-- 
+                      Fuente del video en formato MP4.
+                    -->
+                    Tu navegador no soporta el elemento de video.
+                    <!-- 
+                      Mensaje que se muestra si el navegador no puede 
+                      reproducir el video.
+                    -->
+                </video>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================== 
+        PIE DE PÁGINA (footer)
+        ============================================================== -->
+    <footer>
+        <!-- 
+          Pie de página con enlaces legales y copyright.
+        -->
+        <div class="footer-links" style="display:flex; justify-content:center; gap:40px; margin-bottom:25px;">
+            <!-- 
+              Contenedor de enlaces de privacidad, términos y contacto, 
+              centrados horizontalmente.
+            -->
+            <a href="#">Privacidad</a>
+            <a href="#">Términos de Uso</a>
+            <a href="#">Contacto</a>
+        </div>
+
+        <div class="copyright">
+            <!-- 
+              Texto de copyright con el año y la atribución al proyecto 
+              Blooma y sus desarrolladores.
+            -->
+            © 2026 MERCADO MELCHOR OCAMPO · Proyecto Blooma · Desarrollado con dedicación y equidad por Blooma Devs
+        </div>
+    </footer>
+
+</div>
+<!-- Fin de app-wrapper -->
+
+<!-- ================================================================== 
+    REPRODUCTOR MINIMALISTA DE AUDIO
+    ================================================================== -->
+<div class="minimal-audio" id="minimalAudioWidget">
+    <!-- 
+      Widget de audio que aparece en la interfaz, probablemente en una 
+      esquina fija. Permite reproducir música de fondo (música de 
+      elevador).
+    -->
+    <div class="audio-player">
+        <button class="audio-btn" id="playPauseBtn" aria-label="Play/Pause">▶️</button>
+        <!-- 
+          Botón que alterna entre reproducción y pausa.
+        -->
+        <span class="audio-time" id="audioTimer">00:00</span>
+        <!-- 
+          Muestra el tiempo transcurrido de la canción.
+        -->
+        <input type="range" class="volume-slider" id="volumeSlider" min="0" max="1" step="0.01" value="0.45">
+        <!-- 
+          Control deslizante para ajustar el volumen.
+        -->
+        <span class="audio-icon-small">🎧</span>
+        <!-- 
+          Icono de auriculares como adorno.
+        -->
+    </div>
+</div>
+
+<!-- ================================================================== 
+    MODAL PARA LOCALES (se muestra al hacer clic en una categoría)
+    ================================================================== -->
+<div class="modal-overlay" id="modalLocales">
+    <!-- 
+      Capa de fondo que oscurece el contenido cuando el modal está 
+      abierto.
+    -->
+    <div class="modal-contenido">
+        <!-- 
+          Ventana emergente que contiene el título y la lista de locales.
+        -->
+        <h2 id="modal-categoria-titulo">categoría</h2>
+        <!-- 
+          Título que cambiará según la categoría seleccionada.
+        -->
+        <div class="locales-grid" id="lista-locales-modal"></div>
+        <!-- 
+          Cuadrícula donde se listan los locales de la categoría.
+        -->
+        <button class="cerrar-modal" id="cerrar-modal-btn">Cerrar</button>
+        <!-- 
+          Botón para cerrar el modal.
+        -->
+    </div>
+</div>
+
+<!-- ================================================================== 
+    MODAL PARA AGREGAR PRODUCTO AL CARRITO / FAVORITOS
+    ================================================================== -->
+<div id="productModal" class="modal-producto">
+    <!-- 
+      Modal que aparece al hacer clic en un producto, para agregarlo al 
+      carrito o a favoritos.
+    -->
+    <div class="modal-contenido">
+        <h3 id="modalProductoNombre"></h3>
+        <!-- 
+          Nombre del producto (se llena con JavaScript).
+        -->
+        <p>Precio: $<span id="modalProductoPrecio">0</span> MXN</p>
+        <!-- 
+          Precio del producto.
+        -->
+
+        <div class="cantidad-selector">
+            <!-- 
+              Selector de cantidad: botones menos, input numérico y 
+              botón más.
+            -->
+            <button id="decrementQty">-</button>
+            <input type="number" id="modalCantidad" value="1" min="1" class="cantidad-input">
+            <button id="incrementQty">+</button>
+        </div>
+
+        <div class="modal-botones">
+            <!-- 
+              Botones de acción: agregar al carrito, guardar en 
+              favoritos y cerrar.
+            -->
+            <button id="modalAgregarCarrito">🛒 Agregar al carrito</button>
+            <button id="modalAgregarFavorito" class="btn-fav">❤️ Guardar en favoritos</button>
+            <button id="modalCerrar">❌ Cerrar</button>
+        </div>
+    </div>
+</div>
+
+<!-- ================================================================== 
+    TOAST (notificación emergente)
+    ================================================================== -->
+<div id="toastMsg" class="toast-custom"></div>
+<!-- 
+  Este <div> se usa para mostrar mensajes temporales (toast) que 
+  aparecen en la pantalla durante unos segundos, por ejemplo, "Producto 
+  agregado". La clase "toast-custom" le da el estilo.
+-->
+
+<!-- ================================================================== 
+    VARIABLES GLOBALES Y SCRIPTS EXTERNOS
+    ================================================================== -->
+<script>
+    // 
+    // Este bloque de JavaScript define variables globales que serán 
+    // utilizadas por el archivo index.js (cargado después).
+    // 
+
+    var usuarioLogueado = {{ session.get('usuario_id', False)|tojson }};
+    // 
+    // Convierte el ID del usuario (si existe) a un valor booleano 
+    // (true/false) en formato JSON, para que JavaScript sepa si el 
+    // usuario ha iniciado sesión.
+    // 
+
+    var urlCarrito = "{{ url_for('ver_carrito') }}";
+    // 
+    // Genera la URL para la página del carrito (definida en Flask).
+    // 
+
+    var urlAudio = "{{ url_for('static', filename='audio/music_elevador.mp3') }}";
+    // 
+    // Genera la URL del archivo de audio que se usará en el reproductor.
+    // 
+</script>
+
+<script src="{{ url_for('static', filename='js/index.js') }}"></script>
+<!-- 
+  Carga el archivo JavaScript principal (index.js) que contiene toda la 
+  lógica de la página: carruseles, modales, búsquedas, carrito, etc. 
+  Se carga al final del body para que la página ya esté renderizada y 
+  no bloquee la carga.
+-->
+
+</body>
+</html>
+<!-- 
+  FIN DEL DOCUMENTO HTML. 
+  Cada línea ha sido comentada para que cualquier persona, incluso sin 
+  conocimientos previos de programación, pueda entender qué hace cada 
+  parte del código y cómo contribuye al funcionamiento de la página.
+-->

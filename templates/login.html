@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<!-- DECLARACION DEL TIPO DE DOCUMENTO: Indica que este archivo sigue el estandar HTML5, lo que asegura que los navegadores lo interpreten correctamente. -->
+<html lang="es">
+<!-- ETIQUETA DE INICIO DEL DOCUMENTO HTML: Define el idioma principal de la pagina como espanol, util para la accesibilidad y el posicionamiento. -->
+<head>
+    <!-- CABECERA DEL DOCUMENTO: Contiene metadatos, titulo, enlaces a fuentes y estilos, y configuraciones para la pagina. -->
+    <meta charset="UTF-8">
+    <!-- DECLARACION DEL JUEGO DE CARACTERES: Establece UTF-8 para permitir caracteres especiales y acentos de manera correcta. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- CONFIGURACION DE VISTA PARA DISPOSITIVOS MOVILES: Ajusta el ancho al ancho del dispositivo y establece el zoom inicial a 1.0 para una visualizacion responsive. -->
+    <title>Blooma Xoko- Iniciar Sesión</title>
+    <!-- TITULO DE LA PESTANA: Muestra "Blooma Xoko- Iniciar Sesión" en la pestaña del navegador. -->
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/iconic.png') }}">
+    <!-- ICONO DE FAVICON: Define el icono que aparecera en la pestaña del navegador, usando la funcion url_for de Flask para obtener la ruta del archivo estatico. -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lora:ital@0;1&display=swap" rel="stylesheet">
+    <!-- ENLACE A FUENTES DE GOOGLE: Carga las fuentes Playfair Display y Lora desde Google Fonts para usarlas en el diseno de la pagina. -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/blooma_global.css') }}">
+    <!-- HOJA DE ESTILOS GLOBAL: Enlaza el archivo CSS global de Blooma, que contiene estilos comunes a todo el sitio, usando url_for para la ruta estatica. -->
+    <style>
+        /* INICIO DE ESTILOS INTERNOS: Se definen estilos especificos para esta pagina de login que complementan o sobrescriben los globales. */
+
+        /* === ESTILOS EXISTENTES DEL LOGIN === */
+        /* BLOQUE DE ESTILOS PARA EL CUERPO DE LA PAGINA: Define la imagen de fondo, su posicionamiento, y la disposicion flexible para centrar el contenedor. */
+        body {
+            background-image: url('{{ url_for("static", filename="img/fondos/fondoprinci.png") }}');
+            /* ASIGNACION DE IMAGEN DE FONDO: Usa url_for para obtener la ruta de la imagen de fondo, que se muestra como fondo de toda la pagina. */
+            background-size: cover;
+            /* TAMAÑO DEL FONDO: La imagen se escala para cubrir toda el area visible sin distorsionarse. */
+            background-position: center;
+            /* POSICION DEL FONDO: La imagen se centra horizontal y verticalmente. */
+            background-repeat: no-repeat;
+            /* REPETICION DEL FONDO: Evita que la imagen se repita en caso de ser mas pequena que la pantalla. */
+            min-height: 100vh;
+            /* ALTURA MINIMA: Asegura que el cuerpo ocupe al menos el 100% de la altura de la ventana. */
+            display: flex;
+            /* DISPOSICION FLEXIBLE: Convierte al cuerpo en un contenedor flex para alinear a sus hijos. */
+            align-items: center;
+            /* ALINEACION VERTICAL: Centra los elementos hijos en el eje vertical (cross axis). */
+            justify-content: center;
+            /* ALINEACION HORIZONTAL: Centra los elementos hijos en el eje principal (horizontal). */
+            padding: 2rem 1rem;
+            /* RELLENO INTERNO: Agrega espacio interior de 2rem arriba/abajo y 1rem a los lados para evitar que el contenido toque los bordes. */
+            background-color: #f5eef7;
+            /* COLOR DE FONDO DE RESERVA: Define un color de fondo suave en caso de que la imagen no cargue correctamente. */
+        }
+
+        /* ESTILOS DEL CONTENEDOR PRINCIPAL DEL LOGIN: Define la caja blanca semitransparente con bordes redondeados y sombras. */
+        .login-container {
+            max-width: 420px;
+            /* ANCHO MAXIMO: Limita el ancho del contenedor a 420px para mantener un diseno compacto. */
+            width: 100%;
+            /* ANCHO COMPLETO: Ocupa todo el ancho disponible hasta el maximo definido. */
+            margin: 0 auto;
+            /* MARGEN AUTOMATICO: Centra el contenedor horizontalmente dentro de su padre. */
+            background: rgba(255, 255, 255, 0.85);
+            /* FONDO SEMITRANSPARENTE: Blanco con 85% de opacidad para dar un efecto de vidrio. */
+            backdrop-filter: blur(6px);
+            /* FILTRO DE DESENFOQUE: Aplica un desenfoque de 6px al fondo detras del contenedor para mejorar el efecto de vidrio. */
+            border-radius: 48px;
+            /* BORDE REDONDEADO: Esquinas con radio de 48px para un aspecto suave y elegante. */
+            border: 2px solid #6a1b2e;
+            /* BORDE SOLIDO: Borde de 2px de grosor y color burdeos oscuro. */
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(106, 27, 46, 0.2);
+            /* SOMBRA EXTERIOR: Sombra pronunciada hacia abajo y un borde sutil interno con color burdeos. */
+            padding: 2rem 2rem 2.5rem;
+            /* RELLENO INTERNO: Espacio de 2rem arriba y lados, 2.5rem abajo para equilibrar. */
+            transition: transform 0.2s ease;
+            /* TRANSICION SUAVE: Al cambiar la transformacion (como el hover), dura 0.2 segundos con suavizado. */
+            position: relative;
+            /* POSICION RELATIVA: Permite posicionar elementos hijos (como los ornamentos) de forma absoluta respecto a este contenedor. */
+        }
+
+        /* EFECTO HOVER DEL CONTENEDOR: Cuando el usuario pasa el raton por encima, se levanta ligeramente y cambia el borde. */
+        .login-container:hover {
+            transform: translateY(-5px);
+            /* MOVIMIENTO VERTICAL: Sube el contenedor 5px para dar sensacion de elevacion. */
+            border-color: #b8860b;
+            /* CAMBIO DE COLOR DEL BORDE: Se vuelve dorado. */
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.25), 0 0 0 2px rgba(184, 134, 11, 0.3);
+            /* SOMBRA MAS INTENSA Y CON BORDE DORADO SUTIL. */
+        }
+
+        /* ESTILOS DEL TITULO PRINCIPAL (H2): Define la fuente, tamaño, color y alineacion. */
+        .login-container h2 {
+            font-family: 'Playfair Display', serif;
+            /* FUENTE: Usa Playfair Display con respaldo serif. */
+            font-size: 2rem;
+            /* TAMAÑO DE FUENTE: 2rem (aproximadamente 32px). */
+            text-align: center;
+            /* ALINEACION CENTRADA. */
+            margin-bottom: 0.25rem;
+            /* MARGEN INFERIOR: Espacio pequeno debajo del titulo. */
+            color: #2d1b2e;
+            /* COLOR DEL TEXTO: Morado oscuro. */
+            letter-spacing: 1px;
+            /* ESPACIADO ENTRE LETRAS: 1px para dar elegancia. */
+        }
+
+        /* ESTILOS PARA LOS ORNAMENTOS DECORATIVOS: Pequenos iconos (frutas) que se posicionan en las esquinas. */
+        .ornament {
+            position: absolute;
+            /* POSICION ABSOLUTA: Respecto al contenedor padre (login-container) que es relativo. */
+            font-size: 2rem;
+            /* TAMAÑO DE FUENTE: 2rem para que los iconos sean visibles. */
+            opacity: 0.3;
+            /* OPACIDAD: 30% para que no distraigan. */
+            pointer-events: none;
+            /* INTERACCION: Los iconos no interfieren con eventos del raton (clics, etc.). */
+        }
+
+        /* ORNAMENTO SUPERIOR IZQUIERDO: Se posiciona en la esquina superior izquierda. */
+        .ornament.top-l {
+            top: -10px;
+            /* DISTANCIA DESDE ARRIBA: -10px para que sobresalga ligeramente. */
+            left: 10px;
+            /* DISTANCIA DESDE IZQUIERDA: 10px. */
+        }
+
+        /* ORNAMENTO INFERIOR DERECHO: Se posiciona en la esquina inferior derecha. */
+        .ornament.bot-r {
+            bottom: -10px;
+            /* DISTANCIA DESDE ABAJO: -10px. */
+            right: 10px;
+            /* DISTANCIA DESDE DERECHA: 10px. */
+        }
+
+        /* ESTILOS DEL GRUPO DE CAMPOS DEL FORMULARIO: Define margenes y disposicion. */
+        .form-group {
+            margin-bottom: 1.2rem;
+            /* MARGEN INFERIOR: Espacio entre cada campo. */
+        }
+
+        /* ESTILOS DE LOS CAMPOS DE ENTRADA (INPUT): Define el diseno de los campos de texto y contraseña. */
+        .form-group input {
+            width: 100%;
+            /* ANCHO COMPLETO: Ocupa todo el ancho del contenedor. */
+            padding: 12px 16px;
+            /* RELLENO INTERNO: 12px arriba/abajo, 16px lados. */
+            background: #ffffff;
+            /* FONDO BLANCO. */
+            border: 1px solid #d4c4d9;
+            /* BORDE DE 1px de color gris lavanda. */
+            border-radius: 40px;
+            /* BORDE MUY REDONDEADO. */
+            color: #2d1b2e;
+            /* COLOR DEL TEXTO: Morado oscuro. */
+            font-family: 'Montserrat', sans-serif;
+            /* FUENTE: Montserrat o sans-serif. */
+            font-size: 0.9rem;
+            /* TAMAÑO DE FUENTE: 0.9rem. */
+            transition: all 0.2s;
+            /* TRANSICION SUAVE PARA TODAS LAS propiedades. */
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+            /* SOMBRA INTERNA SUTIL. */
+        }
+
+        /* ESTILOS DEL CAMPO DE ENTRADA EN FOCUS: Cuando el usuario hace clic en el campo, cambia el borde y la sombra. */
+        .form-group input:focus {
+            outline: none;
+            /* ELIMINA EL BORDE DE ENFOQUE POR DEFECTO DEL NAVEGADOR. */
+            border-color: #6a1b2e;
+            /* CAMBIA EL COLOR DEL BORDE A BURDEOS. */
+            box-shadow: 0 0 0 3px rgba(106, 27, 46, 0.15);
+            /* SOMBRA EXTERIOR CON COLOR BURDEOS Y TRANSPARENCIA. */
+        }
+
+        /* ESTILOS DEL BOTON DE ENVIO: Define el diseno del boton "Entrar". */
+        button[type="submit"] {
+            width: 100%;
+            /* ANCHO COMPLETO. */
+            background: linear-gradient(95deg, #6a1b2e, #4b2e5a);
+            /* FONDO CON GRADIENTE LINEAL: de burdeos a morado oscuro. */
+            border: none;
+            /* SIN BORDE. */
+            padding: 14px;
+            /* RELLENO INTERNO: 14px en todas direcciones. */
+            border-radius: 40px;
+            /* BORDE REDONDEADO. */
+            color: #ffffff;
+            /* TEXTO BLANCO. */
+            font-weight: bold;
+            /* TEXTO EN NEGRITA. */
+            font-family: 'Montserrat', sans-serif;
+            /* FUENTE Montserrat. */
+            font-size: 1rem;
+            /* TAMAÑO DE FUENTE: 1rem. */
+            margin-top: 1rem;
+            /* MARGEN SUPERIOR: separacion respecto al ultimo campo. */
+            cursor: pointer;
+            /* CAMBIA EL CURSOR A MANO al pasar por encima. */
+            transition: 0.2s;
+            /* TRANSICION SUAVE. */
+            box-shadow: 0 5px 15px rgba(106, 27, 46, 0.3);
+            /* SOMBRA EXTERIOR CON COLOR BURDEOS. */
+            letter-spacing: 1px;
+            /* ESPACIADO ENTRE LETRAS. */
+        }
+
+        /* ESTILOS DEL BOTON AL PASAR EL RATON: Aumenta el gradiente y la sombra, y escala ligeramente. */
+        button[type="submit"]:hover {
+            background: linear-gradient(95deg, #8a2a40, #5a3a6a);
+            /* GRADIENTE MAS CLARO. */
+            transform: scale(1.02);
+            /* ESCALA: Aumenta un 2% el tamaño. */
+            box-shadow: 0 8px 20px rgba(106, 27, 46, 0.4);
+            /* SOMBRA MAS PRONUNCIADA. */
+        }
+
+        /* ESTILOS DEL PIE DE PAGINA CON ENLACES: Define la alineacion y margenes. */
+        .footer-links {
+            text-align: center;
+            /* TEXTO CENTRADO. */
+            margin-top: 1.5rem;
+            /* MARGEN SUPERIOR: separacion respecto al boton. */
+        }
+
+        /* ESTILOS DE LOS ENLACES DENTRO DEL PIE: Define el color, fuente y efectos de transicion. */
+        .footer-links a {
+            color: #4b2e5a;
+            /* COLOR DEL TEXTO: Morado oscuro. */
+            text-decoration: none;
+            /* SIN SUBRAYADO. */
+            font-family: 'Montserrat', sans-serif;
+            /* FUENTE Montserrat. */
+            font-size: 0.85rem;
+            /* TAMAÑO DE FUENTE: 0.85rem. */
+            transition: 0.2s;
+            /* TRANSICION SUAVE. */
+        }
+
+        /* ESTILOS DEL ENLACE AL PASAR EL RATON: Cambia a dorado y subraya. */
+        .footer-links a:hover {
+            color: #b8860b;
+            /* COLOR DORADO. */
+            text-decoration: underline;
+            /* SUBRAYADO. */
+        }
+
+        /* === NUEVOS ESTILOS PARA MENSAJES FLASH === */
+        /* BLOQUE DE ESTILOS PARA LOS MENSAJES FLASH: Define el contenedor y los distintos tipos de alertas. */
+        .flash-messages {
+            margin: 1rem 0;
+            /* MARGEN VERTICAL: 1rem arriba y abajo. */
+        }
+
+        /* ESTILOS BASE DE LAS ALERTAS: Define el relleno, borde redondeado, fuente y alineacion. */
+        .alert {
+            padding: 0.8rem 1rem;
+            /* RELLENO INTERNO. */
+            border-radius: 40px;
+            /* BORDE REDONDEADO. */
+            font-family: 'Montserrat', sans-serif;
+            /* FUENTE Montserrat. */
+            font-size: 0.9rem;
+            /* TAMAÑO DE FUENTE. */
+            text-align: center;
+            /* TEXTO CENTRADO. */
+            border: 1px solid transparent;
+            /* BORDE TRANSPARENTE POR DEFECTO (se sobrescribira). */
+        }
+
+        /* ALERTA DE EXITO: Fondo verde claro, borde verde y texto verde oscuro. */
+        .alert-success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+
+        /* ALERTA DE PELIGRO (ERROR): Fondo rojo claro, borde rojo y texto rojo oscuro. */
+        .alert-danger {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+
+        /* ALERTA DE INFORMACION: Fondo azul claro, borde azul y texto azul oscuro. */
+        .alert-info {
+            background-color: #d1ecf1;
+            border-color: #bee5eb;
+            color: #0c5460;
+        }
+
+        /* ALERTA DE ADVERTENCIA: Fondo amarillo claro, borde amarillo y texto marron. */
+        .alert-warning {
+            background-color: #fff3cd;
+            border-color: #ffeeba;
+            color: #856404;
+        }
+
+        /* ESTILOS RESPONSIVE PARA PANTALLAS PEQUENAS: Reduce el relleno del contenedor. */
+        @media (max-width: 550px) {
+            .login-container {
+                padding: 1.5rem;
+                /* RELLENO DE 1.5rem en lugar de 2rem para pantallas pequenas. */
+            }
+        }
+
+        /* NOTA: Los estilos de flash-messages y alert ya estan definidos arriba, pero se repiten en el codigo original; no afecta la funcionalidad. */
+        /* Se mantienen por coherencia con el archivo original. */
+    </style>
+    <!-- FIN DE ESTILOS INTERNOS -->
+</head>
+<!-- FIN DE LA CABECERA -->
+
+<body>
+    <!-- CUERPO DE LA PAGINA: Contiene el contenido visible. -->
+
+    <div class="login-container">
+        <!-- CONTENEDOR PRINCIPAL DEL LOGIN: Agrupa todos los elementos del formulario y decoraciones. -->
+
+        <div class="ornament top-l">🍓</div>
+        <!-- ORNAMENTO SUPERIOR IZQUIERDO: Icono de fresa con clase "ornament top-l". -->
+
+        <div class="ornament bot-r">🫐</div>
+        <!-- ORNAMENTO INFERIOR DERECHO: Icono de arandano con clase "ornament bot-r". -->
+
+        <h2>Blooma Xoko</h2>
+        <!-- TITULO DE LA PAGINA: Muestra "Blooma Xoko" como encabezado de nivel 2. -->
+
+        <!-- === BLOQUE DE MENSAJES FLASH === -->
+        <!-- INICIO DEL BLOQUE DE MENSAJES FLASH: Se utiliza la sintaxis de Jinja2 para mostrar mensajes temporales (exito, error, etc.). -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        <!-- OBTIENE LOS MENSAJES FLASH: Llama a la funcion get_flashed_messages de Flask con categorias (con_categories=true) y los asigna a la variable 'messages'. -->
+          {% if messages %}
+          <!-- CONDICIONAL: Si existen mensajes (la lista no esta vacia), se ejecuta el bloque interno. -->
+            <div class="flash-messages">
+            <!-- CONTENEDOR DE MENSAJES FLASH: Usa la clase flash-messages para aplicar los estilos definidos. -->
+              {% for category, message in messages %}
+              <!-- BUCLE: Itera sobre cada mensaje, obteniendo la categoria y el mensaje en si. -->
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+                <!-- DIV DE ALERTA: Se genera una clase dinamica "alert alert-categoria" y se muestra el mensaje. -->
+              {% endfor %}
+              <!-- FIN DEL BUCLE -->
+            </div>
+            <!-- FIN DEL CONTENEDOR DE MENSAJES -->
+          {% endif %}
+          <!-- FIN DEL CONDICIONAL -->
+        {% endwith %}
+        <!-- FIN DEL BLOQUE DE MENSAJES FLASH -->
+
+        <form method="POST">
+            <!-- FORMULARIO DE INICIO DE SESION: Utiliza el metodo POST para enviar los datos al servidor. -->
+
+            <div class="form-group">
+                <!-- GRUPO DEL CAMPO CORREO: Contiene la etiqueta y el input (aunque la etiqueta no se usa explicitamente). -->
+                <input name="correo" type="email" placeholder="Correo electrónico" required>
+                <!-- CAMPO DE ENTRADA PARA CORREO: Atributo name="correo", tipo email (valida formato), placeholder con texto, y required para validacion del lado del cliente. -->
+            </div>
+
+            <div class="form-group">
+                <!-- GRUPO DEL CAMPO CONTRASENA: Similar al anterior. -->
+                <input name="password" type="password" placeholder="Contraseña" required>
+                <!-- CAMPO DE ENTRADA PARA CONTRASENA: name="password", tipo password (oculta el texto), placeholder y required. -->
+            </div>
+
+            <button type="submit">Entrar</button>
+            <!-- BOTON DE ENVIO: type="submit" envia el formulario al servidor con el metodo POST. -->
+        </form>
+        <!-- FIN DEL FORMULARIO -->
+
+        <div class="footer-links">
+            <!-- PIE DE PAGINA CON ENLACES: Contiene un enlace a la pagina de registro. -->
+            <a href="/registro">¿No tienes cuenta? Regístrate aquí</a>
+            <!-- ENLACE: href="/registro" redirige a la pagina de registro. -->
+        </div>
+    </div>
+    <!-- FIN DEL CONTENEDOR PRINCIPAL -->
+
+    <script>
+        // INICIO DEL SCRIPT: Contiene codigo JavaScript para efectos interactivos.
+
+        // EFECTO PARALLAX: Al mover el raton, el contenedor rota ligeramente en 3D para dar sensacion de profundidad.
+        document.addEventListener('mousemove', (e) => {
+            // SE AGREGA UN ESCUCHADOR DE EVENTO 'mousemove' al documento, que se dispara cada vez que el raton se mueve.
+            const container = document.querySelector('.login-container');
+            // SELECCIONA EL CONTENEDOR PRINCIPAL usando la clase 'login-container'.
+            const moveX = (window.innerWidth / 2 - e.pageX) / 30;
+            // CALCULA EL DESPLAZAMIENTO EN EL EJE X: La mitad del ancho de la ventana menos la posicion X del raton, dividido entre 30 para suavizar.
+            const moveY = (window.innerHeight / 2 - e.pageY) / 30;
+            // CALCULA EL DESPLAZAMIENTO EN EL EJE Y: Similar pero con la altura.
+            container.style.transform = `rotateY(${moveX}deg) rotateX(${-moveY}deg)`;
+            // APLICA LA TRANSFORMACION: Rota el contenedor alrededor del eje Y (horizontal) con moveX grados, y alrededor del eje X (vertical) con -moveY grados (negativo para efecto correcto).
+        });
+        // FIN DEL SCRIPT
+    </script>
+</body>
+<!-- FIN DEL CUERPO -->
+
+</html>
+<!-- FIN DEL DOCUMENTO HTML -->

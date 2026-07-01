@@ -1,0 +1,1504 @@
+<!DOCTYPE html>
+<!-- DECLARACIÓN DEL TIPO DE DOCUMENTO HTML5 -->
+<html lang="es">
+<!-- INICIO DEL ELEMENTO HTML, CON IDIOMA ESPAÑOL -->
+
+<head>
+    <!-- INICIO DE LA CABECERA DEL DOCUMENTO, DONDE SE DEFINEN METADATOS Y RECURSOS -->
+
+    <!-- CONFIGURACIÓN DE CODIFICACIÓN DE CARACTERES UTF-8 PARA SOPORTAR ACENTOS Y SÍMBOLOS -->
+    <meta charset="UTF-8">
+    <!-- CONFIGURACIÓN DE LA VENTANA GRÁFICA PARA DISPOSITIVOS MÓVILES, CON ESCALA INICIAL Y PERMITIR ZOOM -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <!-- TÍTULO DE LA PESTAÑA DEL NAVEGADOR, INDICA EL NOMBRE DE LA PÁGINA Y LA MARCA -->
+    <title>Multimedia · Mi Local · Blooma</title>
+
+    <!-- ========================================================== -->
+    <!-- SECCIÓN: FUENTES DE GOOGLE -->
+    <!-- ========================================================== -->
+    <!-- ENLACE DE PRECONEXIÓN A GOOGLE FONTS PARA ACELERAR LA CARGA DE LAS FUENTES -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <!-- ENLACE DE PRECONEXIÓN AL DOMINIO DE ESTÁTICOS DE GOOGLE FONTS -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- ENLACE A LAS FUENTES CORMORANT GARAMOND, MONTSERRAT Y PLAYFAIR DISPLAY CON VARIOS PESOS -->
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Montserrat:wght@200;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- ========================================================== -->
+    <!-- SECCIÓN: ICONOS DE FONT AWESOME -->
+    <!-- ========================================================== -->
+    <!-- ENLACE A LA HOJA DE ESTILOS DE FONT AWESOME PARA USAR ICONOS VECTORIALES -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- ========================================================== -->
+    <!-- SECCIÓN: ESTILOS GLOBALES DEL SITIO -->
+    <!-- ========================================================== -->
+    <!-- ENLACE AL ARCHIVO CSS GLOBAL DE BLOOMA, QUE DEFINE VARIABLES Y ESTILOS BASE -->
+    <!-- CORRECCIÓN: RUTA SIN ESPACIOS NI PUNTOS EXTRA -->
+    <link rel="stylesheet" href="static/css/blooma_global.css">
+
+    <!-- ========================================================== -->
+    <!-- SECCIÓN: FAVICON -->
+    <!-- ========================================================== -->
+    <!-- ENLACE AL FAVICON DEL SITIO, QUE APARECE EN LA PESTAÑA DEL NAVEGADOR -->
+    <!-- CORRECCIÓN: RUTA SIN ESPACIOS NI PUNTOS EXTRA -->
+    <link rel="shortcut icon" href="static/img/iconic.png">
+
+    <!-- ========================================================== -->
+    <!-- SECCIÓN: ESTILOS ESPECÍFICOS PARA LA PÁGINA MULTIMEDIA -->
+    <!-- ========================================================== -->
+    <style>
+        /* ==========================================================
+        ESTILOS ESPECÍFICOS PARA MULTIMEDIA
+        ========================================================== */
+
+        /* CONTENEDOR PRINCIPAL DE LA PÁGINA, CENTRADO Y CON MÁRGENES */
+        .multimedia-container {
+            max-width: 1400px;
+            /* ANCHO MÁXIMO DE 1400 PÍXELES */
+            margin: 1.5rem auto;
+            /* MARGEN SUPERIOR E INFERIOR DE 1.5 REM Y CENTRADO HORIZONTAL */
+            padding: 0 1rem;
+            /* RELLENO LATERAL DE 1 REM PARA EVITAR PEGADO A LOS BORDES */
+        }
+
+        /* ESTILOS PARA EL ENCABEZADO DE LA PÁGINA MULTIMEDIA */
+        .multimedia-header {
+            display: flex;
+            /* DISPOSICIÓN FLEXIBLE */
+            justify-content: space-between;
+            /* ELEMENTOS SEPARADOS CON ESPACIO ENTRE ELLOS */
+            align-items: center;
+            /* ALINEACIÓN VERTICAL CENTRADA */
+            flex-wrap: wrap;
+            /* PERMITIR QUE LOS ELEMENTOS SE ENVUELVAN EN PANTALLAS PEQUEÑAS */
+            gap: 1rem;
+            /* ESPACIO ENTRE ELEMENTOS DE 1 REM */
+            background: rgba(10, 5, 20, 0.7);
+            /* FONDO SEMITRANSPARENTE CON TONO OSCURO */
+            backdrop-filter: blur(12px);
+            /* EFECTO DE DESENFOQUE EN EL FONDO DETRÁS DEL ELEMENTO */
+            border-radius: 48px;
+            /* BORDES MUY REDONDEADOS */
+            padding: 1.2rem 2rem;
+            /* RELLENO INTERNO: 1.2 REM ARRIBA/ABAJO, 2 REM LATERALES */
+            border: 1px solid rgba(255, 107, 129, 0.25);
+            /* BORDE SUTIL CON COLOR ROSADO */
+            margin-bottom: 2rem;
+            /* MARGEN INFERIOR DE 2 REM */
+            color: var(--text-light);
+            /* COLOR DE TEXTO DEFINIDO POR VARIABLE GLOBAL (TEXTO CLARO) */
+        }
+
+        /* ESTILOS PARA EL TÍTULO H1 DENTRO DEL ENCABEZADO */
+        .multimedia-header h1 {
+            font-family: var(--font-title);
+            /* FUENTE TIPO TÍTULO DEFINIDA EN VARIABLE GLOBAL */
+            font-size: 1.6rem;
+            /* TAMAÑO DE FUENTE DE 1.6 REM */
+            color: var(--golden-hour);
+            /* COLOR DORADO DEFINIDO EN VARIABLE GLOBAL */
+            display: flex;
+            /* DISPOSICIÓN FLEXIBLE PARA ALINEAR ÍCONO Y TEXTO */
+            align-items: center;
+            /* CENTRADO VERTICAL */
+            gap: 0.8rem;
+            /* ESPACIO ENTRE EL ÍCONO Y EL TEXTO */
+        }
+
+        /* ESTILOS PARA EL ÍCONO DENTRO DEL H1 */
+        .multimedia-header h1 i {
+            color: var(--berry-lumina);
+            /* COLOR ROSADO BRILLANTE DEFINIDO EN VARIABLE GLOBAL */
+        }
+
+        /* CONTENEDOR DE BOTONES DENTRO DEL ENCABEZADO */
+        .multimedia-header .btn-group {
+            display: flex;
+            /* DISPOSICIÓN FLEXIBLE */
+            gap: 0.8rem;
+            /* ESPACIO ENTRE BOTONES */
+            flex-wrap: wrap;
+            /* PERMITIR ENVUELTA EN PANTALLAS PEQUEÑAS */
+        }
+
+        /* ESTILOS BASE PARA CUALQUIER BOTÓN .btn */
+        .btn {
+            background: rgba(255, 107, 129, 0.15);
+            /* FONDO ROSADO MUY SUTIL */
+            border: 1px solid var(--accent-berry-pink);
+            /* BORDE CON COLOR ROSADO DEFINIDO EN VARIABLE */
+            padding: 0.5rem 1.2rem;
+            /* RELLENO INTERNO */
+            border-radius: 40px;
+            /* BORDES REDONDEADOS */
+            color: white;
+            /* TEXTO BLANCO */
+            text-decoration: none;
+            /* ELIMINAR SUBRAYADO DE ENLACES */
+            font-weight: 600;
+            /* PESO DE FUENTE SEMINEGRITA */
+            font-size: 0.85rem;
+            /* TAMAÑO DE FUENTE PEQUEÑO */
+            transition: 0.2s;
+            /* TRANSICIÓN SUAVE PARA EFECTOS HOVER */
+            display: inline-flex;
+            /* MOSTRAR COMO ELEMENTO EN LÍNEA CON FLEX */
+            align-items: center;
+            /* CENTRAR VERTICALMENTE ÍCONO Y TEXTO */
+            gap: 0.5rem;
+            /* ESPACIO ENTRE ÍCONO Y TEXTO */
+        }
+
+        /* EFECTO HOVER PARA LOS BOTONES */
+        .btn:hover {
+            background: rgba(255, 107, 129, 0.3);
+            /* AUMENTAR OPACIDAD DEL FONDO AL PASAR EL RATÓN */
+            transform: translateY(-2px);
+            /* LEVANTAR LIGERAMENTE EL BOTÓN */
+        }
+
+        /* ESTILOS PARA BOTÓN PRIMARIO (DESTACADO) */
+        .btn-primary {
+            background: var(--berry-lumina);
+            /* FONDO CON COLOR ROSADO BRILLANTE */
+            color: #0a0514;
+            /* TEXTO OSCURO PARA CONTRASTE */
+            border: none;
+            /* SIN BORDE */
+        }
+
+        /* HOVER DEL BOTÓN PRIMARIO */
+        .btn-primary:hover {
+            background: #ff8fa3;
+            /* CAMBIO A UN ROSADO MÁS CLARO */
+        }
+
+        /* ESTILOS PARA BOTÓN DE PELIGRO (ELIMINAR, ETC.) */
+        .btn-danger {
+            background: rgba(231, 76, 60, 0.25);
+            /* FONDO ROJO SEMITRANSPARENTE */
+            color: #f1948a;
+            /* TEXTO ROJO CLARO */
+            border: 1px solid #e74c3c;
+            /* BORDE ROJO */
+        }
+
+        /* HOVER DEL BOTÓN DE PELIGRO */
+        .btn-danger:hover {
+            background: rgba(231, 76, 60, 0.4);
+            /* AUMENTAR OPACIDAD DEL FONDO ROJO */
+        }
+
+        /* ESTILOS PARA BOTÓN PEQUEÑO (VERSIÓN COMPACTA) */
+        .btn-sm {
+            padding: 0.25rem 0.8rem;
+            /* RELLENO REDUCIDO */
+            border-radius: 20px;
+            /* BORDES REDONDEADOS */
+            border: none;
+            /* SIN BORDE POR DEFECTO */
+            font-weight: 600;
+            /* SEMINEGRITA */
+            cursor: pointer;
+            /* CAMBIAR CURSOR A MANO */
+            transition: 0.15s;
+            /* TRANSICIÓN SUAVE */
+            font-size: 0.75rem;
+            /* TAMAÑO DE FUENTE MUY PEQUEÑO */
+        }
+
+        /* HOVER DEL BOTÓN PEQUEÑO */
+        .btn-sm:hover {
+            transform: scale(1.02);
+            /* AUMENTAR LIGERAMENTE EL TAMAÑO */
+        }
+
+        /* ESTILOS PARA LA TARJETA DE SUBIDA DE ARCHIVOS */
+        .upload-card {
+            background: rgba(10, 5, 20, 0.6);
+            /* FONDO OSCURO SEMITRANSPARENTE */
+            backdrop-filter: blur(8px);
+            /* DESENFOQUE DEL FONDO */
+            border-radius: 32px;
+            /* BORDES REDONDEADOS */
+            padding: 2rem;
+            /* RELLENO INTERNO GENEROSO */
+            border: 1px solid rgba(255, 107, 129, 0.15);
+            /* BORDE ROSADO SUTIL */
+            margin-bottom: 2.5rem;
+            /* MARGEN INFERIOR */
+            color: var(--text-light);
+            /* TEXTO CLARO */
+        }
+
+        /* ESTILOS PARA EL TÍTULO DE SECCIÓN DENTRO DE UNA TARJETA */
+        .upload-card .section-title {
+            font-family: var(--font-title);
+            /* FUENTE TIPO TÍTULO */
+            font-size: 1.3rem;
+            /* TAMAÑO DE FUENTE */
+            color: var(--golden-hour);
+            /* COLOR DORADO */
+            border-bottom: 2px solid rgba(212, 175, 55, 0.3);
+            /* LÍNEA INFERIOR DORADA SEMITRANSPARENTE */
+            padding-bottom: 0.6rem;
+            /* RELLENO INFERIOR PARA SEPARACIÓN */
+            margin-bottom: 1.2rem;
+            /* MARGEN INFERIOR */
+            display: flex;
+            /* DISPOSICIÓN FLEXIBLE */
+            align-items: center;
+            /* CENTRADO VERTICAL */
+            gap: 0.8rem;
+            /* ESPACIO ENTRE ELEMENTOS */
+        }
+
+        /* ÍCONO DENTRO DEL TÍTULO DE SECCIÓN */
+        .upload-card .section-title i {
+            color: var(--berry-lumina);
+            /* COLOR ROSADO BRILLANTE */
+        }
+
+        /* CONTENEDOR DEL FORMULARIO DE SUBIDA, CON DISPOSICIÓN FLEXIBLE */
+        .form-multimedia {
+            display: flex;
+            /* FLEXBOX */
+            flex-wrap: wrap;
+            /* ENVOLVER ELEMENTOS */
+            gap: 1rem;
+            /* ESPACIO ENTRE CAMPOS */
+            align-items: flex-end;
+            /* ALINEAR ELEMENTOS AL FINAL (PARTE INFERIOR) */
+        }
+
+        /* CADA GRUPO DE CAMPO DEL FORMULARIO */
+        .form-multimedia .form-group {
+            flex: 1;
+            /* OCUPAR ESPACIO DISPONIBLE PROPORCIONALMENTE */
+            min-width: 180px;
+            /* ANCHO MÍNIMO PARA EVITAR QUE SE ENCOJAN DEMASIADO */
+        }
+
+        /* ETIQUETA DE CADA CAMPO */
+        .form-multimedia .form-group label {
+            display: block;
+            /* MOSTRAR EN BLOQUE PARA OCUPAR TODA LA LÍNEA */
+            font-weight: 500;
+            /* PESO MEDIO */
+            margin-bottom: 0.3rem;
+            /* MARGEN INFERIOR PEQUEÑO */
+            color: #ddd;
+            /* COLOR GRIS CLARO */
+            font-size: 0.85rem;
+            /* TAMAÑO DE FUENTE */
+        }
+
+        /* ESTILOS PARA INPUTS Y SELECT DENTRO DE FORM-GROUP */
+        .form-multimedia .form-group input,
+        .form-multimedia .form-group select {
+            width: 100%;
+            /* OCUPAR TODO EL ANCHO DEL CONTENEDOR */
+            padding: 0.6rem 1rem;
+            /* RELLENO INTERNO */
+            background: rgba(0, 0, 0, 0.5);
+            /* FONDO OSCURO SEMITRANSPARENTE */
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            /* BORDE BLANCO SUTIL */
+            border-radius: 40px;
+            /* BORDES REDONDEADOS */
+            color: white;
+            /* TEXTO BLANCO */
+            font-family: var(--font-sans);
+            /* FUENTE SANS SERIF DEFINIDA */
+            font-size: 0.9rem;
+            /* TAMAÑO DE FUENTE */
+        }
+
+        /* ESTADO DE FOCUS PARA INPUTS Y SELECT */
+        .form-multimedia .form-group input:focus,
+        .form-multimedia .form-group select:focus {
+            outline: none;
+            /* ELIMINAR CONTORNO PREDETERMINADO */
+            border-color: var(--berry-lumina);
+            /* BORDE CON COLOR ROSADO BRILLANTE */
+        }
+
+        /* AJUSTE PARA EL INPUT DE ARCHIVO (FILE) */
+        .form-multimedia .form-group input[type="file"] {
+            padding: 0.4rem 1rem;
+            /* RELLENO AJUSTADO */
+        }
+
+        /* ESTILOS PARA EL BOTÓN DE SUBIR DENTRO DEL FORMULARIO */
+        .form-multimedia button {
+            background: var(--berry-lumina);
+            /* FONDO ROSADO BRILLANTE */
+            border: none;
+            /* SIN BORDE */
+            padding: 0.6rem 2rem;
+            /* RELLENO */
+            border-radius: 40px;
+            /* BORDES REDONDEADOS */
+            font-weight: 700;
+            /* NEGRITA */
+            cursor: pointer;
+            /* CURSOR MANO */
+            color: #0a0514;
+            /* TEXTO OSCURO */
+            transition: 0.2s;
+            /* TRANSICIÓN SUAVE */
+            font-size: 0.9rem;
+            /* TAMAÑO DE FUENTE */
+            display: inline-flex;
+            /* MOSTRAR COMO FLEX EN LÍNEA */
+            align-items: center;
+            /* CENTRADO VERTICAL */
+            gap: 0.6rem;
+            /* ESPACIO ENTRE ÍCONO Y TEXTO */
+            height: fit-content;
+            /* AJUSTAR ALTURA AL CONTENIDO */
+            align-self: center;
+            /* ALINEARSE AL CENTRO VERTICALMENTE DENTRO DEL FLEX */
+        }
+
+        /* HOVER DEL BOTÓN DE SUBIR */
+        .form-multimedia button:hover {
+            background: #ff8fa3;
+            /* ROSADO MÁS CLARO */
+            transform: scale(1.02);
+            /* AUMENTAR LIGERAMENTE */
+        }
+
+        /* BOTÓN DE SUBIR DESHABILITADO */
+        .form-multimedia button:disabled {
+            opacity: 0.5;
+            /* REDUCIR OPACIDAD */
+            cursor: not-allowed;
+            /* CURSOR DE NO PERMITIDO */
+            transform: none;
+            /* SIN ESCALA */
+        }
+
+        /* ESTILOS PARA LA GALERÍA EN FORMA DE CUADRICULA */
+        .gallery-grid {
+            display: grid;
+            /* DISPOSICIÓN EN CUADRICULA */
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            /* COLUMNAS CON TAMAÑO MÍNIMO DE 220PX Y MÁXIMO 1FR */
+            gap: 1.5rem;
+            /* ESPACIO ENTRE ELEMENTOS */
+            margin-top: 1.5rem;
+            /* MARGEN SUPERIOR */
+        }
+
+        /* ESTILOS PARA CADA ÍTEM DE LA GALERÍA */
+        .gallery-item {
+            background: rgba(10, 5, 20, 0.6);
+            /* FONDO OSCURO SEMITRANSPARENTE */
+            backdrop-filter: blur(8px);
+            /* DESENFOQUE */
+            border-radius: 24px;
+            /* BORDES REDONDEADOS */
+            overflow: hidden;
+            /* OCULTAR CONTENIDO QUE SOBRESALGA */
+            border: 1px solid rgba(255, 107, 129, 0.15);
+            /* BORDE ROSADO SUTIL */
+            transition: 0.25s ease;
+            /* TRANSICIÓN SUAVE */
+            position: relative;
+            /* POSICIÓN RELATIVA PARA CONTENER ELEMENTOS ABSOLUTOS */
+        }
+
+        /* EFECTO HOVER SOBRE ÍTEM DE GALERÍA */
+        .gallery-item:hover {
+            transform: translateY(-4px);
+            /* LEVANTAR LIGERAMENTE */
+            border-color: var(--berry-lumina);
+            /* BORDE ROSADO BRILLANTE */
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+            /* SOMBRA */
+        }
+
+        /* CONTENEDOR DEL MEDIA (IMAGEN, VIDEO O ICONO DE AUDIO) DENTRO DEL ÍTEM */
+        .gallery-item .media-wrapper {
+            width: 100%;
+            /* ANCHO COMPLETO */
+            aspect-ratio: 1 / 1;
+            /* RELACIÓN DE ASPECTO CUADRADA */
+            background: #0a0514;
+            /* FONDO OSCURO */
+            display: flex;
+            /* FLEX */
+            align-items: center;
+            /* CENTRADO VERTICAL */
+            justify-content: center;
+            /* CENTRADO HORIZONTAL */
+            overflow: hidden;
+            /* OCULTAR DESBORDAMIENTO */
+            position: relative;
+            /* RELATIVO PARA OVERLAY */
+        }
+
+        /* ESTILOS PARA IMÁGENES Y VIDEOS DENTRO DEL WRAPPER */
+        .gallery-item .media-wrapper img,
+        .gallery-item .media-wrapper video {
+            width: 100%;
+            /* ANCHO COMPLETO */
+            height: 100%;
+            /* ALTO COMPLETO */
+            object-fit: cover;
+            /* AJUSTAR CUBRIENDO EL CONTENEDOR */
+        }
+
+        /* ESTILOS PARA EL ÍCONO DE AUDIO DENTRO DEL WRAPPER */
+        .gallery-item .media-wrapper .audio-icon {
+            font-size: 4rem;
+            /* TAMAÑO GRANDE */
+            color: var(--berry-lumina);
+            /* COLOR ROSADO BRILLANTE */
+            opacity: 0.8;
+            /* LIGERA TRANSPARENCIA */
+        }
+
+        /* OVERLAY QUE SE MUESTRA AL PASAR EL RATÓN SOBRE EL MEDIA */
+        .gallery-item .media-wrapper .play-overlay {
+            position: absolute;
+            /* POSICIÓN ABSOLUTA DENTRO DEL WRAPPER */
+            top: 0;
+            /* ARRIBA */
+            left: 0;
+            /* IZQUIERDA */
+            width: 100%;
+            /* ANCHO COMPLETO */
+            height: 100%;
+            /* ALTO COMPLETO */
+            background: rgba(0, 0, 0, 0.3);
+            /* FONDO OSCURO SEMITRANSPARENTE */
+            display: flex;
+            /* FLEX */
+            align-items: center;
+            /* CENTRADO VERTICAL */
+            justify-content: center;
+            /* CENTRADO HORIZONTAL */
+            font-size: 3rem;
+            /* TAMAÑO DE ÍCONO GRANDE */
+            color: white;
+            /* TEXTO BLANCO */
+            pointer-events: none;
+            /* NO INTERACTUABLE (SOLO VISUAL) */
+            opacity: 0;
+            /* INVISIBLE POR DEFECTO */
+            transition: 0.2s;
+            /* TRANSICIÓN SUAVE */
+        }
+
+        /* AL PASAR EL RATÓN SOBRE EL ÍTEM, EL OVERLAY SE VUELVE VISIBLE */
+        .gallery-item:hover .play-overlay {
+            opacity: 1;
+            /* VISIBLE */
+        }
+
+        /* CONTENEDOR DE LA INFORMACIÓN DEL ÍTEM (DESCRIPCIÓN, FECHA, ETC.) */
+        .gallery-item .item-info {
+            padding: 0.8rem 1rem;
+            /* RELLENO INTERNO */
+            color: var(--text-light);
+            /* TEXTO CLARO */
+        }
+
+        /* BADGE QUE INDICA EL TIPO DE MEDIA (FOTO, VIDEO, AUDIO) */
+        .gallery-item .item-info .tipo-badge {
+            display: inline-block;
+            /* MOSTRAR EN LÍNEA PERO CON BLOQUE */
+            padding: 0.15rem 0.8rem;
+            /* RELLENO PEQUEÑO */
+            border-radius: 20px;
+            /* BORDES REDONDEADOS */
+            font-size: 0.6rem;
+            /* TAMAÑO MUY PEQUEÑO */
+            font-weight: 600;
+            /* SEMINEGRITA */
+            text-transform: uppercase;
+            /* TEXTO EN MAYÚSCULAS */
+            letter-spacing: 0.5px;
+            /* ESPACIADO ENTRE LETRAS */
+            background: rgba(255, 107, 129, 0.2);
+            /* FONDO ROSADO SUTIL */
+            color: var(--berry-lumina);
+            /* COLOR ROSADO BRILLANTE */
+            margin-bottom: 0.3rem;
+            /* MARGEN INFERIOR */
+        }
+
+        /* DESCRIPCIÓN DEL ARCHIVO */
+        .gallery-item .item-info .descripcion {
+            font-size: 0.85rem;
+            /* TAMAÑO DE FUENTE */
+            color: #e8e0da;
+            /* COLOR BEIGE CLARO */
+            margin: 0.2rem 0;
+            /* MÁRGENES VERTICALES PEQUEÑOS */
+            word-break: break-word;
+            /* PERMITIR ROMPER PALABRAS LARGAS */
+        }
+
+        /* FECHA DE SUBIDA */
+        .gallery-item .item-info .fecha {
+            font-size: 0.65rem;
+            /* TAMAÑO MUY PEQUEÑO */
+            color: var(--text-mist);
+            /* COLOR GRISÁCEO DEFINIDO EN VARIABLE */
+        }
+
+        /* CONTENEDOR DE ACCIONES (BOTONES) DENTRO DEL ÍTEM */
+        .gallery-item .item-actions {
+            padding: 0.5rem 1rem 1rem;
+            /* RELLENO */
+            display: flex;
+            /* FLEX */
+            gap: 0.5rem;
+            /* ESPACIO ENTRE BOTONES */
+            justify-content: flex-end;
+            /* ALINEAR A LA DERECHA */
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            /* LÍNEA SUPERIOR SUTIL */
+        }
+
+        /* ESTILOS PARA CUANDO LA GALERÍA ESTÁ VACÍA */
+        .gallery-empty {
+            text-align: center;
+            /* TEXTO CENTRADO */
+            padding: 3rem 1rem;
+            /* RELLENO GENEROSO */
+            color: var(--text-mist);
+            /* COLOR GRIS */
+            grid-column: 1 / -1;
+            /* OCUPAR TODAS LAS COLUMNAS DE LA CUADRICULA */
+        }
+
+        /* ÍCONO EN EL MENSAJE DE GALERÍA VACÍA */
+        .gallery-empty i {
+            font-size: 3rem;
+            /* TAMAÑO GRANDE */
+            display: block;
+            /* MOSTRAR EN BLOQUE */
+            margin-bottom: 1rem;
+            /* MARGEN INFERIOR */
+            opacity: 0.5;
+            /* SEMITRANSPARENTE */
+        }
+
+        /* ========================================================== */
+        /* SECCIÓN: ESTILOS PARA EL TOAST (MENSAJE EMERGENTE) */
+        /* ========================================================== */
+        .toast-msg {
+            position: fixed;
+            /* POSICIÓN FIJA EN LA PANTALLA */
+            bottom: 30px;
+            /* A 30 PÍXELES DEL BORDE INFERIOR */
+            left: 50%;
+            /* CENTRADO HORIZONTAL */
+            transform: translateX(-50%);
+            /* AJUSTE PARA CENTRAR EXACTAMENTE */
+            padding: 12px 28px;
+            /* RELLENO */
+            border-radius: 60px;
+            /* BORDES MUY REDONDEADOS */
+            color: white;
+            /* TEXTO BLANCO */
+            font-weight: 600;
+            /* SEMINEGRITA */
+            z-index: 4000;
+            /* POR ENCIMA DE LA MAYORÍA DE ELEMENTOS */
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4);
+            /* SOMBRA */
+            font-family: var(--font-sans);
+            /* FUENTE SANS */
+            background: var(--berry-lumina);
+            /* FONDO ROSADO BRILLANTE */
+            animation: slideUp 0.3s ease;
+            /* ANIMACIÓN DE ENTRADA */
+            max-width: 90%;
+            /* ANCHO MÁXIMO PARA PANTALLAS PEQUEÑAS */
+            text-align: center;
+            /* TEXTO CENTRADO */
+            opacity: 0;
+            /* INVISIBLE POR DEFECTO */
+            pointer-events: none;
+            /* NO INTERACTUABLE */
+            transition: opacity 0.3s;
+            /* TRANSICIÓN PARA APARECER/DESAPARECER */
+        }
+
+        /* CLASE PARA MOSTRAR EL TOAST */
+        .toast-msg.show {
+            opacity: 1;
+            /* VISIBLE */
+            pointer-events: auto;
+            /* PERMITIR INTERACCIÓN (CIERRE) */
+        }
+
+        /* VARIANTE DE TOAST PARA ERRORES (FONDO ROJO) */
+        .toast-msg.error {
+            background: #e74c3c;
+            /* FONDO ROJO */
+        }
+
+        /* ANIMACIÓN DE DESLIZAMIENTO HACIA ARRIBA */
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(20px);
+                /* INICIO ABAJO Y TRANSPARENTE */
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+                /* FINAL EN POSICIÓN ORIGINAL */
+            }
+        }
+
+        /* ========================================================== */
+        /* SECCIÓN: SPINNER DE CARGA */
+        /* ========================================================== */
+        .spinner {
+            display: inline-block;
+            /* MOSTRAR EN LÍNEA */
+            width: 20px;
+            /* ANCHO */
+            height: 20px;
+            /* ALTO */
+            border: 3px solid rgba(0, 0, 0, 0.1);
+            /* BORDE GRIS CLARO */
+            border-radius: 50%;
+            /* FORMA CIRCULAR */
+            border-top-color: #0a0514;
+            /* BORDE SUPERIOR OSCURO PARA EFECTO DE GIRO */
+            animation: spin 0.8s ease infinite;
+            /* ANIMACIÓN DE ROTACIÓN INFINITA */
+        }
+
+        /* ANIMACIÓN DE ROTACIÓN */
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+                /* ROTACIÓN COMPLETA */
+            }
+        }
+
+        /* ========================================================== */
+        /* SECCIÓN: MEDIA QUERIES PARA RESPONSIVE */
+        /* ========================================================== */
+        @media (max-width: 768px) {
+            /* PANTALLAS DE ANCHO MÁXIMO 768PX (TABLETS Y MÓVILES) */
+            .multimedia-header {
+                flex-direction: column;
+                /* DISPOSICIÓN EN COLUMNA */
+                align-items: stretch;
+                /* ESTIRAR ELEMENTOS */
+                text-align: center;
+                /* TEXTO CENTRADO */
+            }
+            .multimedia-header .btn-group {
+                justify-content: center;
+                /* BOTONES CENTRADOS */
+            }
+            .form-multimedia {
+                flex-direction: column;
+                /* FORMULARIO EN COLUMNA */
+                align-items: stretch;
+                /* ESTIRAR CAMPOS */
+            }
+            .form-multimedia .form-group {
+                min-width: 100%;
+                /* OCUPAR TODO EL ANCHO */
+            }
+            .form-multimedia button {
+                width: 100%;
+                /* BOTÓN DE SUBIR OCUPA TODO EL ANCHO */
+                justify-content: center;
+                /* CENTRAR CONTENIDO */
+            }
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+                /* COLUMNAS MÁS PEQUEÑAS */
+                gap: 1rem;
+                /* ESPACIO REDUCIDO */
+            }
+        }
+
+        @media (max-width: 480px) {
+            /* PANTALLAS MUY PEQUEÑAS (MÓVILES) */
+            .gallery-grid {
+                grid-template-columns: 1fr 1fr;
+                /* DOS COLUMNAS FIJAS */
+            }
+            .multimedia-header h1 {
+                font-size: 1.2rem;
+                /* TAMAÑO DE FUENTE MÁS PEQUEÑO */
+            }
+            .upload-card {
+                padding: 1.2rem;
+                /* RELLENO REDUCIDO */
+            }
+        }
+
+        /* ========================================================== */
+        /* SECCIÓN: ESTILOS PARA EL MODAL DE VISTA PREVIA */
+        /* ========================================================== */
+        .preview-modal {
+            position: fixed;
+            /* FIJO EN PANTALLA */
+            top: 0;
+            /* ARRIBA */
+            left: 0;
+            /* IZQUIERDA */
+            width: 100%;
+            /* ANCHO COMPLETO */
+            height: 100%;
+            /* ALTO COMPLETO */
+            background: rgba(0, 0, 0, 0.92);
+            /* FONDO CASI NEGRO */
+            backdrop-filter: blur(16px);
+            /* DESENFOQUE FUERTE */
+            z-index: 5000;
+            /* POR ENCIMA DE TODO */
+            display: none;
+            /* OCULTO POR DEFECTO */
+            align-items: center;
+            /* CENTRADO VERTICAL */
+            justify-content: center;
+            /* CENTRADO HORIZONTAL */
+            padding: 2rem;
+            /* RELLENO */
+        }
+
+        /* MODAL ACTIVO (VISIBLE) */
+        .preview-modal.active {
+            display: flex;
+            /* MOSTRAR COMO FLEX */
+        }
+
+        /* CONTENEDOR DEL CONTENIDO DE PREVISUALIZACIÓN */
+        .preview-modal .preview-content {
+            max-width: 90%;
+            /* ANCHO MÁXIMO */
+            max-height: 90%;
+            /* ALTO MÁXIMO */
+            position: relative;
+            /* RELATIVO PARA EL BOTÓN DE CIERRE ABSOLUTO */
+        }
+
+        /* ESTILOS PARA IMÁGENES Y VIDEOS DENTRO DEL MODAL */
+        .preview-modal .preview-content img,
+        .preview-modal .preview-content video {
+            max-width: 100%;
+            /* ANCHO MÁXIMO AJUSTADO */
+            max-height: 85vh;
+            /* ALTO MÁXIMO RELATIVO A LA VENTANA */
+            border-radius: 16px;
+            /* BORDES REDONDEADOS */
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+            /* SOMBRA PROFUNDA */
+        }
+
+        /* CONTENEDOR PARA PREVISUALIZACIÓN DE AUDIO */
+        .preview-modal .preview-content .audio-preview {
+            background: #1e1a2f;
+            /* FONDO OSCURO */
+            border-radius: 48px;
+            /* BORDES REDONDEADOS */
+            padding: 3rem 4rem;
+            /* RELLENO GENEROSO */
+            text-align: center;
+            /* TEXTO CENTRADO */
+            border: 1px solid var(--berry-lumina);
+            /* BORDE ROSADO */
+        }
+
+        /* ÍCONO DE MÚSICA EN PREVISUALIZACIÓN DE AUDIO */
+        .preview-modal .preview-content .audio-preview i {
+            font-size: 5rem;
+            /* TAMAÑO GRANDE */
+            color: var(--berry-lumina);
+            /* ROSADO */
+            display: block;
+            /* BLOQUE */
+            margin-bottom: 1.5rem;
+            /* MARGEN INFERIOR */
+        }
+
+        /* BOTÓN DE CIERRE DEL MODAL */
+        .preview-modal .close-preview {
+            position: absolute;
+            /* POSICIÓN ABSOLUTA DENTRO DEL CONTENEDOR */
+            top: -20px;
+            /* DESPLAZADO HACIA ARRIBA */
+            right: -20px;
+            /* DESPLAZADO HACIA LA DERECHA */
+            background: rgba(0, 0, 0, 0.6);
+            /* FONDO OSCURO SEMITRANSPARENTE */
+            border: 2px solid white;
+            /* BORDE BLANCO */
+            color: white;
+            /* TEXTO BLANCO */
+            border-radius: 50%;
+            /* CIRCULAR */
+            width: 44px;
+            /* ANCHO */
+            height: 44px;
+            /* ALTO */
+            font-size: 1.5rem;
+            /* TAMAÑO DE FUENTE */
+            cursor: pointer;
+            /* CURSOR MANO */
+            display: flex;
+            /* FLEX */
+            align-items: center;
+            /* CENTRADO VERTICAL */
+            justify-content: center;
+            /* CENTRADO HORIZONTAL */
+            transition: 0.2s;
+            /* TRANSICIÓN */
+            z-index: 10;
+            /* POR ENCIMA DEL CONTENIDO */
+        }
+
+        /* HOVER DEL BOTÓN DE CIERRE */
+        .preview-modal .close-preview:hover {
+            background: var(--berry-lumina);
+            /* FONDO ROSADO */
+            transform: scale(1.05);
+            /* AUMENTAR TAMAÑO */
+        }
+    </style>
+    <!-- FIN DE LA SECCIÓN DE ESTILOS -->
+
+</head>
+<!-- FIN DE LA CABECERA -->
+
+<body>
+    <!-- INICIO DEL CUERPO DEL DOCUMENTO -->
+
+    <!-- ========================================================== -->
+    <!-- SECCIÓN: CONTENEDOR PRINCIPAL DE LA PÁGINA MULTIMEDIA -->
+    <!-- ========================================================== -->
+    <div class="multimedia-container">
+        <!-- CONTENEDOR PRINCIPAL QUE CENTRA Y LIMITA EL ANCHO -->
+
+        <!-- ===== ENCABEZADO ===== -->
+        <div class="multimedia-header">
+            <!-- ENCABEZADO CON TÍTULO Y BOTONES DE NAVEGACIÓN -->
+            <h1>
+                <!-- TÍTULO PRINCIPAL -->
+                <i class="fas fa-photo-video"></i>
+                <!-- ÍCONO DE FOTO/VIDEO -->
+                Galería Multimedia · {{ local.nombre }}
+                <!-- NOMBRE DEL LOCAL (VARIABLE DE PLANTILLA) -->
+            </h1>
+            <div class="btn-group">
+                <!-- GRUPO DE BOTONES -->
+                <a href="/dueno/dashboard" class="btn">
+                    <!-- BOTÓN PARA IR AL PANEL DE CONTROL -->
+                    <i class="fas fa-arrow-left"></i> Panel
+                    <!-- ÍCONO DE FLECHA Y TEXTO -->
+                </a>
+                <a href="/inicio" class="btn">
+                    <!-- BOTÓN PARA IR AL INICIO -->
+                    <i class="fas fa-home"></i> Inicio
+                    <!-- ÍCONO DE CASA Y TEXTO -->
+                </a>
+                <a href="/local/{{ local.codigo }}" class="btn btn-primary">
+                    <!-- BOTÓN PARA VER LA PÁGINA PÚBLICA DEL LOCAL (PRIMARIO) -->
+                    <i class="fas fa-eye"></i> Ver página pública
+                    <!-- ÍCONO DE OJO Y TEXTO -->
+                </a>
+            </div>
+        </div>
+
+        <!-- ===== TARJETA DE SUBIDA DE ARCHIVOS ===== -->
+        <div class="upload-card">
+            <!-- CONTENEDOR CON FONDO Y BORDES -->
+            <div class="section-title">
+                <!-- TÍTULO DE LA SECCIÓN -->
+                <i class="fas fa-cloud-upload-alt"></i>
+                <!-- ÍCONO DE NUBE DE SUBIDA -->
+                Subir nuevo contenido
+                <!-- TEXTO -->
+            </div>
+            <!-- FORMULARIO PARA SUBIR ARCHIVOS -->
+            <form id="uploadForm" class="form-multimedia" enctype="multipart/form-data">
+                <!-- ID Y CLASE, CON TIPO DE CODIFICACIÓN PARA ARCHIVOS -->
+                <div class="form-group">
+                    <!-- GRUPO PARA EL CAMPO DE ARCHIVO -->
+                    <label><i class="fas fa-file"></i> Archivo *</label>
+                    <!-- ETIQUETA CON ÍCONO -->
+                    <input type="file" id="archivoInput" name="archivo" accept="image/*,video/*,audio/*" required>
+                    <!-- INPUT DE TIPO FILE, ACEPTA IMÁGENES, VIDEOS Y AUDIOS, OBLIGATORIO -->
+                </div>
+                <div class="form-group">
+                    <!-- GRUPO PARA EL SELECT DE TIPO -->
+                    <label><i class="fas fa-tag"></i> Tipo</label>
+                    <!-- ETIQUETA CON ÍCONO -->
+                    <select id="tipoInput" name="tipo">
+                        <!-- SELECT CON OPCIONES -->
+                        <option value="foto">📷 Foto</option>
+                        <!-- OPCIÓN FOTO -->
+                        <option value="video">🎬 Video</option>
+                        <!-- OPCIÓN VIDEO -->
+                        <option value="audio">🎵 Audio</option>
+                        <!-- OPCIÓN AUDIO -->
+                    </select>
+                </div>
+                <div class="form-group" style="flex:2; min-width:200px;">
+                    <!-- GRUPO CON FLEX MÁS GRANDE PARA DESCRIPCIÓN -->
+                    <label><i class="fas fa-pencil-alt"></i> Descripción</label>
+                    <!-- ETIQUETA CON ÍCONO -->
+                    <input type="text" id="descripcionInput" name="descripcion" placeholder="Ej. Nuestro nuevo producto estrella..." maxlength="200">
+                    <!-- INPUT DE TEXTO PARA DESCRIPCIÓN, CON LÍMITE DE 200 CARACTERES -->
+                </div>
+                <button type="submit" id="uploadBtn">
+                    <!-- BOTÓN DE ENVÍO DEL FORMULARIO -->
+                    <i class="fas fa-upload"></i> Subir
+                    <!-- ÍCONO DE SUBIDA Y TEXTO -->
+                </button>
+            </form>
+            <!-- DIV PARA MOSTRAR ESTADO DE LA SUBIDA -->
+            <div id="uploadStatus" style="margin-top:0.8rem; font-size:0.85rem; color:var(--text-mist);"></div>
+            <!-- ESTILO EN LÍNEA PARA MARGEN Y COLOR -->
+        </div>
+
+        <!-- ===== GALERÍA DE MULTIMEDIA ===== -->
+        <div class="upload-card">
+            <!-- OTRA TARJETA PARA LA GALERÍA -->
+            <div class="section-title">
+                <!-- TÍTULO DE LA SECCIÓN -->
+                <i class="fas fa-images"></i>
+                <!-- ÍCONO DE IMÁGENES -->
+                Contenido multimedia
+                <!-- TEXTO -->
+                <span style="font-size:0.8rem; font-weight:400; color:var(--text-mist); margin-left:auto;">
+                    <!-- CONTADOR DE ARCHIVOS ALINEADO A LA DERECHA -->
+                    <span id="totalCount">0</span> archivos
+                    <!-- ELEMENTO SPAN QUE SE ACTUALIZARÁ CON JAVASCRIPT -->
+                </span>
+            </div>
+            <div id="galleryContainer" class="gallery-grid">
+                <!-- CONTENEDOR DE LA GALERÍA (CUADRICULA) -->
+                <!-- SE LLENARÁ CON JAVASCRIPT -->
+                <div class="gallery-empty">
+                    <!-- MENSAJE DE CARGA INICIAL -->
+                    <i class="fas fa-camera"></i>
+                    <!-- ÍCONO DE CÁMARA -->
+                    <p>Cargando contenido...</p>
+                    <!-- TEXTO -->
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- FIN DEL CONTENEDOR PRINCIPAL -->
+
+    <!-- ========================================================== -->
+    <!-- SECCIÓN: MODAL DE VISTA PREVIA -->
+    <!-- ========================================================== -->
+    <div id="previewModal" class="preview-modal">
+        <!-- MODAL OCULTO POR DEFECTO -->
+        <div class="preview-content" id="previewContent">
+            <!-- CONTENEDOR DEL CONTENIDO DEL MODAL -->
+            <button class="close-preview" id="closePreview">
+                <!-- BOTÓN DE CIERRE -->
+                <i class="fas fa-times"></i>
+                <!-- ÍCONO DE EQUIS -->
+            </button>
+            <div id="previewInner">
+                <!-- AQUÍ SE INYECTARÁ EL CONTENIDO DINÁMICO (IMG, VIDEO, AUDIO) -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================== -->
+    <!-- SECCIÓN: TOAST (MENSAJE EMERGENTE) -->
+    <!-- ========================================================== -->
+    <div id="toastMsg" class="toast-msg"></div>
+    <!-- DIV PARA EL TOAST, INICIALMENTE OCULTO -->
+
+    <!-- ========================================================== -->
+    <!-- SECCIÓN: JAVASCRIPT DE LA LÓGICA DE LA PÁGINA -->
+    <!-- ========================================================== -->
+    <script>
+        // ================================================================
+        // BLOQUE: VARIABLES Y CONFIGURACIÓN INICIAL
+        // ================================================================
+        // SE OBTIENEN LOS DATOS DEL LOCAL DESDE LA PLANTILLA (JINJA)
+        const localId = {{ local.id|tojson }};
+        // ID DEL LOCAL, CONVERTIDO A JSON PARA SEGURIDAD
+        const localCodigo = {{ local.codigo|tojson }};
+        // CÓDIGO DEL LOCAL, TAMBIÉN EN JSON
+
+        // ================================================================
+        // BLOQUE: FUNCIONES DEL TOAST (MENSAJES EMERGENTES)
+        // ================================================================
+        function showToast(msg, isError = false) {
+            // FUNCIÓN QUE RECIBE UN MENSAJE Y UN INDICADOR DE ERROR (OPCIONAL)
+            const toast = document.getElementById('toastMsg');
+            // OBTENER EL ELEMENTO DEL TOAST
+            toast.innerHTML = `<i class="fas ${isError ? 'fa-exclamation-triangle' : 'fa-check-circle'}"></i> ${msg}`;
+            // INSERTAR ÍCONO SEGÚN SEA ERROR O ÉXITO, Y EL MENSAJE
+            toast.className = 'toast-msg show' + (isError ? ' error' : '');
+            // ASIGNAR CLASE 'show' Y AGREGAR 'error' SI CORRESPONDE
+            clearTimeout(toast._timer);
+            // LIMPIAR TEMPORIZADOR ANTERIOR PARA EVITAR CONFLICTOS
+            toast._timer = setTimeout(() => toast.classList.remove('show'), 3500);
+            // PROGRAMAR OCULTAMIENTO DESPUÉS DE 3.5 SEGUNDOS
+        }
+
+        // ================================================================
+        // BLOQUE: FUNCIÓN PARA ESCAPAR HTML (PREVENIR XSS)
+        // ================================================================
+        function escapeHtml(str) {
+            // FUNCIÓN QUE TOMA UN STRING Y ESCAPA CARACTERES PELIGROSOS
+            if (!str) return '';
+            // SI ES NULO O VACÍO, DEVOLVER CADENA VACÍA
+            return str.replace(/[&<>]/g, function(m) {
+                // REEMPLAZAR &, <, > POR SUS ENTIDADES HTML
+                if (m === '&') return '&amp;';
+                // AMPERSAND
+                if (m === '<') return '&lt;';
+                // MENOR QUE
+                if (m === '>') return '&gt;';
+                // MAYOR QUE
+                return m;
+                // OTRO (NO DEBERÍA OCURRIR)
+            });
+        }
+
+        // ================================================================
+        // BLOQUE: FUNCIÓN PARA CARGAR LA GALERÍA DESDE EL SERVIDOR
+        // ================================================================
+        async function cargarGaleria() {
+            // FUNCIÓN ASÍNCRONA PARA OBTENER Y RENDERIZAR LOS ARCHIVOS
+            const container = document.getElementById('galleryContainer');
+            // OBTENER EL CONTENEDOR DE LA GALERÍA
+            const totalSpan = document.getElementById('totalCount');
+            // OBTENER EL SPAN DEL CONTADOR
+
+            try {
+                // INICIO DEL BLOQUE TRY PARA MANEJAR ERRORES
+                const res = await fetch(`/api/owner/multimedia?local_id=${localId}`);
+                // REALIZAR PETICIÓN GET A LA API CON EL ID DEL LOCAL
+                if (!res.ok) throw new Error('Error al cargar multimedia');
+                // SI LA RESPUESTA NO ES OK, LANZAR ERROR
+
+                const data = await res.json();
+                // PARSEAR LA RESPUESTA COMO JSON
+                const files = data.files || [];
+                // OBTENER EL ARRAY DE ARCHIVOS (O VACÍO SI NO EXISTE)
+
+                totalSpan.innerText = files.length;
+                // ACTUALIZAR EL CONTADOR CON LA CANTIDAD DE ARCHIVOS
+
+                if (files.length === 0) {
+                    // SI NO HAY ARCHIVOS
+                    container.innerHTML = `
+                        <div class="gallery-empty">
+                            <i class="fas fa-images"></i>
+                            <p>No hay contenido multimedia aún.</p>
+                            <p style="font-size:0.8rem;">Sube fotos, videos o audio para mostrar tu local.</p>
+                        </div>
+                    `;
+                    // MOSTRAR MENSAJE DE GALERÍA VACÍA
+                    return;
+                    // SALIR DE LA FUNCIÓN
+                }
+
+                let html = '';
+                // VARIABLE PARA ACUMULAR EL HTML DE LOS ÍTEMS
+
+                files.forEach(f => {
+                    // RECORRER CADA ARCHIVO
+                    const url = `/multimedia/${f.file_id}`;
+                    // CONSTRUIR LA URL PARA OBTENER EL ARCHIVO
+                    let mediaHtml = '';
+                    // VARIABLE PARA EL CONTENIDO DEL MEDIA (IMG, VIDEO O ÍCONO)
+                    let overlayIcon = '';
+                    // VARIABLE PARA EL ÍCONO QUE APARECE EN EL OVERLAY
+
+                    if (f.tipo === 'foto') {
+                        // SI EL TIPO ES FOTO
+                        mediaHtml = `<img src="${url}" alt="${escapeHtml(f.descripcion || f.filename)}" loading="lazy">`;
+                        // IMAGEN CON ATRIBUTO LOADING LAZY PARA OPTIMIZAR
+                        overlayIcon = '<i class="fas fa-search-plus"></i>';
+                        // ÍCONO DE LUPA PARA EL OVERLAY
+                    } else if (f.tipo === 'video') {
+                        // SI EL TIPO ES VIDEO
+                        mediaHtml = `
+                            <video muted preload="metadata">
+                                <source src="${url}" type="${f.content_type || 'video/mp4'}">
+                            </video>
+                        `;
+                        // ELEMENTO VIDEO CON MUTED Y PRELOAD METADATA, Y FUENTE
+                        overlayIcon = '<i class="fas fa-play-circle"></i>';
+                        // ÍCONO DE REPRODUCCIÓN
+                    } else if (f.tipo === 'audio') {
+                        // SI EL TIPO ES AUDIO
+                        mediaHtml = `<div class="audio-icon"><i class="fas fa-music"></i></div>`;
+                        // UN DIV CON ÍCONO DE MÚSICA
+                        overlayIcon = '<i class="fas fa-headphones"></i>';
+                        // ÍCONO DE AURICULARES
+                    }
+
+                    const tipoIcon = f.tipo === 'foto' ? '📷' : f.tipo === 'video' ? '🎬' : '🎵';
+                    // EMOGI SEGÚN EL TIPO
+                    const fecha = f.upload_date ? new Date(f.upload_date).toLocaleDateString('es-MX') : '';
+                    // FORMATO DE FECHA EN ESPAÑOL MEXICANO, O VACÍO SI NO HAY
+
+                    html += `
+                        <div class="gallery-item" data-file-id="${f.file_id}">
+                            <!-- ÍTEM DE GALERÍA CON ATRIBUTO DATA-FILE-ID -->
+                            <div class="media-wrapper" onclick="abrirPreview('${f.file_id}', '${f.tipo}')">
+                                <!-- WRAPPER DEL MEDIA, AL HACER CLICK ABRE PREVISUALIZACIÓN -->
+                                ${mediaHtml}
+                                <!-- CONTENIDO DEL MEDIA -->
+                                <div class="play-overlay">${overlayIcon}</div>
+                                <!-- OVERLAY QUE SE MUESTRA AL HOVER -->
+                            </div>
+                            <div class="item-info">
+                                <!-- INFORMACIÓN DEL ARCHIVO -->
+                                <span class="tipo-badge">${tipoIcon} ${f.tipo}</span>
+                                <!-- BADGE CON TIPO -->
+                                <div class="descripcion">${escapeHtml(f.descripcion || f.filename)}</div>
+                                <!-- DESCRIPCIÓN O NOMBRE DEL ARCHIVO ESCAPADO -->
+                                <div class="fecha">${fecha}</div>
+                                <!-- FECHA DE SUBIDA -->
+                            </div>
+                            <div class="item-actions">
+                                <!-- ACCIONES DEL ÍTEM -->
+                                <button class="btn-sm btn-danger eliminar-multimedia" data-file-id="${f.file_id}">
+                                    <!-- BOTÓN DE ELIMINAR CON CLASE Y DATA-FILE-ID -->
+                                    <i class="fas fa-trash-alt"></i> Eliminar
+                                    <!-- ÍCONO Y TEXTO -->
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                container.innerHTML = html;
+                // INSERTAR EL HTML GENERADO EN EL CONTENEDOR
+
+                // EVENTOS DE ELIMINAR
+                document.querySelectorAll('.eliminar-multimedia').forEach(btn => {
+                    // SELECCIONAR TODOS LOS BOTONES DE ELIMINAR
+                    btn.addEventListener('click', async (e) => {
+                        // ESCUCHAR CLICK
+                        e.stopPropagation();
+                        // EVITAR QUE EL CLICK SE PROPAGE AL ELEMENTO PADRE
+                        const fileId = btn.dataset.fileId;
+                        // OBTENER EL ID DEL ARCHIVO DESDE EL ATRIBUTO DATA
+                        if (confirm('¿Eliminar este archivo permanentemente?')) {
+                            // CONFIRMAR CON EL USUARIO
+                            await eliminarArchivo(fileId);
+                            // LLAMAR A LA FUNCIÓN DE ELIMINACIÓN
+                        }
+                    });
+                });
+
+            } catch (e) {
+                // CAPTURAR ERRORES
+                console.error('Error al cargar galería:', e);
+                // REGISTRAR EN LA CONSOLA
+                container.innerHTML = `
+                    <div class="gallery-empty">
+                        <i class="fas fa-exclamation-triangle" style="color:#e74c3c;"></i>
+                        <p>Error al cargar el contenido.</p>
+                        <button class="btn-sm btn-primary" onclick="cargarGaleria()" style="margin-top:0.5rem;">
+                            <i class="fas fa-sync"></i> Reintentar
+                        </button>
+                    </div>
+                `;
+                // MOSTRAR MENSAJE DE ERROR CON BOTÓN PARA REINTENTAR
+            }
+        }
+
+        // ================================================================
+        // BLOQUE: FUNCIÓN PARA ELIMINAR UN ARCHIVO
+        // ================================================================
+        async function eliminarArchivo(fileId) {
+            // FUNCIÓN ASÍNCRONA PARA ELIMINAR
+            try {
+                const res = await fetch(`/api/owner/multimedia/${fileId}`, {
+                    // PETICIÓN DELETE A LA API
+                    method: 'DELETE'
+                });
+                const data = await res.json();
+                // PARSEAR RESPUESTA
+                if (data.success) {
+                    // SI LA OPERACIÓN FUE EXITOSA
+                    showToast('Archivo eliminado correctamente');
+                    // MOSTRAR TOAST DE ÉXITO
+                    cargarGaleria();
+                    // RECARGAR LA GALERÍA
+                } else {
+                    showToast(data.error || 'Error al eliminar', true);
+                    // MOSTRAR TOAST DE ERROR CON EL MENSAJE DEL SERVIDOR
+                }
+            } catch (e) {
+                showToast('Error de conexión', true);
+                // ERROR DE CONEXIÓN
+            }
+        }
+
+        // ================================================================
+        // BLOQUE: FUNCIONES PARA ABRIR Y CERRAR LA VISTA PREVIA
+        // ================================================================
+        function abrirPreview(fileId, tipo) {
+            // FUNCIÓN QUE ABRE EL MODAL CON EL CONTENIDO PREVISUALIZADO
+            const modal = document.getElementById('previewModal');
+            // OBTENER EL MODAL
+            const inner = document.getElementById('previewInner');
+            // OBTENER EL CONTENEDOR INTERNO
+            const url = `/multimedia/${fileId}`;
+            // CONSTRUIR LA URL DEL ARCHIVO
+
+            let html = '';
+            // VARIABLE PARA EL HTML DEL CONTENIDO
+
+            if (tipo === 'foto') {
+                // SI ES FOTO
+                html = `<img src="${url}" alt="Vista previa" style="max-width:100%; max-height:85vh; border-radius:16px;">`;
+                // IMAGEN CON ESTILOS PARA AJUSTAR
+            } else if (tipo === 'video') {
+                // SI ES VIDEO
+                html = `
+                    <video controls autoplay style="max-width:100%; max-height:85vh; border-radius:16px;">
+                        <source src="${url}">
+                        Tu navegador no soporta el video.
+                    </video>
+                `;
+                // VIDEO CON CONTROLES Y AUTO REPRODUCCIÓN
+            } else if (tipo === 'audio') {
+                // SI ES AUDIO
+                html = `
+                    <div class="audio-preview">
+                        <i class="fas fa-music"></i>
+                        <h3 style="color:var(--golden-hour); font-family:var(--font-title);">Reproduciendo audio</h3>
+                        <audio controls autoplay style="width:100%; margin-top:1rem;">
+                            <source src="${url}">
+                            Tu navegador no soporta audio.
+                        </audio>
+                    </div>
+                `;
+                // DISEÑO ESPECIAL PARA AUDIO CON TÍTULO Y REPRODUCTOR
+            }
+
+            inner.innerHTML = html;
+            // INSERTAR EL HTML EN EL CONTENEDOR
+            modal.classList.add('active');
+            // AGREGAR CLASE ACTIVE PARA MOSTRAR EL MODAL
+            document.body.style.overflow = 'hidden';
+            // EVITAR EL DESPLAZAMIENTO DEL FONDO
+        }
+
+        function cerrarPreview() {
+            // FUNCIÓN PARA CERRAR EL MODAL
+            const modal = document.getElementById('previewModal');
+            // OBTENER EL MODAL
+            modal.classList.remove('active');
+            // QUITAR CLASE ACTIVE
+            document.body.style.overflow = '';
+            // RESTAURAR DESPLAZAMIENTO
+
+            // DETENER REPRODUCCIÓN DE VIDEO Y AUDIO
+            const video = document.querySelector('#previewInner video');
+            // BUSCAR ELEMENTO VIDEO DENTRO DEL CONTENEDOR
+            if (video) video.pause();
+            // SI EXISTE, PAUSAR
+            const audio = document.querySelector('#previewInner audio');
+            // BUSCAR ELEMENTO AUDIO
+            if (audio) audio.pause();
+            // SI EXISTE, PAUSAR
+        }
+
+        // ASIGNAR EVENTOS AL BOTÓN DE CIERRE Y AL FONDO DEL MODAL
+        document.getElementById('closePreview').addEventListener('click', cerrarPreview);
+        // AL HACER CLICK EN EL BOTÓN DE CIERRE
+        document.getElementById('previewModal').addEventListener('click', (e) => {
+            // AL HACER CLICK EN EL MODAL
+            if (e.target === e.currentTarget) cerrarPreview();
+            // SI EL CLICK FUE DIRECTAMENTE SOBRE EL FONDO (NO SOBRE EL CONTENIDO), CERRAR
+        });
+        document.addEventListener('keydown', (e) => {
+            // ESCUCHAR EVENTO DE TECLADO
+            if (e.key === 'Escape') cerrarPreview();
+            // SI SE PRESIONA ESC, CERRAR
+        });
+
+        // ================================================================
+        // BLOQUE: MANEJO DEL FORMULARIO DE SUBIDA
+        // ================================================================
+        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+            // ESCUCHAR EVENTO SUBMIT DEL FORMULARIO
+            e.preventDefault();
+            // EVITAR EL ENVÍO TRADICIONAL
+
+            const form = e.target;
+            // REFERENCIA AL FORMULARIO
+            const btn = document.getElementById('uploadBtn');
+            // BOTÓN DE SUBIR
+            const status = document.getElementById('uploadStatus');
+            // ELEMENTO DE ESTADO
+            const fileInput = document.getElementById('archivoInput');
+            // INPUT DE ARCHIVO
+            const tipoInput = document.getElementById('tipoInput');
+            // SELECT DE TIPO
+            const descripcionInput = document.getElementById('descripcionInput');
+            // INPUT DE DESCRIPCIÓN
+
+            const file = fileInput.files[0];
+            // OBTENER EL PRIMER ARCHIVO SELECCIONADO
+            if (!file) {
+                // SI NO HAY ARCHIVO
+                showToast('Selecciona un archivo', true);
+                // MOSTRAR ERROR
+                return;
+                // SALIR
+            }
+
+            // VALIDAR TIPO DE ARCHIVO SEGÚN LA SELECCIÓN
+            const tipo = tipoInput.value;
+            // OBTENER EL TIPO SELECCIONADO
+            const validTypes = {
+                // OBJETO CON TIPOS MIME VÁLIDOS PARA CADA CATEGORÍA
+                'foto': ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/jpg'],
+                'video': ['video/mp4', 'video/webm', 'video/avi', 'video/mov', 'video/quicktime'],
+                'audio': ['audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/mp3', 'audio/aac']
+            };
+
+            if (!validTypes[tipo].includes(file.type)) {
+                // SI EL TIPO MIME DEL ARCHIVO NO ESTÁ EN LA LISTA
+                showToast(`Formato no válido para ${tipo}. Usa: ${validTypes[tipo].join(', ')}`, true);
+                // MOSTRAR ERROR CON LOS TIPOS PERMITIDOS
+                return;
+                // SALIR
+            }
+
+            // VALIDAR TAMAÑO MÁXIMO (50MB)
+            if (file.size > 50 * 1024 * 1024) {
+                // SI EL TAMAÑO EXCEDE 50 MEGABYTES
+                showToast('El archivo es demasiado grande. Máximo 50MB.', true);
+                // ERROR
+                return;
+            }
+
+            // PREPARAR FORM DATA PARA ENVIAR
+            const formData = new FormData();
+            // CREAR OBJETO FORM DATA
+            formData.append('archivo', file);
+            // AGREGAR EL ARCHIVO
+            formData.append('tipo', tipo);
+            // AGREGAR EL TIPO
+            formData.append('descripcion', descripcionInput.value.trim() || '');
+            // AGREGAR DESCRIPCIÓN (SI ESTÁ VACÍA, CADENA VACÍA)
+            formData.append('local_id', localId);
+            // AGREGAR EL ID DEL LOCAL
+
+            btn.disabled = true;
+            // DESHABILITAR EL BOTÓN MIENTRAS SUBE
+            btn.innerHTML = '<span class="spinner"></span> Subiendo...';
+            // CAMBIAR EL TEXTO POR UN SPINNER
+            status.innerText = '⏳ Subiendo archivo...';
+            // ACTUALIZAR ESTADO
+
+            try {
+                const res = await fetch('/api/owner/multimedia/upload', {
+                    // PETICIÓN POST A LA API DE SUBIDA
+                    method: 'POST',
+                    body: formData
+                    // ENVIAR FORM DATA
+                });
+
+                const data = await res.json();
+                // PARSEAR RESPUESTA
+
+                if (data.success) {
+                    // SI LA SUBIDA FUE EXITOSA
+                    showToast('✅ Archivo subido correctamente');
+                    // TOAST DE ÉXITO
+                    status.innerText = '✅ Subido correctamente';
+                    // ACTUALIZAR ESTADO
+                    form.reset();
+                    // REINICIAR EL FORMULARIO
+                    cargarGaleria();
+                    // RECARGAR LA GALERÍA
+                } else {
+                    showToast(data.error || 'Error al subir', true);
+                    // TOAST DE ERROR CON MENSAJE DEL SERVIDOR
+                    status.innerText = '❌ Error: ' + (data.error || 'Desconocido');
+                    // ACTUALIZAR ESTADO CON ERROR
+                }
+            } catch (err) {
+                // CAPTURAR ERROR DE CONEXIÓN
+                showToast('Error de conexión al servidor', true);
+                // TOAST DE ERROR
+                status.innerText = '❌ Error de conexión';
+                // ACTUALIZAR ESTADO
+                console.error(err);
+                // REGISTRAR EN CONSOLA
+            } finally {
+                // BLOQUE QUE SE EJECUTA SIEMPRE, HAYA ÉXITO O ERROR
+                btn.disabled = false;
+                // HABILITAR BOTÓN
+                btn.innerHTML = '<i class="fas fa-upload"></i> Subir';
+                // RESTAURAR TEXTO ORIGINAL
+                setTimeout(() => {
+                    status.innerText = '';
+                    // LIMPIAR ESTADO DESPUÉS DE 4 SEGUNDOS
+                }, 4000);
+            }
+        });
+
+        // ================================================================
+        // BLOQUE: INICIALIZACIÓN DE LA GALERÍA Y ACTUALIZACIÓN PERIÓDICA
+        // ================================================================
+        cargarGaleria();
+        // LLAMAR A LA FUNCIÓN PARA CARGAR LA GALERÍA AL INICIO
+
+        setInterval(cargarGaleria, 30000);
+        // PROGRAMAR RECARGA CADA 30 SEGUNDOS (PARA REFLEJAR CAMBIOS DESDE OTRAS PESTAÑAS)
+
+        // ================================================================
+        // BLOQUE: ESTILOS DINÁMICOS PARA EL MODAL DE PREVISUALIZACIÓN
+        // ================================================================
+        const stylePreview = document.createElement('style');
+        // CREAR UN ELEMENTO STYLE
+        stylePreview.textContent = `
+            /* ESTILOS ADICIONALES PARA EL REPRODUCTOR DE AUDIO EN EL MODAL */
+            .preview-modal .preview-content .audio-preview audio {
+                background: #2a2438;
+                border-radius: 40px;
+                padding: 0.5rem;
+            }
+            .preview-modal .preview-content .audio-preview audio::-webkit-media-controls-panel {
+                background: #2a2438;
+            }
+            .preview-modal .preview-content .audio-preview h3 {
+                color: var(--golden-hour);
+                font-family: var(--font-title);
+                margin-bottom: 0.5rem;
+            }
+        `;
+        // CONTENIDO CSS PARA PERSONALIZAR EL REPRODUCTOR DE AUDIO
+        document.head.appendChild(stylePreview);
+        // AGREGAR EL ESTILO AL HEAD DEL DOCUMENTO
+
+        console.log('🎬 Panel multimedia cargado para local:', localCodigo);
+        // MENSAJE DE CONSOLA INDICANDO QUE EL PANEL SE CARGÓ CORRECTAMENTE
+    </script>
+    <!-- FIN DEL BLOQUE DE JAVASCRIPT -->
+
+</body>
+<!-- FIN DEL CUERPO DEL DOCUMENTO -->
+
+</html>
+<!-- FIN DEL DOCUMENTO HTML -->

@@ -1,0 +1,3060 @@
+/* ============================================================
+SECCIÓN 1: RESET Y VARIABLES GLOBALES
+============================================================
+Esta sección "reinicia" los estilos por defecto del navegador
+para que todos los elementos empiecen desde un mismo punto,
+y define las "variables" (como una paleta de colores y fuentes)
+que se usarán en todo el sitio. Es como preparar la mesa antes
+de cocinar: tener todos los ingredientes listos y organizados.
+============================================================ */
+
+/* ============================================================
+REGLA: * (selector universal)
+============================================================
+El asterisco (*) selecciona TODOS los elementos de la página.
+Esta regla se aplica a absolutamente todo: texto, imágenes,
+contenedores, botones, etc.
+- margin: 0; -> Elimina todos los márgenes exteriores que los
+    navegadores ponen por defecto a los elementos. Así controlamos
+    nosotros el espacio.
+- padding: 0; -> Elimina todos los rellenos internos que los
+    navegadores ponen por defecto. Así todo empieza desde cero.
+- box-sizing: border-box; -> Esta es una regla muy importante:
+    hace que el ancho y alto de un elemento incluyan el borde y
+    el relleno. Es más fácil trabajar así porque no hay que
+    hacer sumas y restas para calcular el tamaño real.
+*/
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ============================================================
+REGLA: :root (pseudo-clase raíz)
+============================================================
+:root es como el "almacén principal" de la página. Aquí se
+definen variables CSS que se pueden usar en cualquier otro
+lugar del archivo. Es como tener un "cajón de colores" y
+"cajón de fuentes" al que podemos acceder desde cualquier
+regla. Si queremos cambiar un color, solo lo cambiamos aquí
+y se actualiza automáticamente en toda la página.
+*/
+:root {
+    /* ========================================================
+    PALETA DE COLORES (Versión Clara y Brillante)
+    ========================================================
+    Estos son los colores principales que se usan en toda la
+    página. Están organizados por categorías para que sea
+    fácil encontrarlos y cambiarlos.
+    */
+
+    /* --bg-light: Color de fondo general de la página.
+    Es un blanco muy suave con un toque cálido (casi crema). */
+    --bg-light: #FCFAF5;
+
+    /* --bg-card: Color de fondo de las tarjetas y contenedores.
+    Blanco puro para contrastar con el fondo general. */
+    --bg-card: #FFFFFF;
+
+    /* --text-primary: Color principal del texto.
+    Casi negro, para que sea muy legible. */
+    --text-primary: #1A1A1A;
+
+    /* --text-secondary: Color secundario del texto.
+    Un gris oscuro, para textos menos importantes o subtítulos. */
+    --text-secondary: #4A4A4A;
+
+    /* --wine-main: El color principal de la marca (vino tinto).
+    Es un rojo vino oscuro y elegante. */
+    --wine-main: #8B1A2B;
+
+    /* --wine-hover: Una versión más clara del vino, para cuando
+    el mouse pasa por encima de un botón o enlace. */
+    --wine-hover: #A52A3B;
+
+    /* --wine-light: Una versión muy clara del vino, casi rosada.
+    Se usa para fondos sutiles o resaltar áreas. */
+    --wine-light: #F2D7DE;
+
+    /* --gold-main: El color dorado de la marca.
+    Da un toque de lujo y calidez. */
+    --gold-main: #D4AF37;
+
+    /* --gold-light: Una versión más clara del dorado.
+    Para fondos o detalles más suaves. */
+    --gold-light: #F5D06B;
+
+    /* --gold-soft: Un dorado muy suave, casi beige.
+    Se usa para bordes y separadores sutiles. */
+    --gold-soft: #E8D5C4;
+
+    /* --border-soft: Un borde con el color dorado pero
+    con transparencia (25% de opacidad). Ideal para
+    líneas que no quieren ser demasiado prominentes. */
+    --border-soft: rgba(212, 175, 55, 0.25);
+
+    /* --shadow-soft: Una sombra muy suave y sutil.
+    Da profundidad a los elementos sin ser demasiado
+    llamativa. */
+    --shadow-soft: 0 8px 30px rgba(0, 0, 0, 0.08);
+
+    /* ========================================================
+    FUENTES (Tipos de letra)
+    ========================================================
+    Estas son las fuentes que se usan en toda la página.
+    Se cargan desde Google Fonts en el archivo HTML.
+    Son como los "trajes" de los textos: cada uno tiene
+    un estilo y personalidad diferente.
+    */
+
+    /* --font-serif: Una fuente con serifas (remates en las
+    letras). Tiene un estilo clásico y elegante. */
+    --font-serif: 'Cormorant Garamond', serif;
+
+    /* --font-title: Una fuente para títulos principales.
+    Es más decorativa y llamativa. */
+    --font-title: 'Playfair Display', serif;
+
+    /* --font-sans: Una fuente sin serifas (moderna y limpia).
+    Se usa para textos largos y elementos de interfaz. */
+    --font-sans: 'Montserrat', sans-serif;
+
+    /* --font-accent: Una fuente especial para acentos.
+    Tiene un estilo más dramático y decorativo. */
+    --font-accent: 'Cinzel', serif;
+
+    /* --transition-smooth: Una "receta" de transición que se
+    usa en muchos lugares. Hace que los cambios (como al
+    pasar el mouse) sean suaves y agradables a la vista. */
+    --transition-smooth: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================================
+REGLA: body (el cuerpo de la página)
+============================================================
+El <body> es el contenedor principal de todo el contenido
+visible de la página. Aquí se definen los estilos globales
+que afectan a toda la página.
+- background: var(--bg-light); -> Fondo con el color claro
+    definido en las variables (crema suave).
+- font-family: var(--font-serif); -> Usa la fuente con serifas
+    para todo el texto de la página, a menos que se especifique
+    otra cosa.
+- line-height: 1.5; -> La altura entre líneas de texto.
+    1.5 es un valor cómodo para leer (espaciado 1.5 veces el
+    tamaño de la fuente).
+- overflow-x: hidden; -> Evita que la página se desplace
+    horizontalmente (no aparecerá barra de desplazamiento lateral).
+- position: relative; -> Para que los elementos hijos con
+    position: absolute se posicionen en relación al body.
+- color: var(--text-primary); -> Color de texto principal
+    (casi negro).
+- background-image: radial-gradient(...); -> Añade un gradiente
+    radial (circular) muy sutil en la esquina superior izquierda,
+    con un tono vino muy tenue para dar calidez al fondo.
+*/
+body {
+    /* Mantén las propiedades que ya tengas, pero añade o reemplaza el fondo */
+    background-image: url('/static/img/fondos/fondoprinci.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-color: var(--bg-light);  /* color de respaldo */
+    /* el resto de tus estilos... */
+}
+
+/* ============================================================
+REGLA: body::before (pseudo-elemento antes del body)
+============================================================
+::before es un "elemento fantasma" que se crea antes del
+contenido del body. Se usa para añadir decoraciones sin
+añadir código HTML extra.
+- content: ""; -> El contenido está vacío (es solo un
+    elemento visual, no textual).
+- position: fixed; -> Se mantiene fijo en la pantalla
+    aunque el usuario haga scroll.
+- top: 0; left: 0; -> Ocupa toda la esquina superior izquierda.
+- width: 100%; height: 100%; -> Ocupa todo el ancho y alto.
+- background: radial-gradient(...); -> Añade un brillo muy
+    sutil en el centro de la pantalla.
+- pointer-events: none; -> Permite que los clics "atraviesen"
+    este elemento, para que no bloquee la interacción con
+    otros elementos.
+- z-index: 0; -> Se coloca por debajo del contenido.
+*/
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* ============================================================
+REGLA: #cosmicCanvas (canvas cósmico)
+============================================================
+Este es un elemento <canvas> que se usa para dibujar efectos
+visuales (como estrellas o partículas). Es opcional y se
+puede quitar si no se necesita.
+- position: fixed; -> Se mantiene fijo en la pantalla.
+- top: 0; left: 0; -> Ocupa toda la pantalla.
+- width: 100%; height: 100%; -> Ocupa todo el espacio.
+- display: block; -> Se comporta como un bloque.
+- z-index: 1; -> Se coloca por encima del fondo del body
+    pero por debajo del contenido principal.
+- pointer-events: none; -> No interfiere con los clics.
+- background: transparent; -> Fondo transparente para que
+    se vea el gradiente del body.
+*/
+#cosmicCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    z-index: 1;
+    pointer-events: none;
+    background: transparent;
+}
+
+/* ============================================================
+REGLA: .app-wrapper (contenedor principal)
+============================================================
+Este es el contenedor que envuelve todo el contenido de la
+página. Es como una "bandeja" donde se coloca todo.
+- max-width: 1300px; -> La página no se estirará más de
+    1300 píxeles de ancho (para que no sea demasiado ancha
+    en pantallas grandes).
+- margin: 20px auto; -> Centra el contenedor horizontalmente
+    y le da un margen de 20px arriba y abajo.
+- padding: 0 28px; -> Añade espacio interno a los lados.
+- position: relative; -> Para que los elementos hijos con
+    position: absolute se posicionen en relación a este contenedor.
+- z-index: 2; -> Se coloca por encima del canvas y del fondo.
+- background: var(--bg-card); -> Fondo blanco.
+- backdrop-filter: blur(4px); -> Aplica un ligero desenfoque
+    al fondo que está detrás (efecto de vidrio esmerilado).
+- border-radius: 42px; -> Bordes muy redondeados (esquina
+    suave y elegante).
+- border: 2px solid var(--gold-soft); -> Borde dorado suave.
+- box-shadow: var(--shadow-soft); -> Sombra suave para dar
+    profundidad.
+- transition: all 0.2s; -> Transición suave para cambios.
+*/
+.app-wrapper {
+    max-width: 1300px;
+    margin: 20px auto;
+    padding: 0 28px;
+    position: relative;
+    z-index: 2;
+    background: rgba(255, 255, 255, 0.55);   /* ← semi-transparente */
+    backdrop-filter: blur(12px);              /* ← más desenfoque */
+    border-radius: 42px;
+    border: 1px solid var(--gold-main);       /* ← borde dorado más visible */
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    transition: all 0.3s ease;
+}
+
+/* ============================================================
+REGLA: .app-wrapper::before y .app-wrapper::after
+============================================================
+Estos pseudo-elementos añaden decoraciones de emojis (frutas)
+en la parte superior e inferior del contenedor principal.
+Es como un "borde decorativo" hecho con emojis.
+- content: "🍷 🫐 🍒 🍇 ..."; -> El contenido son emojis
+    de frutas y vino.
+- position: absolute; -> Se posicionan de forma absoluta
+    dentro del contenedor.
+- font-size: 16px; -> Tamaño de los emojis.
+- opacity: 0.4; -> Transparencia para que no distraiga.
+- pointer-events: none; -> No interfieren con los clics.
+- letter-spacing: 8px; -> Espacio entre cada emoji.
+*/
+.app-wrapper::before,
+.app-wrapper::after {
+    content: "🍷 🫐 🍒 🍇 🍷 🫐 🍒 🍇";
+    position: absolute;
+    font-size: 16px;
+    opacity: 0.4;
+    pointer-events: none;
+    letter-spacing: 8px;
+}
+/* El ::before se coloca en la parte superior, centrado. */
+.app-wrapper::before {
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+/* El ::after se coloca en la parte inferior, centrado. */
+.app-wrapper::after {
+    bottom: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* ============================================================
+REGLA: .char-decor (personajes fruta-animal)
+============================================================
+Son decoraciones con emojis o imágenes de personajes
+(como animales con frutas) que aparecen en la página.
+- position: absolute; -> Se posicionan de forma absoluta.
+- pointer-events: none; -> No interfieren con clics.
+- z-index: 10; -> Se colocan por encima del contenido.
+- width: 130px; height: 130px; -> Tamaño fijo.
+- background-size: contain; -> La imagen se ajusta sin
+    deformarse.
+- background-repeat: no-repeat; -> No se repite.
+- background-position: center; -> Centrada.
+- opacity: 0.85; -> Ligeramente transparente.
+- transition: var(--transition-smooth); -> Transición suave.
+- filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1)); -> Sombra
+    sutil para dar profundidad.
+*/
+.char-decor {
+    position: absolute;
+    pointer-events: none;
+    z-index: 10;
+    width: 130px;
+    height: 130px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.85;
+    transition: var(--transition-smooth);
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+}
+
+/* Cuando el mouse pasa sobre el contenedor principal,
+los personajes se vuelven más visibles y brillantes.
+Es un pequeño efecto de "revelación" que hace la página
+más interactiva y mágica. */
+.app-wrapper:hover .char-decor {
+    opacity: 1;
+    filter: drop-shadow(0 0 12px var(--gold-main));
+}
+
+/* ============================================================
+REGLA: .costado-decor (decoraciones botánicas a los costados)
+============================================================
+Son decoraciones que aparecen a los lados del contenedor
+principal, con emojis de plantas o elementos naturales.
+- position: absolute; -> Posición absoluta dentro del contenedor.
+- pointer-events: none; -> No interfieren con clics.
+- z-index: 1; -> Por debajo del contenido principal.
+- opacity: 0.5; -> Semi-transparente.
+- transition: var(--transition-smooth); -> Transición suave.
+- font-size: 48px; -> Tamaño grande de los emojis.
+- text-align: center; -> Texto centrado.
+- background: rgba(255,255,255,0.5); -> Fondo blanco
+    semi-transparente.
+- border-radius: 60px; -> Bordes redondeados.
+- backdrop-filter: blur(4px); -> Efecto de vidrio.
+- padding: 12px; -> Espacio interno.
+- white-space: nowrap; -> El texto no se envuelve a la
+    siguiente línea.
+*/
+.costado-decor {
+    position: absolute;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.5;
+    transition: var(--transition-smooth);
+    font-size: 48px;
+    text-align: center;
+    background: rgba(255,255,255,0.5);
+    border-radius: 60px;
+    backdrop-filter: blur(4px);
+    padding: 12px;
+    white-space: nowrap;
+}
+
+/* Al pasar el mouse sobre el contenedor, las decoraciones
+laterales se vuelven más visibles y brillan. */
+.app-wrapper:hover .costado-decor {
+    opacity: 0.8;
+    filter: drop-shadow(0 0 6px var(--gold-main));
+}
+
+/* ============================================================
+REGLA: .site-header (cabecera del sitio)
+============================================================
+Esta es la barra superior que contiene el logo, la búsqueda
+y los botones de navegación. Es la "carta de presentación"
+de la página.
+- padding: 1.5rem 0; -> Espacio vertical interno.
+- border-bottom: 1px solid var(--border-soft); -> Línea
+    separadora dorada suave.
+- display: grid; -> Organiza los elementos en una cuadrícula.
+- grid-template-columns: auto 1fr auto; -> Tres columnas:
+    la primera se ajusta al contenido (logo), la segunda ocupa
+    el espacio restante (búsqueda), la tercera se ajusta al
+    contenido (acciones).
+- align-items: center; -> Centra verticalmente todos los
+    elementos.
+- gap: 2rem; -> Espacio entre las columnas.
+- position: relative; -> Para posicionar elementos hijos
+    de forma absoluta si es necesario.
+*/
+.site-header {
+    padding: 1.5rem 0;
+    border-bottom: 1px solid var(--border-soft);
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 2rem;
+    position: relative;
+}
+
+/* ============================================================
+REGLA: .logo (logotipo)
+============================================================
+Es el contenedor del logotipo, que incluye un icono y
+texto. Es un enlace que lleva a la página de inicio.
+- display: flex; -> Organiza los elementos en fila.
+- align-items: center; -> Centra verticalmente.
+- gap: 1rem; -> Espacio entre el icono y el texto.
+- text-decoration: none; -> Elimina el subrayado del enlace.
+- transition: var(--transition-smooth); -> Transición suave.
+*/
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    text-decoration: none;
+    transition: var(--transition-smooth);
+}
+
+/* Cuando el mouse pasa sobre el logo, este crece ligeramente
+(efecto de "zoom" sutil). */
+.logo:hover {
+    transform: scale(1.02);
+}
+
+/* ============================================================
+REGLA: .logo-icon (icono del logo)
+============================================================
+Es el emoji o icono que aparece al lado del texto del logo.
+- font-size: 2.5rem; -> Tamaño grande.
+- animation: pulseGlow 3s infinite; -> Animación de
+    "pulso" que dura 3 segundos y se repite infinitamente.
+- color: var(--wine-main); -> Color vino.
+- display: flex; -> Para centrar el contenido.
+- align-items: center; justify-content: center; -> Centrado.
+*/
+.logo-icon {
+    font-size: 2.5rem;
+    animation: pulseGlow 3s infinite;
+    color: var(--wine-main);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ============================================================
+REGLA: .logo-text-container (contenedor del texto del logo)
+============================================================
+Agrupa el título y el subtítulo del logo en una columna.
+- display: flex; -> Flexbox.
+- flex-direction: column; -> Organiza los elementos en
+    columna (uno debajo del otro).
+*/
+.logo-text-container {
+    display: flex;
+    flex-direction: column;
+}
+
+/* ============================================================
+REGLA: .logo-title (título del logo)
+============================================================
+Es el nombre principal del mercado.
+- font-family: var(--font-title); -> Fuente decorativa.
+- font-size: 1.6rem; -> Tamaño grande.
+- font-weight: 700; -> Negrita.
+- letter-spacing: 2px; -> Espacio entre letras.
+- color: var(--text-primary); -> Color casi negro.
+- text-shadow: 0 0 10px rgba(139, 26, 43, 0.1); -> Sombra
+    vino muy tenue.
+- text-transform: uppercase; -> Todo en mayúsculas.
+*/
+.logo-title {
+    font-family: var(--font-title);
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--text-primary);
+    text-shadow: 0 0 10px rgba(139, 26, 43, 0.1);
+    text-transform: uppercase;
+}
+
+/* ============================================================
+REGLA: .logo-subtitle (subtítulo del logo)
+============================================================
+Es un texto más pequeño debajo del título.
+- font-size: 0.7rem; -> Tamaño pequeño.
+- letter-spacing: 1.5px; -> Espacio entre letras.
+- opacity: 0.7; -> Semi-transparente.
+- margin-top: 0.2rem; -> Espacio arriba.
+- font-family: var(--font-sans); -> Fuente moderna.
+- color: var(--text-secondary); -> Gris oscuro.
+- font-weight: 300; -> Peso ligero.
+*/
+.logo-subtitle {
+    font-size: 0.7rem;
+    letter-spacing: 1.5px;
+    opacity: 0.7;
+    margin-top: 0.2rem;
+    font-family: var(--font-sans);
+    color: var(--text-secondary);
+    font-weight: 300;
+}
+
+/* ============================================================
+REGLA: @keyframes pulseGlow (animación de brillo pulsante)
+============================================================
+Esta animación hace que el icono del logo "pulse" con un
+brillo que va y viene.
+- 0%: Estado inicial (sin brillo, tamaño normal).
+- 50%: En la mitad de la animación, el brillo aumenta y
+    el tamaño crece ligeramente.
+- 100%: Vuelve al estado inicial.
+*/
+@keyframes pulseGlow {
+    0% { text-shadow: 0 0 5px var(--wine-main); transform: scale(1); }
+    50% { text-shadow: 0 0 20px var(--wine-main), 0 0 30px var(--gold-main); transform: scale(1.08); }
+    100% { text-shadow: 0 0 5px var(--wine-main); transform: scale(1); }
+}
+
+/* ============================================================
+REGLA: .search-bar-header (barra de búsqueda)
+============================================================
+Esta es la barra donde los usuarios pueden escribir para
+buscar productos, locales o cualquier cosa.
+- background: rgba(255,255,255,0.7); -> Fondo blanco
+    semi-transparente.
+- border: 1px solid var(--gold-soft); -> Borde dorado suave.
+- border-radius: 60px; -> Bordes muy redondeados.
+- display: flex; -> Organiza los elementos en fila.
+- padding: 5px 5px 5px 25px; -> Espacio interno:
+    5px arriba/abajo/derecha, 25px izquierda.
+- backdrop-filter: blur(4px); -> Efecto de vidrio.
+- transition: var(--transition-smooth); -> Transición suave.
+- max-width: 500px; -> Ancho máximo.
+- justify-self: center; -> Se centra dentro de su celda
+    de la cuadrícula.
+- width: 100%; -> Ocupa todo el ancho disponible.
+*/
+.search-bar-header {
+    background: rgba(255,255,255,0.7);
+    border: 1px solid var(--gold-soft);
+    border-radius: 60px;
+    display: flex;
+    padding: 5px 5px 5px 25px;
+    backdrop-filter: blur(4px);
+    transition: var(--transition-smooth);
+    max-width: 500px;
+    justify-self: center;
+    width: 100%;
+}
+
+/* Cuando la barra de búsqueda está enfocada (el usuario
+hace clic dentro), cambia de color y se resalta.
+- border-color: var(--wine-main); -> Borde vino.
+- box-shadow: 0 0 20px rgba(139, 26, 43, 0.15); -> Sombra
+    vino para resaltar.
+- background: rgba(255,255,255,0.9); -> Fondo más blanco. */
+.search-bar-header:focus-within {
+    border-color: var(--wine-main);
+    box-shadow: 0 0 20px rgba(139, 26, 43, 0.15);
+    background: rgba(255,255,255,0.9);
+}
+
+/* ============================================================
+REGLA: .search-bar-header input (campo de entrada de búsqueda)
+============================================================
+Es el campo de texto donde el usuario escribe.
+- background: transparent; -> Fondo transparente para que
+    se vea el fondo de la barra.
+- border: none; -> Sin borde propio.
+- flex: 1; -> Ocupa todo el espacio disponible.
+- color: var(--text-primary); -> Texto casi negro.
+- padding: 12px 10px; -> Espacio interno.
+- outline: none; -> Elimina el borde azul que algunos
+    navegadores ponen al enfocar.
+- font-family: var(--font-sans); -> Fuente moderna.
+- font-size: 0.95rem; -> Tamaño de letra.
+- letter-spacing: 0.5px; -> Espacio entre letras.
+*/
+.search-bar-header input {
+    background: transparent;
+    border: none;
+    flex: 1;
+    color: var(--text-primary);
+    padding: 12px 10px;
+    outline: none;
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+}
+
+/* Estilo del texto de "marca de agua" (placeholder)
+que aparece cuando el campo está vacío.
+- color: var(--text-secondary); -> Gris oscuro.
+- font-weight: 300; -> Peso ligero. */
+.search-bar-header input::placeholder {
+    color: var(--text-secondary);
+    font-weight: 300;
+}
+
+/* ============================================================
+REGLA: .search-bar-header button (botón de búsqueda)
+============================================================
+Es el botón con lupa que se usa para enviar la búsqueda.
+- background: linear-gradient(135deg, var(--wine-main), var(--wine-hover));
+    -> Gradiente de vino a vino más claro.
+- border: none; -> Sin borde.
+- color: #FFFFFF; -> Texto blanco.
+- border-radius: 50px; -> Bordes redondeados (círculo).
+- width: 46px; height: 46px; -> Tamaño cuadrado.
+- font-size: 1.1rem; -> Tamaño del icono.
+- cursor: pointer; -> Mano al pasar el mouse.
+- transition: all 0.3s ease; -> Transición suave.
+- display: flex; align-items: center; justify-content: center;
+    -> Centra el icono dentro del botón.
+- box-shadow: 0 4px 10px rgba(139, 26, 43, 0.2); -> Sombra
+    vino para resaltar.
+*/
+.search-bar-header button {
+    background: linear-gradient(135deg, var(--wine-main), var(--wine-hover));
+    border: none;
+    color: #FFFFFF;
+    border-radius: 50px;
+    width: 46px;
+    height: 46px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(139, 26, 43, 0.2);
+}
+
+/* Cuando el mouse pasa sobre el botón de búsqueda:
+- background: var(--gold-main); -> Fondo dorado.
+- color: var(--text-primary); -> Texto casi negro.
+- transform: scale(1.05); -> Crece ligeramente.
+- box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4); -> Sombra
+    dorada. */
+.search-bar-header button:hover {
+    background: var(--gold-main);
+    color: var(--text-primary);
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
+}
+
+/* ============================================================
+REGLA: .header-actions (acciones del header)
+============================================================
+Contiene los iconos de acciones (perfil, favoritos, etc.)
+- display: flex; -> Organiza en fila.
+- gap: 1.5rem; -> Espacio entre iconos.
+- align-items: center; -> Centra verticalmente.
+*/
+.header-actions {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+/* ============================================================
+REGLA: .icon-action (cada acción con icono)
+============================================================
+- display: flex; -> Organiza en columna.
+- flex-direction: column; -> Icono arriba, texto abajo.
+- align-items: center; -> Centra horizontalmente.
+- gap: 0.3rem; -> Espacio entre icono y texto.
+- cursor: pointer; -> Mano al pasar.
+- transition: var(--transition-smooth); -> Transición suave.
+- text-decoration: none; -> Sin subrayado.
+- color: var(--text-secondary); -> Color gris.
+- position: relative; -> Para posicionar el contador
+    de notificaciones si lo hubiera.
+*/
+.icon-action {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    text-decoration: none;
+    color: var(--text-secondary);
+    position: relative;
+}
+
+/* Al pasar el mouse sobre una acción:
+- color: var(--wine-main); -> Color vino.
+- transform: translateY(-3px); -> Se eleva ligeramente. */
+.icon-action:hover {
+    color: var(--wine-main);
+    transform: translateY(-3px);
+}
+
+/* ============================================================
+REGLA: .icon-symbol (símbolo del icono)
+============================================================
+Es el emoji o icono en sí mismo.
+- font-size: 1.6rem; -> Tamaño grande.
+- transition: text-shadow 0.3s ease; -> Transición para
+    el brillo.
+*/
+.icon-symbol {
+    font-size: 1.6rem;
+    transition: text-shadow 0.3s ease;
+}
+
+/* Al pasar el mouse sobre la acción, el icono brilla.
+- text-shadow: 0 0 15px var(--wine-main); -> Brillo vino. */
+.icon-action:hover .icon-symbol {
+    text-shadow: 0 0 15px var(--wine-main);
+}
+
+/* ============================================================
+REGLA: .icon-label (etiqueta del icono)
+============================================================
+Es el texto pequeño que va debajo del icono.
+- font-family: var(--font-sans); -> Fuente moderna.
+- font-size: 0.7rem; -> Tamaño pequeño.
+- font-weight: 600; -> Semi-negrita.
+- letter-spacing: 1px; -> Espacio entre letras.
+- text-transform: uppercase; -> Mayúsculas.
+- opacity: 0.9; -> Casi opaco.
+*/
+.icon-label {
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    opacity: 0.9;
+}
+
+/* ============================================================
+REGLA: .cart-icon (icono del carrito de compras)
+============================================================
+- display: flex; -> Organiza en columna.
+- flex-direction: column; -> Icono arriba, texto abajo.
+- align-items: center; -> Centra horizontalmente.
+- gap: 0.3rem; -> Espacio entre elementos.
+- cursor: pointer; -> Mano al pasar.
+- transition: var(--transition-smooth); -> Transición suave.
+- color: var(--text-secondary); -> Color gris.
+- position: relative; -> Para el contador.
+*/
+.cart-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    color: var(--text-secondary);
+    position: relative;
+}
+
+/* Al pasar el mouse sobre el carrito:
+- color: var(--wine-main); -> Color vino.
+- transform: translateY(-3px) scale(1.05); -> Se eleva y
+    crece ligeramente. */
+.cart-icon:hover {
+    color: var(--wine-main);
+    transform: translateY(-3px) scale(1.05);
+}
+
+/* ============================================================
+REGLA: .cart-symbol (símbolo del carrito)
+============================================================
+Es el emoji del carrito.
+- font-size: 1.8rem; -> Tamaño grande.
+- transition: text-shadow 0.3s ease; -> Transición del brillo.
+*/
+.cart-symbol {
+    font-size: 1.8rem;
+    transition: text-shadow 0.3s ease;
+}
+
+/* Al pasar el mouse, el carrito brilla. */
+.cart-icon:hover .cart-symbol {
+    text-shadow: 0 0 15px var(--wine-main);
+}
+
+/* ============================================================
+REGLA: .cart-count (contador del carrito)
+============================================================
+Es el número que muestra cuántos productos hay en el carrito.
+Aparece como una burbuja roja sobre el icono.
+- position: absolute; -> Posición absoluta sobre el icono.
+- top: -8px; right: -10px; -> Se coloca en la esquina
+    superior derecha.
+- background: var(--wine-main); -> Fondo vino.
+- color: #FFFFFF; -> Texto blanco.
+- border-radius: 50%; -> Forma de círculo.
+- width: 22px; height: 22px; -> Tamaño fijo.
+- font-size: 0.7rem; -> Texto pequeño.
+- display: flex; align-items: center; justify-content: center;
+    -> Centra el número.
+- font-weight: bold; -> Negrita.
+- border: 2px solid #FFFFFF; -> Borde blanco para resaltar.
+- box-shadow: 0 0 10px rgba(139, 26, 43, 0.3); -> Sombra.
+- font-family: var(--font-sans); -> Fuente moderna.
+*/
+.cart-count {
+    position: absolute;
+    top: -8px;
+    right: -10px;
+    background: var(--wine-main);
+    color: #FFFFFF;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    font-size: 0.7rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    border: 2px solid #FFFFFF;
+    box-shadow: 0 0 10px rgba(139, 26, 43, 0.3);
+    font-family: var(--font-sans);
+}
+
+/* ============================================================
+REGLA: .nav-frutal (barra de navegación con temática de frutas)
+============================================================
+Es la barra de navegación secundaria que aparece debajo del
+header. Tiene enlaces a diferentes secciones o categorías.
+- position: relative; -> Para posicionar decoraciones.
+- margin: 1rem 0 0.5rem; -> Márgenes verticales.
+- display: flex; -> Flexbox.
+- justify-content: center; -> Centra los elementos.
+*/
+.nav-frutal {
+    position: relative;
+    margin: 1rem 0 0.5rem;
+    display: flex;
+    justify-content: center;
+}
+
+/* ============================================================
+REGLA: .sub-nav (sub-navegación)
+============================================================
+Es el contenedor de los enlaces de navegación.
+- display: flex; -> Organiza en fila.
+- justify-content: center; -> Centra los enlaces.
+- gap: 0.8rem; -> Espacio entre enlaces.
+- background: rgba(255, 255, 255, 0.7); -> Fondo blanco
+    semi-transparente.
+- backdrop-filter: blur(12px); -> Efecto de vidrio.
+- border-radius: 80px; -> Bordes muy redondeados.
+- padding: 0.8rem 1.8rem; -> Espacio interno.
+- border: 1px solid var(--gold-soft); -> Borde dorado suave.
+- box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05); -> Sombra
+    muy suave.
+- transition: all 0.3s ease; -> Transición suave.
+- flex-wrap: wrap; -> Permite que los enlaces se envuelvan
+    en móviles.
+- position: relative; -> Para posicionar decoraciones.
+- z-index: 5; -> Por encima de otros elementos.
+*/
+.sub-nav {
+    display: flex;
+    justify-content: center;
+    gap: 0.8rem;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    border-radius: 80px;
+    padding: 0.8rem 1.8rem;
+    border: 1px solid var(--gold-soft);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 5;
+}
+
+/* ============================================================
+REGLA: .sub-nav::before y .sub-nav::after (decoraciones de frutas)
+============================================================
+Añaden emojis de frutas a los lados de la barra de navegación.
+- content: "🍷"; -> Emoji de vino a la izquierda.
+- content: "🫐"; -> Emoji de arándano a la derecha.
+- position: absolute; -> Posición absoluta.
+- left/right: -28px; -> Fuera del contenedor.
+- top: 50%; transform: translateY(-50%); -> Centrado vertical.
+- font-size: 32px; -> Tamaño grande.
+- opacity: 0.6; -> Semi-transparente.
+- filter: drop-shadow(0 0 6px var(--wine-main)); -> Brillo vino.
+- pointer-events: none; -> No interfieren.
+*/
+.sub-nav::before {
+    content: "🍷";
+    position: absolute;
+    left: -28px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 32px;
+    opacity: 0.6;
+    filter: drop-shadow(0 0 6px var(--wine-main));
+    pointer-events: none;
+}
+.sub-nav::after {
+    content: "🫐";
+    position: absolute;
+    right: -28px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 32px;
+    opacity: 0.6;
+    filter: drop-shadow(0 0 6px var(--wine-main));
+    pointer-events: none;
+}
+
+/* ============================================================
+REGLA: .sub-nav a (cada enlace de la sub-navegación)
+============================================================
+- text-decoration: none; -> Sin subrayado.
+- font-family: var(--font-sans); -> Fuente moderna.
+- font-weight: 600; -> Semi-negrita.
+- font-size: 0.85rem; -> Tamaño de letra.
+- letter-spacing: 1.2px; -> Espacio entre letras.
+- color: var(--text-primary); -> Color casi negro.
+- padding: 0.6rem 1.4rem; -> Espacio interno.
+- border-radius: 60px; -> Bordes redondeados.
+- transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    -> Transición con curva personalizada.
+- display: inline-flex; -> Flex en línea.
+- align-items: center; -> Centra verticalmente.
+- gap: 0.6rem; -> Espacio entre icono y texto.
+- background: rgba(255, 255, 255, 0.3); -> Fondo blanco
+    semi-transparente.
+- border: 1px solid transparent; -> Borde transparente.
+- position: relative; -> Para posicionar decoraciones.
+- backdrop-filter: blur(4px); -> Efecto de vidrio.
+- white-space: nowrap; -> El texto no se envuelve.
+*/
+.sub-nav a {
+    text-decoration: none;
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 0.85rem;
+    letter-spacing: 1.2px;
+    color: var(--text-primary);
+    padding: 0.6rem 1.4rem;
+    border-radius: 60px;
+    transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: rgba(255, 255, 255, 0.3);
+    border: 1px solid transparent;
+    position: relative;
+    backdrop-filter: blur(4px);
+    white-space: nowrap;
+}
+
+/* ============================================================
+REGLA: .sub-nav a:not(:last-child)::after (separador entre enlaces)
+============================================================
+Añade un emoji de cereza entre cada enlace (excepto el último)
+como separador decorativo.
+- content: "🍒"; -> Emoji de cereza.
+- position: absolute; -> Posición absoluta.
+- right: -1.1rem; -> A la derecha del enlace.
+- top: 50%; transform: translateY(-50%); -> Centrado vertical.
+- font-size: 14px; -> Tamaño pequeño.
+- opacity: 0.4; -> Semi-transparente.
+- pointer-events: none; -> No interfieren.
+- color: var(--wine-main); -> Color vino.
+- text-shadow: 0 0 4px currentColor; -> Brillo.
+*/
+.sub-nav a:not(:last-child)::after {
+    content: "🍒";
+    position: absolute;
+    right: -1.1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+    opacity: 0.4;
+    pointer-events: none;
+    color: var(--wine-main);
+    text-shadow: 0 0 4px currentColor;
+}
+
+/* ============================================================
+REGLA: .sub-nav a:hover (enlace al pasar el mouse)
+============================================================
+- background: var(--wine-main); -> Fondo vino.
+- color: #FFFFFF; -> Texto blanco.
+- transform: translateY(-3px) scale(1.02); -> Se eleva y
+    crece ligeramente.
+- box-shadow: 0 8px 20px rgba(139, 26, 43, 0.25); -> Sombra
+    vino.
+- border-color: var(--gold-main); -> Borde dorado.
+*/
+.sub-nav a:hover {
+    background: var(--wine-main);
+    color: #FFFFFF;
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 20px rgba(139, 26, 43, 0.25);
+    border-color: var(--gold-main);
+}
+
+/* ============================================================
+REGLA: .sub-nav a:active (enlace al hacer clic)
+============================================================
+- transform: translateY(1px); -> Baja ligeramente para dar
+    efecto de "presión".
+*/
+.sub-nav a:active {
+    transform: translateY(1px);
+}
+
+/* ============================================================
+REGLAS RESPONSIVAS PARA LA SUB-NAVEGACIÓN (pantallas pequeñas)
+============================================================
+Cuando la pantalla es más pequeña que 860px, se ajustan
+los tamaños y se ocultan las decoraciones laterales.
+*/
+@media (max-width: 860px) {
+    .sub-nav {
+        gap: 0.4rem;
+        padding: 0.6rem 1rem;
+        border-radius: 50px;
+    }
+    .sub-nav a {
+        padding: 0.4rem 1rem;
+        font-size: 0.7rem;
+        white-space: nowrap;
+    }
+    /* Se ocultan los separadores de cereza */
+    .sub-nav a:not(:last-child)::after {
+        display: none;
+    }
+    /* Se ocultan los emojis laterales (vino y arándano) */
+    .sub-nav::before, .sub-nav::after {
+        display: none;
+    }
+}
+
+/* Para pantallas aún más pequeñas (640px) */
+@media (max-width: 640px) {
+    .sub-nav a {
+        padding: 0.3rem 0.9rem;
+        font-size: 0.65rem;
+        gap: 0.3rem;
+    }
+}
+
+/* ============================================================
+REGLA: .dept-section (sección de departamentos/categorías)
+============================================================
+- padding: 48px 0 20px; -> Espacio vertical.
+- text-align: center; -> Texto centrado.
+*/
+.dept-section {
+    padding: 48px 0 20px;
+    text-align: center;
+}
+
+/* ============================================================
+REGLA: .dept-title (título de la sección de departamentos)
+============================================================
+- font-family: var(--font-title); -> Fuente decorativa.
+- font-size: 28px; -> Tamaño grande.
+- margin-bottom: 32px; -> Espacio debajo.
+- color: var(--text-primary); -> Color casi negro.
+*/
+.dept-title {
+    font-family: var(--font-title);
+    font-size: 28px;
+    margin-bottom: 32px;
+    color: var(--text-primary);
+}
+
+/* ============================================================
+REGLA: .dept-grid (cuadrícula de departamentos)
+============================================================
+- display: flex; -> Flexbox.
+- justify-content: center; -> Centra los elementos.
+- flex-wrap: wrap; -> Permite que se envuelvan.
+- gap: 30px; -> Espacio entre elementos.
+*/
+.dept-grid {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+
+/* ============================================================
+REGLA: .dept-item (cada departamento)
+============================================================
+- min-width: 100px; -> Ancho mínimo.
+- cursor: pointer; -> Mano al pasar.
+- transition: var(--transition-smooth); -> Transición suave.
+*/
+.dept-item {
+    min-width: 100px;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+/* ============================================================
+REGLA: .dept-circle (círculo del departamento)
+============================================================
+- width: 100px; height: 100px; -> Tamaño cuadrado.
+- border-radius: 50%; -> Forma de círculo.
+- margin: 0 auto 12px; -> Centrado y espacio debajo.
+- background: linear-gradient(145deg, var(--wine-light), var(--bg-card));
+    -> Gradiente de vino claro a blanco.
+- border: 2px solid var(--wine-main); -> Borde vino.
+- display: flex; align-items: center; justify-content: center;
+    -> Centra el contenido.
+- font-size: 42px; -> Tamaño del icono/emoji.
+- box-shadow: 0 0 12px rgba(139, 26, 43, 0.1); -> Sombra vino.
+- transition: 0.2s; -> Transición rápida.
+*/
+.dept-circle {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin: 0 auto 12px;
+    background: linear-gradient(145deg, var(--wine-light), var(--bg-card));
+    border: 2px solid var(--wine-main);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 42px;
+    box-shadow: 0 0 12px rgba(139, 26, 43, 0.1);
+    transition: 0.2s;
+}
+
+/* Al pasar el mouse sobre un departamento, el círculo crece
+y gira ligeramente, y cambia el borde a dorado.
+- transform: scale(1.08) rotate(5deg); -> Crecimiento y rotación.
+- border-color: var(--gold-main); -> Borde dorado.
+- box-shadow: 0 0 22px rgba(139, 26, 43, 0.2); -> Sombra vino. */
+.dept-item:hover .dept-circle {
+    transform: scale(1.08) rotate(5deg);
+    border-color: var(--gold-main);
+    box-shadow: 0 0 22px rgba(139, 26, 43, 0.2);
+}
+
+/* ============================================================
+REGLA: .dept-name (nombre del departamento)
+============================================================
+- font-family: var(--font-sans); -> Fuente moderna.
+- font-size: 14px; -> Tamaño de letra.
+- font-weight: 500; -> Peso medio.
+- letter-spacing: 1px; -> Espacio entre letras.
+- color: var(--text-primary); -> Color casi negro.
+*/
+.dept-name {
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    color: var(--text-primary);
+}
+
+/* ============================================================
+REGLA: .banner-principal (banner o carrusel principal)
+============================================================
+- position: relative; -> Para posicionar elementos hijos.
+- width: 100%; -> Ocupa todo el ancho.
+- height: 420px; -> Altura fija.
+- margin: 30px 0 20px; -> Márgenes verticales.
+- border-radius: 32px; -> Bordes redondeados.
+- overflow: hidden; -> Oculta el contenido que sobresale.
+- border: 2px solid var(--gold-soft); -> Borde dorado suave.
+- box-shadow: var(--shadow-soft); -> Sombra suave.
+*/
+.banner-principal {
+    position: relative;
+    width: 100%;
+    height: 420px;
+    margin: 30px 0 20px;
+    border-radius: 32px;
+    overflow: hidden;
+    border: 2px solid var(--gold-soft);
+    box-shadow: var(--shadow-soft);
+}
+
+/* ============================================================
+REGLA: .carousel-wrapper (contenedor del carrusel)
+============================================================
+- display: flex; -> Organiza las diapositivas en fila.
+- width: 500%; -> 5 veces el ancho del contenedor (para 5 slides).
+- height: 100%; -> Misma altura que el contenedor.
+- transition: transform 1.2s cubic-bezier(0.7, 0, 0.3, 1);
+    -> Transición suave con curva personalizada.
+*/
+.carousel-wrapper {
+    display: flex;
+    width: 500%;
+    height: 100%;
+    transition: transform 1.2s cubic-bezier(0.7, 0, 0.3, 1);
+}
+
+/* ============================================================
+REGLA: .slide (cada diapositiva del carrusel)
+============================================================
+- width: 20%; -> Ocupa 1/5 del contenedor (porque son 5 slides).
+- height: 100%; -> Misma altura que el contenedor.
+- position: relative; -> Para posicionar contenido interno.
+*/
+.slide {
+    width: 20%;
+    height: 100%;
+    position: relative;
+}
+
+/* ============================================================
+REGLA: .slide img (imagen dentro de la diapositiva)
+============================================================
+- width: 100%; height: 100%; -> Ocupa todo el espacio.
+- object-fit: cover; -> La imagen se recorta para llenar
+    sin deformarse.
+- filter: brightness(0.9) contrast(1.1); -> Ajusta el brillo
+    y contraste para que se vea mejor.
+*/
+.slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.9) contrast(1.1);
+}
+
+/* ============================================================
+REGLA: .banner-nav (navegación del banner)
+============================================================
+- position: absolute; -> Posición absoluta sobre el banner.
+- top: 50%; -> Centrado vertical.
+- width: 100%; -> Ocupa todo el ancho.
+- display: flex; -> Flexbox.
+- justify-content: space-between; -> Botones a los extremos.
+- padding: 0 20px; -> Espacio a los lados.
+- transform: translateY(-50%); -> Ajuste para centrar.
+- z-index: 10; -> Por encima de las imágenes.
+*/
+.banner-nav {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px;
+    transform: translateY(-50%);
+    z-index: 10;
+}
+
+/* ============================================================
+REGLA: .nav-btn (botones de navegación del banner)
+============================================================
+- background: rgba(255,255,255,0.6); -> Fondo blanco
+    semi-transparente.
+- backdrop-filter: blur(8px); -> Efecto de vidrio.
+- border: 1px solid var(--wine-main); -> Borde vino.
+- color: var(--wine-main); -> Color vino.
+- width: 46px; height: 46px; -> Tamaño cuadrado.
+- border-radius: 50%; -> Forma de círculo.
+- display: flex; align-items: center; justify-content: center;
+    -> Centra el contenido.
+- cursor: pointer; -> Mano al pasar.
+- transition: 0.3s; -> Transición suave.
+- font-size: 20px; -> Tamaño del icono.
+*/
+.nav-btn {
+    background: rgba(255,255,255,0.6);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--wine-main);
+    color: var(--wine-main);
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 20px;
+}
+
+/* Al pasar el mouse, el botón cambia a fondo vino y texto blanco. */
+.nav-btn:hover {
+    background: var(--wine-main);
+    color: #FFFFFF;
+}
+
+/* ============================================================
+REGLA: .banner-indicators (indicadores/puntos del banner)
+============================================================
+- position: absolute; -> Posición absoluta.
+- bottom: 20px; -> A 20px del borde inferior.
+- left: 50%; transform: translateX(-50%); -> Centrado.
+- display: flex; -> Flexbox.
+- gap: 12px; -> Espacio entre indicadores.
+- z-index: 10; -> Por encima de las imágenes.
+*/
+.banner-indicators {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 12px;
+    z-index: 10;
+}
+
+/* ============================================================
+REGLA: .indicator (cada indicador)
+============================================================
+- width: 36px; -> Ancho.
+- height: 4px; -> Alto (muy delgado).
+- background: rgba(0,0,0,0.2); -> Gris semi-transparente.
+- cursor: pointer; -> Mano al pasar.
+- border-radius: 4px; -> Bordes redondeados.
+*/
+.indicator {
+    width: 36px;
+    height: 4px;
+    background: rgba(0,0,0,0.2);
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+/* ============================================================
+REGLA: .indicator.active (indicador activo)
+============================================================
+- background: var(--wine-main); -> Fondo vino.
+- width: 56px; -> Más ancho para destacar.
+*/
+.indicator.active {
+    background: var(--wine-main);
+    width: 56px;
+}
+
+/* ============================================================
+REGLA: .tablero-container (tablero de anuncios)
+============================================================
+- display: grid; -> Cuadrícula.
+- grid-template-columns: 1fr 1fr; -> Dos columnas iguales.
+- gap: 32px; -> Espacio entre columnas.
+- margin: 40px 0 30px; -> Márgenes verticales.
+*/
+.tablero-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    margin: 40px 0 30px;
+}
+
+/* ============================================================
+REGLA: .anuncio-box (caja de anuncio)
+============================================================
+- background: var(--bg-card); -> Fondo blanco.
+- border-radius: 32px; -> Bordes redondeados.
+- border: 1px solid var(--gold-soft); -> Borde dorado suave.
+- box-shadow: var(--shadow-soft); -> Sombra suave.
+- overflow: hidden; -> Oculta el contenido que sobresale.
+- position: relative; -> Para posicionar elementos hijos.
+*/
+.anuncio-box {
+    background: var(--bg-card);
+    border-radius: 32px;
+    border: 1px solid var(--gold-soft);
+    box-shadow: var(--shadow-soft);
+    overflow: hidden;
+    position: relative;
+}
+
+/* ============================================================
+REGLA: .anuncio-header (cabecera del anuncio)
+============================================================
+- padding: 16px 24px; -> Espacio interno.
+- background: var(--wine-light); -> Fondo vino claro.
+- border-bottom: 1px solid var(--gold-soft); -> Línea separadora.
+- display: flex; -> Flexbox.
+- justify-content: space-between; -> Espacia los elementos.
+- font-family: var(--font-sans); -> Fuente moderna.
+- font-size: 11px; -> Texto pequeño.
+- color: var(--wine-main); -> Color vino.
+*/
+.anuncio-header {
+    padding: 16px 24px;
+    background: var(--wine-light);
+    border-bottom: 1px solid var(--gold-soft);
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-sans);
+    font-size: 11px;
+    color: var(--wine-main);
+}
+
+/* ============================================================
+REGLA: .carrusel-slide (diapositiva del carrusel de anuncios)
+============================================================
+- height: 160px; -> Altura fija.
+- display: flex; align-items: center; justify-content: center;
+    -> Centra el contenido.
+- text-align: center; -> Texto centrado.
+- padding: 20px; -> Espacio interno.
+*/
+.carrusel-slide {
+    height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+}
+
+/* ============================================================
+REGLA: .anuncio-texto (texto del anuncio)
+============================================================
+- font-family: var(--font-title); -> Fuente decorativa.
+- font-size: 22px; -> Tamaño grande.
+- font-style: italic; -> Cursiva.
+- color: var(--text-primary); -> Color casi negro.
+*/
+.anuncio-texto {
+    font-family: var(--font-title);
+    font-size: 22px;
+    font-style: italic;
+    color: var(--text-primary);
+}
+
+/* ============================================================
+REGLA: .controles-anuncio (controles del carrusel de anuncios)
+============================================================
+- display: flex; -> Flexbox.
+- justify-content: center; -> Centra los puntos.
+- gap: 12px; -> Espacio entre puntos.
+- padding: 12px; -> Espacio interno.
+*/
+.controles-anuncio {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    padding: 12px;
+}
+
+/* ============================================================
+REGLA: .dot-anuncio (punto indicador del anuncio)
+============================================================
+- width: 8px; height: 8px; -> Tamaño pequeño.
+- background: rgba(139, 26, 43, 0.2); -> Vino semi-transparente.
+- border-radius: 50%; -> Forma de círculo.
+- cursor: pointer; -> Mano al pasar.
+*/
+.dot-anuncio {
+    width: 8px;
+    height: 8px;
+    background: rgba(139, 26, 43, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+/* ============================================================
+REGLA: .dot-anuncio.active (punto activo)
+============================================================
+- background: var(--wine-main); -> Fondo vino.
+- width: 24px; -> Más ancho.
+- border-radius: 12px; -> Forma de píldora.
+*/
+.dot-anuncio.active {
+    background: var(--wine-main);
+    width: 24px;
+    border-radius: 12px;
+}
+
+/* ============================================================
+REGLA: .main-content-grid (contenido principal en cuadrícula)
+============================================================
+- display: grid; -> Cuadrícula.
+- grid-template-columns: 280px 1fr; -> Sidebar de 280px y
+    el resto para el contenido principal.
+- gap: 48px; -> Espacio entre columnas.
+- margin: 40px 0 20px; -> Márgenes verticales.
+*/
+.main-content-grid {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 48px;
+    margin: 40px 0 20px;
+}
+
+/* ============================================================
+REGLA: .sidebar-lunar (barra lateral)
+============================================================
+- background: var(--bg-card); -> Fondo blanco.
+- padding: 32px 24px; -> Espacio interno.
+- border-radius: 36px; -> Bordes redondeados.
+- border: 1px solid var(--gold-soft); -> Borde dorado suave.
+- box-shadow: var(--shadow-soft); -> Sombra suave.
+- height: fit-content; -> Se ajusta al contenido.
+- position: sticky; -> Se mantiene fijo al hacer scroll.
+- top: 20px; -> A 20px del borde superior.
+*/
+.sidebar-lunar {
+    background: var(--bg-card);
+    padding: 32px 24px;
+    border-radius: 36px;
+    border: 1px solid var(--gold-soft);
+    box-shadow: var(--shadow-soft);
+    height: fit-content;
+    position: sticky;
+    top: 20px;
+}
+
+/* ============================================================
+REGLA: .cat-item (elemento de categoría en la barra lateral)
+============================================================
+- padding: 14px 0; -> Espacio vertical.
+- border-bottom: 1px solid var(--border-soft); -> Línea separadora.
+- cursor: pointer; -> Mano al pasar.
+- font-family: var(--font-sans); -> Fuente moderna.
+- font-size: 13px; -> Tamaño de letra.
+- font-weight: 500; -> Peso medio.
+- transition: 0.2s; -> Transición rápida.
+- display: flex; -> Flexbox.
+- align-items: center; -> Centra verticalmente.
+- gap: 8px; -> Espacio entre elementos.
+- color: var(--text-primary); -> Color casi negro.
+*/
+.cat-item {
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border-soft);
+    cursor: pointer;
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 500;
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-primary);
+}
+
+/* Al pasar el mouse sobre una categoría:
+- color: var(--wine-main); -> Color vino.
+- padding-left: 8px; -> Se mueve ligeramente a la derecha. */
+.cat-item:hover { color: var(--wine-main); padding-left: 8px; }
+
+/* ============================================================
+REGLA: .locales-dropdown (desplegable de locales)
+============================================================
+- max-height: 0; -> Oculto (altura 0).
+- overflow: hidden; -> Oculta el contenido.
+- transition: max-height 0.6s ease; -> Transición suave.
+- background: rgba(0,0,0,0.02); -> Fondo muy tenue.
+- border-radius: 24px; -> Bordes redondeados.
+- margin-top: 8px; -> Espacio arriba.
+*/
+.locales-dropdown {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.6s ease;
+    background: rgba(0,0,0,0.02);
+    border-radius: 24px;
+    margin-top: 8px;
+}
+
+/* ============================================================
+REGLA: .cat-item.active .locales-dropdown (cuando la categoría está activa)
+============================================================
+- max-height: 380px; -> Se muestra con altura suficiente.
+- padding: 16px; -> Espacio interno.
+- border: 1px solid var(--border-soft); -> Borde visible.
+*/
+.cat-item.active .locales-dropdown {
+    max-height: 380px;
+    padding: 16px;
+    border: 1px solid var(--border-soft);
+}
+
+/* ============================================================
+REGLA: .local-link (enlace a un local)
+============================================================
+- display: block; -> Ocupa todo el ancho.
+- padding: 8px 14px; -> Espacio interno.
+- font-size: 12px; -> Texto pequeño.
+- color: var(--text-secondary); -> Color gris.
+- text-decoration: none; -> Sin subrayado.
+*/
+.local-link {
+    display: block;
+    padding: 8px 14px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    text-decoration: none;
+}
+
+/* Al pasar el mouse sobre un enlace de local:
+- border-left-color: var(--wine-main); -> Borde izquierdo vino.
+- color: var(--text-primary); -> Color casi negro.
+- background: var(--wine-light); -> Fondo vino claro. */
+.local-link:hover {
+    border-left-color: var(--wine-main);
+    color: var(--text-primary);
+    background: var(--wine-light);
+}
+
+/* ============================================================
+REGLA: .product-grid (cuadrícula de productos)
+============================================================
+- display: grid; -> Cuadrícula.
+- grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    -> Columnas automáticas con un mínimo de 260px.
+- gap: 30px; -> Espacio entre productos.
+*/
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 30px;
+}
+
+/* ============================================================
+REGLA: .product-card (tarjeta de producto)
+============================================================
+- background: var(--bg-card); -> Fondo blanco.
+- border-radius: 28px; -> Bordes redondeados.
+- border: 1px solid var(--gold-soft); -> Borde dorado suave.
+- overflow: hidden; -> Oculta el contenido que sobresale.
+- transition: var(--transition-smooth); -> Transición suave.
+- box-shadow: var(--shadow-soft); -> Sombra suave.
+- position: relative; -> Para posicionar elementos hijos.
+*/
+.product-card {
+    background: var(--bg-card);
+    border-radius: 28px;
+    border: 1px solid var(--gold-soft);
+    overflow: hidden;
+    transition: var(--transition-smooth);
+    box-shadow: var(--shadow-soft);
+    position: relative;
+}
+
+/* Al pasar el mouse sobre una tarjeta de producto:
+- transform: translateY(-8px) scale(1.02); -> Se eleva y crece.
+- border-color: var(--wine-main); -> Borde vino.
+- box-shadow: 0 10px 30px rgba(139, 26, 43, 0.1); -> Sombra vino. */
+.product-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    border-color: var(--wine-main);
+    box-shadow: 0 10px 30px rgba(139, 26, 43, 0.1);
+}
+
+/* ============================================================
+REGLA: .product-img (imagen del producto)
+============================================================
+- height: 210px; -> Altura fija.
+- display: flex; align-items: center; justify-content: center;
+    -> Centra el contenido.
+- font-size: 58px; -> Tamaño del emoji.
+- background: var(--wine-light); -> Fondo vino claro.
+- border-bottom: 1px solid var(--gold-soft); -> Línea separadora.
+- transition: 0.3s; -> Transición suave.
+*/
+.product-img {
+    height: 210px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 58px;
+    background: var(--wine-light);
+    border-bottom: 1px solid var(--gold-soft);
+    transition: 0.3s;
+}
+
+/* ============================================================
+REGLA: .tag-shipping (etiqueta de envío)
+============================================================
+- position: absolute; -> Posición absoluta.
+- top: 16px; left: 16px; -> Esquina superior izquierda.
+- background: var(--wine-light); -> Fondo vino claro.
+- color: var(--wine-main); -> Color vino.
+- padding: 4px 12px; -> Espacio interno.
+- border-radius: 40px; -> Bordes redondeados.
+- font-size: 9px; -> Texto muy pequeño.
+- font-family: var(--font-sans); -> Fuente moderna.
+- border: 1px solid var(--wine-main); -> Borde vino.
+- backdrop-filter: blur(4px); -> Efecto de vidrio.
+- z-index: 2; -> Por encima de la imagen.
+*/
+.tag-shipping {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    background: var(--wine-light);
+    color: var(--wine-main);
+    padding: 4px 12px;
+    border-radius: 40px;
+    font-size: 9px;
+    font-family: var(--font-sans);
+    border: 1px solid var(--wine-main);
+    backdrop-filter: blur(4px);
+    z-index: 2;
+}
+
+/* ============================================================
+REGLA: .badge-descuento (etiqueta de descuento)
+============================================================
+- position: absolute; -> Posición absoluta.
+- top: 16px; right: 16px; -> Esquina superior derecha.
+- background: var(--wine-main); -> Fondo vino.
+- color: #FFFFFF; -> Texto blanco.
+- padding: 5px 14px; -> Espacio interno.
+- border-radius: 40px; -> Bordes redondeados.
+- font-size: 11px; -> Tamaño de letra.
+- font-weight: 600; -> Semi-negrita.
+- z-index: 2; -> Por encima de la imagen.
+- border: 1px solid #FFFFFF; -> Borde blanco.
+*/
+.badge-descuento {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: var(--wine-main);
+    color: #FFFFFF;
+    padding: 5px 14px;
+    border-radius: 40px;
+    font-size: 11px;
+    font-weight: 600;
+    z-index: 2;
+    border: 1px solid #FFFFFF;
+}
+
+/* ============================================================
+REGLA: .product-info (información del producto)
+============================================================
+- padding: 20px; -> Espacio interno.
+- text-align: left; -> Texto alineado a la izquierda.
+*/
+.product-info {
+    padding: 20px;
+    text-align: left;
+}
+
+/* ============================================================
+REGLA: .product-info h3 (título del producto)
+============================================================
+- font-family: var(--font-title); -> Fuente decorativa.
+- font-size: 18px; -> Tamaño de letra.
+- margin-bottom: 8px; -> Espacio debajo.
+- color: var(--text-primary); -> Color casi negro.
+*/
+.product-info h3 {
+    font-family: var(--font-title);
+    font-size: 18px;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+}
+
+/* ============================================================
+REGLA: .price-tag (etiqueta de precio)
+============================================================
+- font-size: 22px; -> Tamaño grande.
+- font-weight: 600; -> Semi-negrita.
+- margin: 12px 0; -> Márgenes verticales.
+- color: var(--wine-main); -> Color vino.
+*/
+.price-tag {
+    font-size: 22px;
+    font-weight: 600;
+    margin: 12px 0;
+    color: var(--wine-main);
+}
+
+/* ============================================================
+REGLA: .old-price (precio anterior/tachado)
+============================================================
+- font-size: 14px; -> Tamaño pequeño.
+- text-decoration: line-through; -> Tachado.
+- opacity: 0.7; -> Semi-transparente.
+- margin-right: 12px; -> Espacio a la derecha.
+- color: var(--text-secondary); -> Color gris.
+*/
+.old-price {
+    font-size: 14px;
+    text-decoration: line-through;
+    opacity: 0.7;
+    margin-right: 12px;
+    color: var(--text-secondary);
+}
+
+/* ============================================================
+REGLA: .btn-add (botón de agregar al carrito)
+============================================================
+- width: 100%; -> Ocupa todo el ancho.
+- padding: 14px; -> Espacio interno.
+- background: transparent; -> Fondo transparente.
+- border: 2px solid var(--wine-main); -> Borde vino.
+- color: var(--wine-main); -> Color vino.
+- border-radius: 50px; -> Bordes redondeados.
+- cursor: pointer; -> Mano al pasar.
+- font-family: var(--font-sans); -> Fuente moderna.
+- font-size: 11px; -> Texto pequeño.
+- font-weight: 600; -> Semi-negrita.
+- letter-spacing: 1.5px; -> Espacio entre letras.
+- transition: 0.3s; -> Transición suave.
+- text-transform: uppercase; -> Mayúsculas.
+*/
+.btn-add {
+    width: 100%;
+    padding: 14px;
+    background: transparent;
+    border: 2px solid var(--wine-main);
+    color: var(--wine-main);
+    border-radius: 50px;
+    cursor: pointer;
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    transition: 0.3s;
+    text-transform: uppercase;
+}
+
+/* Al pasar el mouse sobre el botón de agregar:
+- background: var(--wine-main); -> Fondo vino.
+- color: #FFFFFF; -> Texto blanco.
+- box-shadow: 0 0 15px rgba(139, 26, 43, 0.3); -> Sombra vino. */
+.btn-add:hover {
+    background: var(--wine-main);
+    color: #FFFFFF;
+    box-shadow: 0 0 15px rgba(139, 26, 43, 0.3);
+}
+
+/* ============================================================
+REGLA: .section-header (cabecera de sección)
+============================================================
+- display: flex; -> Flexbox.
+- justify-content: space-between; -> Espacia los elementos.
+- align-items: baseline; -> Alinea alineados por la base.
+- margin: 40px 0 28px; -> Márgenes verticales.
+- border-left: 4px solid var(--wine-main); -> Borde izquierdo vino.
+- padding-left: 24px; -> Espacio a la izquierda.
+*/
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin: 40px 0 28px;
+    border-left: 4px solid var(--wine-main);
+    padding-left: 24px;
+}
+
+/* ============================================================
+REGLA: .section-header h2 (título de la sección)
+============================================================
+- font-family: var(--font-accent); -> Fuente decorativa.
+- font-size: 28px; -> Tamaño grande.
+- font-weight: 400; -> Peso normal (no negrita).
+- color: var(--text-primary); -> Color casi negro.
+*/
+.section-header h2 {
+    font-family: var(--font-accent);
+    font-size: 28px;
+    font-weight: 400;
+    color: var(--text-primary);
+}
+
+/* ============================================================
+REGLA: .journal-section (sección de revista/blog)
+============================================================
+- display: grid; -> Cuadrícula.
+- grid-template-columns: 1fr 1fr; -> Dos columnas iguales.
+- gap: 45px; -> Espacio entre columnas.
+- margin: 70px 0 50px; -> Márgenes verticales.
+*/
+.journal-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 45px;
+    margin: 70px 0 50px;
+}
+
+/* ============================================================
+REGLA: .journal-card (tarjeta de artículo de revista)
+============================================================
+- padding: 40px; -> Espacio interno.
+- background: var(--bg-card); -> Fondo blanco.
+- border-radius: 36px; -> Bordes redondeados.
+- border: 1px solid var(--gold-soft); -> Borde dorado suave.
+- box-shadow: var(--shadow-soft); -> Sombra suave.
+- transition: 0.3s; -> Transición suave.
+- position: relative; -> Para posicionar elementos hijos.
+- overflow: hidden; -> Oculta el contenido que sobresale.
+*/
+.journal-card {
+    padding: 40px;
+    background: var(--bg-card);
+    border-radius: 36px;
+    border: 1px solid var(--gold-soft);
+    box-shadow: var(--shadow-soft);
+    transition: 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Al pasar el mouse sobre una tarjeta de revista:
+- border-color: var(--wine-main); -> Borde vino.
+- box-shadow: 0 10px 30px rgba(139, 26, 43, 0.08); -> Sombra vino. */
+.journal-card:hover {
+    border-color: var(--wine-main);
+    box-shadow: 0 10px 30px rgba(139, 26, 43, 0.08);
+}
+
+/* ============================================================
+REGLA: footer (pie de página)
+============================================================
+- margin-top: 80px; -> Espacio arriba.
+- padding: 50px 0 40px; -> Espacio vertical.
+- border-top: 1px solid var(--border-soft); -> Línea separadora.
+- text-align: center; -> Texto centrado.
+- font-size: 12px; -> Texto pequeño.
+- color: var(--text-secondary); -> Color gris.
+- position: relative; -> Para posicionar el pseudo-elemento.
+*/
+footer {
+    margin-top: 80px;
+    padding: 50px 0 40px;
+    border-top: 1px solid var(--border-soft);
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-secondary);
+    position: relative;
+}
+
+/* ============================================================
+REGLA: footer::before (decoración del pie de página)
+============================================================
+- content: "🍒 🍇 🍷 🫐 ..."; -> Emojis de frutas.
+- position: absolute; -> Posición absoluta.
+- top: -10px; left: 50%; transform: translateX(-50%); -> Centrado.
+- font-size: 10px; -> Texto pequeño.
+- opacity: 0.3; -> Semi-transparente.
+- letter-spacing: 2px; -> Espacio entre letras.
+*/
+footer::before {
+    content: "🍒 🍇 🍷 🫐 Desarrollado con dedicación y equidad 🫐 🍷 🍇 🍒";
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    opacity: 0.3;
+    letter-spacing: 2px;
+}
+
+/* ============================================================
+REGLA: .modal-overlay (fondo oscuro para modales)
+============================================================
+- position: fixed; -> Se mantiene fijo en la pantalla.
+- top: 0; left: 0; -> Ocupa toda la pantalla.
+- width: 100%; height: 100%; -> Ocupa todo el espacio.
+- background: rgba(0,0,0,0.4); -> Fondo negro semi-transparente.
+- backdrop-filter: blur(8px); -> Efecto de desenfoque.
+- display: flex; align-items: center; justify-content: center;
+    -> Centra el contenido.
+- z-index: 2000; -> Por encima de todo.
+- opacity: 0; -> Oculto por defecto.
+- visibility: hidden; -> Oculto por defecto.
+- transition: all 0.3s ease; -> Transición suave.
+*/
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+/* ============================================================
+REGLA: .modal-overlay.activo (modal activo/visible)
+============================================================
+- opacity: 1; -> Totalmente visible.
+- visibility: visible; -> Visible.
+*/
+.modal-overlay.activo {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* ============================================================
+REGLA: .modal-contenido (contenido del modal)
+============================================================
+- background: var(--bg-card); -> Fondo blanco.
+- border: 2px solid var(--wine-main); -> Borde vino.
+- border-radius: 48px; -> Bordes redondeados.
+- padding: 2rem; -> Espacio interno.
+- max-width: 500px; -> Ancho máximo.
+- width: 90%; -> Ocupa el 90% en móviles.
+- text-align: center; -> Texto centrado.
+- box-shadow: var(--shadow-soft); -> Sombra suave.
+- backdrop-filter: blur(8px); -> Efecto de vidrio.
+*/
+.modal-contenido {
+    background: var(--bg-card);
+    border: 2px solid var(--wine-main);
+    border-radius: 48px;
+    padding: 2rem;
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+    box-shadow: var(--shadow-soft);
+    backdrop-filter: blur(8px);
+}
+
+/* ============================================================
+REGLA: .modal-contenido h2 (título del modal)
+============================================================
+- font-family: var(--font-title); -> Fuente decorativa.
+- font-size: 2rem; -> Tamaño grande.
+- color: var(--wine-main); -> Color vino.
+*/
+.modal-contenido h2 {
+    font-family: var(--font-title);
+    font-size: 2rem;
+    color: var(--wine-main);
+}
+
+/* ============================================================
+REGLA: .locales-grid (cuadrícula de locales en el modal)
+============================================================
+- display: flex; -> Flexbox.
+- flex-wrap: wrap; -> Permite que se envuelvan.
+- gap: 1.2rem; -> Espacio entre elementos.
+- justify-content: center; -> Centra los elementos.
+- margin: 2rem 0; -> Márgenes verticales.
+*/
+.locales-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.2rem;
+    justify-content: center;
+    margin: 2rem 0;
+}
+
+/* ============================================================
+REGLA: .local-btn (botón de local en el modal)
+============================================================
+- background: var(--wine-light); -> Fondo vino claro.
+- border: 2px solid var(--wine-main); -> Borde vino.
+- border-radius: 60px; -> Bordes redondeados.
+- padding: 0.9rem 1.8rem; -> Espacio interno.
+- font-size: 1.2rem; -> Tamaño de letra.
+- font-weight: 600; -> Semi-negrita.
+- cursor: pointer; -> Mano al pasar.
+- color: var(--text-primary); -> Color casi negro.
+- font-family: var(--font-sans); -> Fuente moderna.
+- transition: all 0.2s; -> Transición suave.
+- display: inline-block; -> Se comporta como bloque en línea.
+- text-decoration: none; -> Sin subrayado.
+*/
+.local-btn {
+    background: var(--wine-light);
+    border: 2px solid var(--wine-main);
+    border-radius: 60px;
+    padding: 0.9rem 1.8rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    transition: all 0.2s;
+    display: inline-block;
+    text-decoration: none;
+}
+
+/* Al pasar el mouse sobre un botón de local:
+- background: var(--wine-main); -> Fondo vino.
+- color: #FFFFFF; -> Texto blanco.
+- transform: scale(1.05); -> Crece ligeramente. */
+.local-btn:hover {
+    background: var(--wine-main);
+    color: #FFFFFF;
+    transform: scale(1.05);
+}
+
+/* ============================================================
+REGLA: .cerrar-modal (botón para cerrar modal)
+============================================================
+- background: transparent; -> Fondo transparente.
+- border: 2px solid var(--wine-main); -> Borde vino.
+- border-radius: 60px; -> Bordes redondeados.
+- padding: 0.6rem 2rem; -> Espacio interno.
+- cursor: pointer; -> Mano al pasar.
+- color: var(--wine-main); -> Color vino.
+- font-family: var(--font-sans); -> Fuente moderna.
+- font-weight: 600; -> Semi-negrita.
+*/
+.cerrar-modal {
+    background: transparent;
+    border: 2px solid var(--wine-main);
+    border-radius: 60px;
+    padding: 0.6rem 2rem;
+    cursor: pointer;
+    color: var(--wine-main);
+    font-family: var(--font-sans);
+    font-weight: 600;
+}
+
+/* Al pasar el mouse sobre el botón de cerrar:
+- background: var(--wine-main); -> Fondo vino.
+- color: #FFFFFF; -> Texto blanco. */
+.cerrar-modal:hover {
+    background: var(--wine-main);
+    color: #FFFFFF;
+}
+
+/* ============================================================
+REGLA: .local-result-link (enlace de resultado de local)
+============================================================
+- display: inline-block; -> Se comporta como bloque en línea.
+- background: var(--wine-light); -> Fondo vino claro.
+- border: 1px solid var(--wine-main); -> Borde vino.
+- border-radius: 40px; -> Bordes redondeados.
+- padding: 8px 20px; -> Espacio interno.
+- text-decoration: none; -> Sin subrayado.
+- color: var(--wine-main); -> Color vino.
+- font-family: var(--font-sans); -> Fuente moderna.
+- transition: all 0.2s; -> Transición suave.
+*/
+.local-result-link {
+    display: inline-block;
+    background: var(--wine-light);
+    border: 1px solid var(--wine-main);
+    border-radius: 40px;
+    padding: 8px 20px;
+    text-decoration: none;
+    color: var(--wine-main);
+    font-family: var(--font-sans);
+    transition: all 0.2s;
+}
+
+/* Al pasar el mouse:
+- background: var(--wine-main); -> Fondo vino.
+- color: #FFFFFF; -> Texto blanco. */
+.local-result-link:hover {
+    background: var(--wine-main);
+    color: #FFFFFF;
+}
+
+/* ============================================================
+REGLA: .flash-messages (contenedor de mensajes flash)
+============================================================
+- margin: 20px auto; -> Centrado con margen.
+- max-width: 90%; -> Ancho máximo.
+- text-align: center; -> Texto centrado.
+*/
+.flash-messages {
+    margin: 20px auto;
+    max-width: 90%;
+    text-align: center;
+}
+
+/* ============================================================
+REGLA: .flash-message (cada mensaje flash)
+============================================================
+- background: var(--wine-main); -> Fondo vino.
+- color: #FFFFFF; -> Texto blanco.
+- padding: 12px 20px; -> Espacio interno.
+- margin: 8px 0; -> Márgenes verticales.
+- border-radius: 40px; -> Bordes redondeados.
+- font-family: var(--font-sans); -> Fuente moderna.
+- font-weight: 600; -> Semi-negrita.
+- backdrop-filter: blur(4px); -> Efecto de vidrio.
+- box-shadow: 0 2px 10px rgba(0,0,0,0.05); -> Sombra suave.
+*/
+.flash-message {
+    background: var(--wine-main);
+    color: #FFFFFF;
+    padding: 12px 20px;
+    margin: 8px 0;
+    border-radius: 40px;
+    font-family: var(--font-sans);
+    font-weight: 600;
+    backdrop-filter: blur(4px);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+/* ============================================================
+REGLA: .btn-owner y .btn-owner-outline (botones de propietario)
+============================================================
+- padding: 0.4rem 1rem; -> Espacio interno.
+- border-radius: 40px; -> Bordes redondeados.
+- text-decoration: none; -> Sin subrayado.
+- font-weight: 600; -> Semi-negrita.
+- font-size: 0.75rem; -> Texto pequeño.
+- font-family: var(--font-sans); -> Fuente moderna.
+- text-transform: uppercase; -> Mayúsculas.
+- letter-spacing: 1px; -> Espacio entre letras.
+- transition: 0.2s; -> Transición suave.
+- display: inline-block; -> Se comporta como bloque en línea.
+*/
+.btn-owner, .btn-owner-outline {
+    padding: 0.4rem 1rem;
+    border-radius: 40px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.75rem;
+    font-family: var(--font-sans);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: 0.2s;
+    display: inline-block;
+}
+
+/* ============================================================
+REGLA: .btn-owner (botón de propietario relleno)
+============================================================
+- background: linear-gradient(135deg, var(--wine-main), var(--wine-hover));
+    -> Gradiente de vino a vino más claro.
+- color: #FFFFFF; -> Texto blanco.
+- border: none; -> Sin borde.
+*/
+.btn-owner {
+    background: linear-gradient(135deg, var(--wine-main), var(--wine-hover));
+    color: #FFFFFF;
+    border: none;
+}
+
+/* ============================================================
+REGLA: .btn-owner-outline (botón de propietario con borde)
+============================================================
+- border: 1px solid var(--wine-main); -> Borde vino.
+- color: var(--wine-main); -> Color vino.
+- background: transparent; -> Fondo transparente.
+*/
+.btn-owner-outline {
+    border: 1px solid var(--wine-main);
+    color: var(--wine-main);
+    background: transparent;
+}
+
+/* Al pasar el mouse sobre cualquiera de los dos botones:
+- transform: translateY(-2px); -> Se elevan ligeramente.
+- box-shadow: 0 4px 12px rgba(139, 26, 43, 0.2); -> Sombra vino. */
+.btn-owner:hover, .btn-owner-outline:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(139, 26, 43, 0.2);
+}
+
+/* ============================================================
+REGLA: .btn-owner-outline:hover (específico para el outline)
+============================================================
+- background: var(--wine-light); -> Fondo vino claro. */
+.btn-owner-outline:hover {
+    background: var(--wine-light);
+}
+
+/* ============================================================
+REGLAS RESPONSIVAS (pantallas de hasta 1000px)
+============================================================
+Cuando la pantalla es más pequeña que 1000px (tabletas y
+móviles), se reorganizan los elementos para que se vean bien.
+*/
+@media (max-width: 1000px) {
+    /* El contenido principal pasa a una sola columna */
+    .main-content-grid { grid-template-columns: 1fr; }
+
+    /* El header se reorganiza en una sola columna */
+    .site-header {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        text-align: center;
+        padding: 1rem 0;
+    }
+
+    /* El logo se centra */
+    .logo { justify-content: center; gap: 0.8rem; }
+    .logo-icon { font-size: 2rem; }
+    .logo-title { font-size: 1.3rem; }
+
+    /* La barra de búsqueda ocupa casi todo el ancho */
+    .search-bar-header {
+        max-width: 95%;
+        margin: 0 auto;
+        justify-self: center;
+        padding: 4px 4px 4px 18px;
+    }
+    .search-bar-header input { padding: 10px 8px; font-size: 0.9rem; }
+    .search-bar-header button { width: 40px; height: 40px; }
+
+    /* Las acciones del header se centran */
+    .header-actions {
+        justify-content: center;
+        gap: 1.2rem;
+        margin-top: 0.5rem;
+    }
+    .icon-symbol { font-size: 1.4rem; }
+    .icon-label { font-size: 0.65rem; }
+    .cart-symbol { font-size: 1.6rem; }
+
+    /* El tablero de anuncios pasa a una columna */
+    .tablero-container { grid-template-columns: 1fr; }
+
+    /* El banner principal es más bajo */
+    .banner-principal { height: 300px; }
+
+    /* La sección de revista pasa a una columna */
+    .journal-section { grid-template-columns: 1fr; }
+
+    /* Se ocultan decoraciones laterales y personajes */
+    .char-decor, .costado-decor { display: none; }
+
+    /* El contenedor principal tiene bordes más pequeños */
+    .app-wrapper { border-radius: 20px; padding: 0 15px; }
+
+    /* Los círculos de departamentos son más pequeños */
+    .dept-circle { width: 80px; height: 80px; font-size: 32px; }
+}
+
+/* ============================================================
+BARRA DE DESPLAZAMIENTO DECORADA (SCROLLBAR)
+============================================================
+Estas reglas personalizan la apariencia de la barra de
+desplazamiento (scroll) en navegadores que usan WebKit
+(Chrome, Safari, Edge, etc.). Es un detalle visual que
+hace que la página se vea más cuidada y personalizada.
+*/
+
+/* Ancho y alto de la barra de desplazamiento */
+::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+/* Fondo de la barra de desplazamiento (el "riel" por donde se mueve) */
+::-webkit-scrollbar-track {
+    background: var(--bg-light); /* Fondo crema suave */
+    border-radius: 20px; /* Bordes redondeados */
+    border: 1px solid var(--gold-soft); /* Borde dorado suave */
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.03); /* Sombra interna */
+}
+
+/* El "pulgar" de la barra de desplazamiento (la parte que se arrastra) */
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(145deg, var(--wine-main), var(--gold-main));
+    /* -> Gradiente de vino a dorado, elegante y temático */
+    border-radius: 20px; /* Bordes redondeados */
+    box-shadow: 0 0 8px rgba(139, 26, 43, 0.3), inset 0 1px 1px rgba(255, 255, 245, 0.5);
+    /* -> Sombra vino y brillo interno */
+    border: 1px solid rgba(255, 235, 200, 0.4); /* Borde claro para resaltar */
+    transition: all 0.2s ease; /* Transición suave para cambios */
+}
+
+/* Cuando el mouse pasa sobre el pulgar de la barra de desplazamiento */
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(145deg, var(--gold-main), var(--wine-main));
+    /* -> Gradiente invertido para dar efecto de "interacción" */
+    box-shadow: 0 0 14px rgba(139, 26, 43, 0.5), inset 0 0 5px rgba(255, 255, 200, 0.6);
+    /* -> Sombra más fuerte y brillo interno */
+    transform: scale(1.02); /* -> Se agranda ligeramente */
+}
+
+/* La esquina donde se encuentran las barras de desplazamiento */
+::-webkit-scrollbar-corner {
+    background: var(--bg-light); /* Fondo crema suave */
+    border-radius: 8px; /* Bordes redondeados */
+}
+
+/* ============================================================
+REGLAS PARA FIREFOX (scrollbar-color)
+============================================================
+Firefox usa una propiedad diferente para personalizar la
+barra de desplazamiento. Aquí se define un estilo compatible.
+*/
+* {
+    scrollbar-width: thin; /* Barra delgada */
+    scrollbar-color: var(--wine-main) var(--bg-light);
+    /* -> Color del pulgar: vino; color del fondo: crema */
+}
+
+/* ============================================================
+REGLA: @supports (scrollbar-color: auto)
+============================================================
+Esta es una "verificación" para asegurarse de que el
+navegador soporta la propiedad scrollbar-color.
+Si la soporta, se aplica el mismo estilo.
+*/
+@supports (scrollbar-color: auto) {
+    * {
+        scrollbar-color: var(--wine-main) var(--bg-light);
+    }
+}
+
+/* ============================================================
+REGLA: .music-player-fixed (reproductor de música fijo)
+============================================================
+Es un reproductor de música que se mantiene fijo en la
+esquina inferior derecha de la pantalla.
+- position: fixed; -> Se mantiene fijo al hacer scroll.
+- bottom: 24px; right: 24px; -> Esquina inferior derecha.
+- z-index: 9999; -> Por encima de casi todo.
+- font-family: var(--font-sans); -> Fuente moderna.
+*/
+.music-player-fixed {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 9999;
+    font-family: var(--font-sans);
+}
+
+/* ============================================================
+REGLA: .music-controls (controles del reproductor)
+============================================================
+- background: rgba(255, 255, 255, 0.85); -> Fondo blanco
+    semi-transparente.
+- backdrop-filter: blur(12px); -> Efecto de vidrio.
+- border-radius: 60px; -> Bordes redondeados.
+- padding: 8px 16px; -> Espacio interno.
+- display: flex; -> Flexbox.
+- align-items: center; -> Centra verticalmente.
+- gap: 12px; -> Espacio entre elementos.
+- border: 1px solid var(--wine-main); -> Borde vino.
+- box-shadow: 0 4px 12px rgba(0,0,0,0.08), 0 0 10px rgba(139, 26, 43, 0.1);
+    -> Sombra suave con toque vino.
+- transition: all 0.2s ease; -> Transición suave.
+*/
+.music-controls {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    border-radius: 60px;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border: 1px solid var(--wine-main);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08), 0 0 10px rgba(139, 26, 43, 0.1);
+    transition: all 0.2s ease;
+}
+
+/* Al pasar el mouse sobre los controles:
+- transform: scale(1.02); -> Crecen ligeramente.
+- box-shadow: 0 6px 16px rgba(0,0,0,0.1), 0 0 15px var(--wine-main);
+    -> Sombra más fuerte. */
+.music-controls:hover {
+    transform: scale(1.02);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.1), 0 0 15px var(--wine-main);
+}
+
+/* ============================================================
+REGLA: .play-pause-btn (botón de reproducir/pausar)
+============================================================
+- background: var(--wine-main); -> Fondo vino.
+- border: none; -> Sin borde.
+- width: 32px; height: 32px; -> Tamaño cuadrado.
+- border-radius: 50%; -> Forma de círculo.
+- font-size: 16px; -> Tamaño del icono.
+- cursor: pointer; -> Mano al pasar.
+- font-weight: bold; -> Negrita.
+- transition: 0.2s; -> Transición suave.
+- display: flex; align-items: center; justify-content: center;
+    -> Centra el contenido.
+- color: #FFFFFF; -> Texto blanco.
+*/
+.play-pause-btn {
+    background: var(--wine-main);
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #FFFFFF;
+}
+
+/* Al pasar el mouse sobre el botón de reproducción:
+- transform: scale(1.1); -> Crece.
+- background: var(--gold-main); -> Fondo dorado. */
+.play-pause-btn:hover {
+    transform: scale(1.1);
+    background: var(--gold-main);
+}
+
+/* ============================================================
+REGLA: #volumeSlider (control de volumen)
+============================================================
+- width: 80px; -> Ancho fijo.
+- cursor: pointer; -> Mano al pasar.
+- background: var(--wine-light); -> Fondo vino claro.
+- height: 4px; -> Altura delgada.
+- border-radius: 4px; -> Bordes redondeados.
+- -webkit-appearance: none; -> Elimina el estilo por defecto
+    en navegadores WebKit.
+*/
+#volumeSlider {
+    width: 80px;
+    cursor: pointer;
+    background: var(--wine-light);
+    height: 4px;
+    border-radius: 4px;
+    -webkit-appearance: none;
+}
+
+/* ============================================================
+REGLA: #volumeSlider::-webkit-slider-thumb (pulgar del slider)
+============================================================
+- -webkit-appearance: none; -> Elimina el estilo por defecto.
+- width: 14px; height: 14px; -> Tamaño.
+- border-radius: 50%; -> Forma de círculo.
+- background: var(--wine-main); -> Fondo vino.
+- border: none; -> Sin borde.
+- cursor: pointer; -> Mano al pasar.
+*/
+#volumeSlider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--wine-main);
+    border: none;
+    cursor: pointer;
+}
+
+/* ============================================================
+REGLA: .music-label (etiqueta del reproductor)
+============================================================
+- font-size: 11px; -> Texto pequeño.
+- font-weight: 600; -> Semi-negrita.
+- color: var(--wine-main); -> Color vino.
+- letter-spacing: 1px; -> Espacio entre letras.
+*/
+.music-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--wine-main);
+    letter-spacing: 1px;
+}
+
+/* ============================================================
+REGLAS RESPONSIVAS PARA EL REPRODUCTOR DE MÚSICA (móviles)
+============================================================
+Cuando la pantalla es más pequeña que 600px, se ajustan
+los tamaños del reproductor.
+*/
+@media (max-width: 600px) {
+    .music-player-fixed { bottom: 12px; right: 12px; }
+    .music-controls { padding: 6px 12px; gap: 8px; }
+    #volumeSlider { width: 60px; }
+    .music-label { font-size: 9px; }
+}
+
+/* ============================================================
+REGLA: .minimal-audio (reproductor de audio minimalista)
+============================================================
+- position: fixed; -> Fijo en la pantalla.
+- bottom: 24px; right: 24px; -> Esquina inferior derecha.
+- z-index: 2000; -> Por encima de la mayoría.
+- backdrop-filter: blur(12px); -> Efecto de vidrio.
+- background: rgba(255, 255, 255, 0.85); -> Fondo blanco
+    semi-transparente.
+- border-radius: 48px; -> Bordes redondeados.
+- padding: 6px 12px 6px 8px; -> Espacio interno.
+- border: 1px solid var(--wine-main); -> Borde vino.
+- box-shadow: 0 8px 20px rgba(0,0,0,0.05); -> Sombra suave.
+- transition: all 0.2s ease; -> Transición suave.
+- font-family: 'Montserrat', sans-serif; -> Fuente moderna.
+*/
+.minimal-audio {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 2000;
+    backdrop-filter: blur(12px);
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 48px;
+    padding: 6px 12px 6px 8px;
+    border: 1px solid var(--wine-main);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+    transition: all 0.2s ease;
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* Al pasar el mouse sobre el reproductor minimalista:
+- background: rgba(255, 255, 255, 0.95); -> Fondo más blanco.
+- border-color: var(--gold-main); -> Borde dorado.
+- box-shadow: 0 10px 25px rgba(0,0,0,0.08); -> Sombra más fuerte. */
+.minimal-audio:hover {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: var(--gold-main);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+/* ============================================================
+REGLA: .audio-player (contenedor del reproductor de audio)
+============================================================
+- display: flex; -> Flexbox.
+- align-items: center; -> Centra verticalmente.
+- gap: 10px; -> Espacio entre elementos.
+*/
+.audio-player {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* ============================================================
+REGLA: .audio-btn (botón de audio)
+============================================================
+- background: none; -> Sin fondo.
+- border: none; -> Sin borde.
+- font-size: 1.6rem; -> Tamaño grande.
+- cursor: pointer; -> Mano al pasar.
+- padding: 6px; -> Espacio interno.
+- border-radius: 50%; -> Forma de círculo.
+- display: inline-flex; -> Flex en línea.
+- align-items: center; justify-content: center; -> Centra.
+- transition: 0.2s; -> Transición suave.
+- color: var(--text-primary); -> Color casi negro.
+- text-shadow: 0 0 4px var(--wine-main); -> Brillo vino.
+- backdrop-filter: blur(4px); -> Efecto de vidrio.
+*/
+.audio-btn {
+    background: none;
+    border: none;
+    font-size: 1.6rem;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s;
+    color: var(--text-primary);
+    text-shadow: 0 0 4px var(--wine-main);
+    backdrop-filter: blur(4px);
+}
+
+/* Al pasar el mouse sobre el botón de audio:
+- transform: scale(1.05); -> Crece.
+- color: var(--wine-main); -> Color vino.
+- background: var(--wine-light); -> Fondo vino claro. */
+.audio-btn:hover {
+    transform: scale(1.05);
+    color: var(--wine-main);
+    background: var(--wine-light);
+}
+
+/* ============================================================
+REGLA: .audio-time (visualización del tiempo de audio)
+============================================================
+- font-size: 0.7rem; -> Texto pequeño.
+- font-weight: 500; -> Peso medio.
+- letter-spacing: 0.5px; -> Espacio entre letras.
+- background: rgba(0,0,0,0.03); -> Fondo muy tenue.
+- padding: 3px 8px; -> Espacio interno.
+- border-radius: 30px; -> Bordes redondeados.
+- font-family: monospace; -> Fuente monoespaciada.
+- color: var(--text-secondary); -> Color gris.
+*/
+.audio-time {
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    background: rgba(0,0,0,0.03);
+    padding: 3px 8px;
+    border-radius: 30px;
+    font-family: monospace;
+    color: var(--text-secondary);
+}
+
+/* ============================================================
+REGLA: .volume-slider (control de volumen)
+============================================================
+- width: 55px; -> Ancho fijo.
+- height: 3px; -> Altura delgada.
+- -webkit-appearance: none; -> Elimina el estilo por defecto.
+- background: var(--wine-light); -> Fondo vino claro.
+- border-radius: 10px; -> Bordes redondeados.
+- outline: none; -> Sin borde al enfocar.
+- cursor: pointer; -> Mano al pasar.
+*/
+.volume-slider {
+    width: 55px;
+    height: 3px;
+    -webkit-appearance: none;
+    background: var(--wine-light);
+    border-radius: 10px;
+    outline: none;
+    cursor: pointer;
+}
+
+/* ============================================================
+REGLA: .volume-slider::-webkit-slider-thumb (pulgar del slider)
+============================================================
+- -webkit-appearance: none; -> Elimina el estilo por defecto.
+- width: 9px; height: 9px; -> Tamaño.
+- border-radius: 50%; -> Forma de círculo.
+- background: var(--wine-main); -> Fondo vino.
+- border: none; -> Sin borde.
+- box-shadow: 0 0 3px var(--wine-main); -> Brillo vino.
+*/
+.volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--wine-main);
+    border: none;
+    box-shadow: 0 0 3px var(--wine-main);
+}
+
+/* ============================================================
+REGLA: .audio-icon-small (icono de audio pequeño)
+============================================================
+- font-size: 1.2rem; -> Tamaño de letra.
+- margin-right: 2px; -> Espacio a la derecha.
+*/
+.audio-icon-small {
+    font-size: 1.2rem;
+    margin-right: 2px;
+}
+
+/* ============================================================
+REGLAS RESPONSIVAS PARA REPRODUCTOR MINIMALISTA (móviles)
+============================================================
+Cuando la pantalla es más pequeña que 660px, se ajustan
+los tamaños del reproductor minimalista.
+*/
+@media (max-width: 660px) {
+    .minimal-audio { bottom: 16px; right: 16px; padding: 4px 10px 4px 6px; }
+    .audio-time { font-size: 0.6rem; padding: 2px 6px; }
+    .audio-btn { font-size: 1.3rem; padding: 4px; }
+    .volume-slider { width: 45px; }
+}
+
+/* ============================================================
+REGLA: .modal-producto (modal de producto)
+============================================================
+Este modal aparece cuando el usuario quiere ver detalles
+de un producto, ajustar la cantidad, agregar a favoritos,
+o añadir al carrito.
+- position: fixed; -> Fijo en la pantalla.
+- top: 0; left: 0; -> Ocupa toda la pantalla.
+- width: 100%; height: 100%; -> Ocupa todo el espacio.
+- background: rgba(0,0,0,0.3); -> Fondo oscuro semi-transparente.
+- backdrop-filter: blur(8px); -> Efecto de desenfoque.
+- display: flex; align-items: center; justify-content: center;
+    -> Centra el contenido.
+- z-index: 2100; -> Por encima de la mayoría.
+- visibility: hidden; -> Oculto por defecto.
+- opacity: 0; -> Oculto por defecto.
+- transition: 0.2s; -> Transición suave.
+*/
+.modal-producto {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.3);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2100;
+    visibility: hidden;
+    opacity: 0;
+    transition: 0.2s;
+}
+
+/* ============================================================
+REGLA: .modal-producto.active (modal de producto activo)
+============================================================
+- visibility: visible; -> Visible.
+- opacity: 1; -> Totalmente opaco.
+*/
+.modal-producto.active {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* ============================================================
+REGLA: .modal-producto .modal-contenido (contenido del modal de producto)
+============================================================
+- background: var(--bg-card); -> Fondo blanco.
+- border-radius: 48px; -> Bordes redondeados.
+- max-width: 400px; -> Ancho máximo.
+- width: 90%; -> Ocupa el 90% en móviles.
+- padding: 2rem; -> Espacio interno.
+- text-align: center; -> Texto centrado.
+- border: 1px solid var(--wine-main); -> Borde vino.
+- box-shadow: var(--shadow-soft); -> Sombra suave.
+*/
+.modal-producto .modal-contenido {
+    background: var(--bg-card);
+    border-radius: 48px;
+    max-width: 400px;
+    width: 90%;
+    padding: 2rem;
+    text-align: center;
+    border: 1px solid var(--wine-main);
+    box-shadow: var(--shadow-soft);
+}
+
+/* ============================================================
+REGLA: .cantidad-selector (selector de cantidad)
+============================================================
+- display: flex; -> Flexbox.
+- justify-content: center; -> Centra los elementos.
+- align-items: center; -> Centra verticalmente.
+- gap: 1rem; -> Espacio entre elementos.
+- margin: 1rem 0; -> Márgenes verticales.
+*/
+.cantidad-selector {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+/* ============================================================
+REGLA: .cantidad-selector button (botones + y -)
+============================================================
+- background: var(--wine-main); -> Fondo vino.
+- border: none; -> Sin borde.
+- width: 40px; height: 40px; -> Tamaño cuadrado.
+- border-radius: 50%; -> Forma de círculo.
+- font-size: 1.5rem; -> Tamaño grande.
+- cursor: pointer; -> Mano al pasar.
+- font-weight: bold; -> Negrita.
+- color: #FFFFFF; -> Texto blanco.
+*/
+.cantidad-selector button {
+    background: var(--wine-main);
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    cursor: pointer;
+    font-weight: bold;
+    color: #FFFFFF;
+}
+
+/* ============================================================
+REGLA: .cantidad-input (campo de cantidad)
+============================================================
+- width: 80px; -> Ancho fijo.
+- text-align: center; -> Texto centrado.
+- font-size: 1.2rem; -> Tamaño de letra.
+- padding: 8px; -> Espacio interno.
+- border-radius: 40px; -> Bordes redondeados.
+- border: 1px solid var(--gold-soft); -> Borde dorado suave.
+- background: var(--bg-light); -> Fondo crema suave.
+- color: var(--text-primary); -> Color casi negro.
+*/
+.cantidad-input {
+    width: 80px;
+    text-align: center;
+    font-size: 1.2rem;
+    padding: 8px;
+    border-radius: 40px;
+    border: 1px solid var(--gold-soft);
+    background: var(--bg-light);
+    color: var(--text-primary);
+}
+
+/* ============================================================
+REGLA: .modal-botones (botones del modal)
+============================================================
+- display: flex; -> Flexbox.
+- gap: 1rem; -> Espacio entre botones.
+- justify-content: center; -> Centra los botones.
+- margin-top: 1.5rem; -> Espacio arriba.
+- flex-wrap: wrap; -> Permite que se envuelvan en móviles.
+*/
+.modal-botones {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+}
+
+/* ============================================================
+REGLA: .modal-botones button (botones dentro del modal)
+============================================================
+- background: none; -> Sin fondo.
+- border: 1px solid var(--wine-main); -> Borde vino.
+- padding: 8px 20px; -> Espacio interno.
+- border-radius: 40px; -> Bordes redondeados.
+- cursor: pointer; -> Mano al pasar.
+- font-weight: bold; -> Negrita.
+- transition: 0.2s; -> Transición suave.
+- color: var(--text-primary); -> Color casi negro.
+*/
+.modal-botones button {
+    background: none;
+    border: 1px solid var(--wine-main);
+    padding: 8px 20px;
+    border-radius: 40px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.2s;
+    color: var(--text-primary);
+}
+
+/* Al pasar el mouse sobre los botones del modal:
+- background: var(--wine-light); -> Fondo vino claro. */
+.modal-botones button:hover {
+    background: var(--wine-light);
+}
+
+/* ============================================================
+REGLA: .btn-fav (botón de favoritos)
+============================================================
+- border-color: var(--gold-main) !important; -> Borde dorado.
+- color: var(--gold-main) !important; -> Color dorado.
+(El !important asegura que prevalezca sobre otros estilos)
+*/
+.btn-fav {
+    border-color: var(--gold-main) !important;
+    color: var(--gold-main) !important;
+}
+
+/* Al pasar el mouse sobre el botón de favoritos:
+- background: var(--gold-light) !important; -> Fondo dorado claro. */
+.btn-fav:hover {
+    background: var(--gold-light) !important;
+}
+
+/* ============================================================
+REGLA: .toast-custom (mensaje emergente personalizado)
+============================================================
+- position: fixed; -> Fijo en la pantalla.
+- bottom: 30px; -> A 30px del borde inferior.
+- left: 50%; transform: translateX(-50%); -> Centrado.
+- background: var(--wine-main); -> Fondo vino.
+- color: #FFFFFF; -> Texto blanco.
+- padding: 12px 24px; -> Espacio interno.
+- border-radius: 60px; -> Bordes redondeados.
+- z-index: 3000; -> Por encima de todo.
+- font-weight: bold; -> Negrita.
+- box-shadow: 0 4px 15px rgba(0,0,0,0.1); -> Sombra suave.
+- transition: 0.2s; -> Transición suave.
+- opacity: 0; -> Oculto por defecto.
+- pointer-events: none; -> No interfiere con clics.
+- font-family: 'Montserrat', sans-serif; -> Fuente moderna.
+*/
+.toast-custom {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--wine-main);
+    color: #FFFFFF;
+    padding: 12px 24px;
+    border-radius: 60px;
+    z-index: 3000;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: 0.2s;
+    opacity: 0;
+    pointer-events: none;
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* ============================================================
+REGLA: .toast-custom.show (toast visible)
+============================================================
+- opacity: 1; -> Totalmente visible.
+*/
+.toast-custom.show {
+    opacity: 1;
+}
+
+/* ============================================================
+REGLA: .ver-locales-btn (botón para ver locales)
+============================================================
+- margin-left: auto; -> Se alinea a la derecha.
+- background: none; -> Sin fondo.
+- border: 1px solid var(--wine-main); -> Borde vino.
+- border-radius: 20px; -> Bordes redondeados.
+- padding: 2px 8px; -> Espacio interno.
+- cursor: pointer; -> Mano al pasar.
+- font-size: 0.7rem; -> Texto pequeño.
+- transition: 0.2s; -> Transición suave.
+*/
+.ver-locales-btn {
+    margin-left: auto;
+    background: none;
+    border: 1px solid var(--wine-main);
+    border-radius: 20px;
+    padding: 2px 8px;
+    cursor: pointer;
+    font-size: 0.7rem;
+    transition: 0.2s;
+}
+
+/* Al pasar el mouse sobre el botón "ver locales":
+- background: var(--wine-light); -> Fondo vino claro. */
+.ver-locales-btn:hover {
+    background: var(--wine-light);
+}
+
+/* ============================================================
+REGLA: .btn-ver-todos (botón para ver todos los productos)
+============================================================
+- background: var(--wine-main); -> Fondo vino.
+- color: #FFFFFF; -> Texto blanco.
+- padding: 12px 32px; -> Espacio interno.
+- border-radius: 60px; -> Bordes redondeados.
+- text-decoration: none; -> Sin subrayado.
+- font-weight: bold; -> Negrita.
+- display: inline-block; -> Se comporta como bloque en línea.
+- transition: 0.2s; -> Transición suave.
+*/
+.btn-ver-todos {
+    background: var(--wine-main);
+    color: #FFFFFF;
+    padding: 12px 32px;
+    border-radius: 60px;
+    text-decoration: none;
+    font-weight: bold;
+    display: inline-block;
+    transition: 0.2s;
+}
+
+/* Al pasar el mouse sobre "ver todos":
+- transform: scale(1.02); -> Crece ligeramente.
+- background: var(--wine-hover); -> Fondo vino más claro. */
+.btn-ver-todos:hover {
+    transform: scale(1.02);
+    background: var(--wine-hover);
+}

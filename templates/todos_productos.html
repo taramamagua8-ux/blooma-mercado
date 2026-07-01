@@ -1,0 +1,1659 @@
+<!DOCTYPE html>
+<html lang="es">
+<!--
+La etiqueta <html> es el contenedor raíz de toda la página web.
+El atributo lang="es" indica que el contenido está en español,
+útil para motores de búsqueda y lectores de pantalla.
+-->
+<head>
+<!--
+    La cabecera <head> contiene metadatos, enlaces a recursos
+    externos (fuentes, hojas de estilo, iconos) y el título de
+    la pestaña del navegador. No muestra contenido visible,
+    pero es esencial para el funcionamiento y la apariencia.
+-->
+<meta charset="UTF-8">
+<!--
+    Esta etiqueta <meta> define la codificación de caracteres
+    como UTF-8, lo que permite usar letras con acentos, eñes,
+    y símbolos especiales (como emojis) sin problemas.
+-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<!--
+    Controla la visualización en dispositivos móviles:
+    - width=device-width: ajusta el ancho de la página al tamaño
+    de la pantalla del dispositivo.
+    - initial-scale=1.0: establece el nivel de zoom inicial
+    normal (sin ampliar ni reducir).
+    - user-scalable=yes: permite al usuario hacer zoom con
+    gestos de pellizco, útil para accesibilidad y personas
+    con problemas de visión.
+-->
+
+<title>Todos los productos · Blooma Mercado Melchor Ocampo</title>
+<!--
+    Título que aparece en la pestaña del navegador. Describe
+    el contenido de la página e incluye el nombre del mercado.
+-->
+
+<!--
+    A continuación se cargan fuentes desde Google Fonts.
+    Se usan dos etiquetas <link rel="preconnect"> para mejorar
+    el rendimiento al conectar con los servidores de Google.
+    "preconnect" establece una conexión temprana con los dominios
+    que alojan las fuentes, reduciendo el tiempo de carga.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<!--
+    La siguiente línea importa varias familias tipográficas desde
+    Google Fonts:
+    - Cormorant Garamond: una fuente serif elegante, para títulos
+    y textos destacados.
+    - Montserrat: una fuente sans-serif moderna y limpia, para
+    textos generales.
+    - Playfair Display: una fuente serif con un estilo clásico
+    y ornamentado, para detalles especiales.
+    Cada fuente se carga con diferentes pesos (grosor) para tener
+    variedad (300, 400, 600, 700).
+-->
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Montserrat:wght@200;400;600&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+
+<!--
+    Carga la biblioteca de iconos Font Awesome (versión 6).
+    Proporciona cientos de iconos vectoriales (como el de carrito,
+    corazón, estrella, etc.) que se usan en la página para mejorar
+    la experiencia visual y la usabilidad.
+-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<!--
+    Hoja de estilos global del proyecto 'Blooma Xoko'.
+    Contiene variables CSS (colores, fuentes) y estilos comunes
+    para toda la aplicación (como el encabezado, el pie de página,
+    los colores de acento, etc.). Se carga mediante url_for de
+    Flask, que genera la ruta correcta hacia la carpeta 'static/'.
+-->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/blooma_global.css') }}">
+
+<!--
+    Favicon (ícono que aparece en la pestaña del navegador).
+    Usa url_for para generar la ruta hacia 'static/img/iconic.png'.
+    Es una imagen pequeña que identifica la página.
+-->
+<link rel="shortcut icon" href="{{ url_for('static', filename='img/iconic.png') }}">
+
+<style>
+    /*
+    ==========================================================
+    BLOQUE DE ESTILOS CSS ESPECÍFICOS PARA ESTA PÁGINA
+    ==========================================================
+    Aquí se definen todos los estilos que solo se usan en esta
+    página de productos. No afectan a otras páginas del sitio.
+    El CSS es el lenguaje que controla colores, tamaños,
+    posiciones, animaciones y la apariencia general de los
+    elementos HTML.
+    */
+
+    .productos-container {
+    /*
+        Contenedor principal que envuelve toda la lista de
+        productos. Limita el ancho máximo para que en pantallas
+        grandes no se estire demasiado, y lo centra horizontalmente.
+    */
+    max-width: 1400px;
+    /* Ancho máximo de 1400 píxeles. */
+    margin: 2rem auto;
+    /* Margen superior e inferior de 2rem (unidad relativa al
+        tamaño de fuente) y centrado automático a los lados. */
+    padding: 0 1rem;
+    /* Relleno interior de 1rem a los lados para que en móviles
+        el contenido no toque los bordes de la pantalla. */
+    }
+
+    .local-group {
+    /*
+        Cada grupo de productos pertenecientes a un mismo local
+        (tienda). Es una tarjeta con fondo semitransparente y
+        efecto de desenfoque (glassmorphism) que agrupa los
+        productos de ese local.
+    */
+    background: rgba(30, 20, 45, 0.7);
+    /* Fondo oscuro con opacidad 0.7 (70% opaco). */
+    backdrop-filter: blur(8px);
+    /* Desenfoque del fondo detrás de la tarjeta (efecto vidrio). */
+    border-radius: 32px;
+    /* Esquinas redondeadas con radio de 32 píxeles. */
+    margin-bottom: 2.5rem;
+    /* Margen inferior de 2.5rem para separar los grupos. */
+    padding: 1.5rem;
+    /* Relleno interior de 1.5rem alrededor del contenido. */
+    border: 1px solid rgba(255,107,129,0.3);
+    /* Borde de 1px de color rosado semitransparente (el color
+        de acento de la marca). */
+    transition: 0.2s;
+    /* Transición suave de 0.2 segundos para cambios de estado
+        (como el hover). */
+    }
+
+    .local-group:hover {
+    /*
+        Estilo cuando el ratón está encima del grupo de local.
+        Cambia el color del borde y añade una sombra para dar
+        sensación de elevación.
+    */
+    border-color: rgba(255,107,129,0.6);
+    /* Borde más visible (60% de opacidad). */
+    box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+    /* Sombra negra semitransparente que simula profundidad. */
+    }
+
+    .local-header {
+    /*
+        Cabecera de cada grupo de local. Contiene el nombre del
+        local y la categoría. Usa flexbox para distribuir los
+        elementos horizontalmente y alinearlos.
+    */
+    display: flex;
+    /* Activa el modelo de caja flexible (Flexbox). */
+    justify-content: space-between;
+    /* Distribuye el espacio entre los elementos hijos: el nombre
+        a la izquierda y la categoría a la derecha. */
+    align-items: center;
+    /* Centra verticalmente los elementos. */
+    flex-wrap: wrap;
+    /* Permite que los elementos se envuelvan a la siguiente línea
+        si no caben en una sola fila (útil en móviles). */
+    border-bottom: 2px solid var(--berry-lumina);
+    /* Línea inferior de 2px con el color 'berry-lumina'
+        (definido en la hoja global). */
+    padding-bottom: 0.5rem;
+    /* Espacio interior inferior de 0.5rem para separar del borde. */
+    margin-bottom: 1.2rem;
+    /* Margen inferior de 1.2rem para separar del grid de productos. */
+    }
+
+    .local-nombre {
+    /*
+        Nombre del local. Se muestra con un tamaño grande y la
+        fuente de títulos, en color dorado.
+    */
+    font-size: 1.6rem;
+    /* Tamaño de fuente de 1.6 veces el tamaño base. */
+    font-family: var(--font-title);
+    /* Fuente de títulos definida en la hoja global. */
+    color: var(--golden-hour);
+    /* Color dorado (definido en la hoja global). */
+    display: flex;
+    /* Flexbox para alinear el icono y el texto. */
+    align-items: center;
+    /* Centra verticalmente el icono y el texto. */
+    gap: 0.5rem;
+    /* Espacio de 0.5rem entre el icono y el texto. */
+    }
+
+    .local-nombre i {
+    /*
+        Icono de tienda (Font Awesome) dentro del nombre del local.
+    */
+    color: var(--berry-lumina);
+    /* Color morado/rosado brillante. */
+    }
+
+    .local-categoria {
+    /*
+        Etiqueta que muestra la categoría del local (ej. "Frutas",
+        "Verduras", "Artesanías"). Tiene un fondo de color brillante
+        y texto oscuro para destacar.
+    */
+    background: var(--berry-lumina);
+    /* Fondo con el color de acento brillante. */
+    padding: 4px 16px;
+    /* Relleno interior: 4px arriba/abajo, 16px a los lados. */
+    border-radius: 40px;
+    /* Bordes muy redondeados (cápsula). */
+    font-size: 0.8rem;
+    /* Tamaño de fuente pequeño. */
+    color: #0a0514;
+    /* Color de texto muy oscuro (casi negro). */
+    font-weight: 700;
+    /* Texto en negrita (peso 700). */
+    letter-spacing: 0.5px;
+    /* Espacio entre letras de 0.5 píxeles para mejorar la legibilidad. */
+    }
+
+    .productos-grid {
+    /*
+        Cuadrícula que contiene todas las tarjetas de productos
+        de un mismo local. Cada producto se muestra en una tarjeta.
+    */
+    display: grid;
+    /* Activa el sistema de cuadrícula CSS Grid. */
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    /*
+        Columnas automáticas que se ajustan al espacio disponible:
+        - repeat(auto-fill): crea tantas columnas como quepan.
+        - minmax(220px, 1fr): cada columna tiene un ancho mínimo
+        de 220px y se expande para ocupar el espacio restante
+        (1fr = una fracción del espacio disponible).
+        Esto hace que la cuadrícula sea responsive.
+    */
+    gap: 1.2rem;
+    /* Espacio entre las tarjetas de productos (1.2rem). */
+    }
+
+    .producto-card {
+    /*
+        Tarjeta que representa un producto individual. Contiene la
+        imagen, el nombre, el precio, el stock y un botón para
+        agregar al carrito.
+    */
+    background: rgba(0,0,0,0.5);
+    /* Fondo negro semitransparente (50% opaco). */
+    border-radius: 24px;
+    /* Esquinas redondeadas con radio de 24px. */
+    padding: 1rem;
+    /* Relleno interior de 1rem. */
+    text-align: center;
+    /* Centra el texto horizontalmente. */
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    /*
+        Transiciones suaves para cuando el ratón pasa por encima:
+        - transform: anima cambios de posición/escala.
+        - box-shadow: anima cambios en la sombra.
+        Ambas duran 0.25 segundos con aceleración suave (ease).
+    */
+    cursor: default;
+    /* El cursor del ratón tiene la forma normal (flecha). */
+    border: 1px solid rgba(255,255,255,0.08);
+    /* Borde muy tenue (8% opaco) para dar un contorno sutil. */
+    display: flex;
+    /* Flexbox para organizar el contenido verticalmente. */
+    flex-direction: column;
+    /* Coloca los elementos en columna (uno debajo de otro). */
+    align-items: center;
+    /* Centra horizontalmente los elementos hijos. */
+    }
+
+    .producto-card:hover {
+    /*
+        Estilo cuando el ratón está encima de una tarjeta de producto.
+        Se eleva ligeramente (translateY negativo), cambia el fondo
+        y el color del borde, y añade una sombra más pronunciada.
+    */
+    transform: translateY(-6px);
+    /* Eleva la tarjeta 6 píxeles hacia arriba. */
+    background: rgba(255,107,129,0.08);
+    /* Fondo rosado muy tenue (8% opaco). */
+    border-color: var(--accent-berry-pink);
+    /* Borde con el color de acento rosado. */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    /* Sombra más grande y oscura para dar profundidad. */
+    }
+
+    /* Contenedor de la imagen del producto */
+    .producto-imagen-wrapper {
+    /*
+        Contenedor que envuelve la imagen del producto. Tiene un
+        tamaño fijo de altura y ancho completo, y recorta la imagen
+        si es necesario para que encaje.
+    */
+    width: 100%;
+    /* Ancho completo de la tarjeta. */
+    height: 150px;
+    /* Altura fija de 150 píxeles. */
+    border-radius: 16px;
+    /* Esquinas redondeadas con radio de 16px. */
+    overflow: hidden;
+    /*
+        overflow: hidden oculta cualquier parte de la imagen que
+        se salga del contenedor, manteniendo las esquinas redondeadas.
+    */
+    background: #1a1425;
+    /* Fondo oscuro por si la imagen no carga o es transparente. */
+    display: flex;
+    /* Flexbox para centrar el contenido. */
+    align-items: center;
+    justify-content: center;
+    /* Centra vertical y horizontalmente. */
+    margin-bottom: 0.6rem;
+    /* Margen inferior de 0.6rem para separar de la información. */
+    position: relative;
+    /* Posición relativa para que, si se necesita, los hijos
+        se posicionen dentro con absolute. */
+    }
+
+    .producto-imagen-wrapper img {
+    /*
+        Estilo de la imagen del producto dentro del contenedor.
+    */
+    width: 100%;
+    height: 100%;
+    /* Ocupa todo el ancho y alto del contenedor. */
+    object-fit: cover;
+    /*
+        Ajusta la imagen para que cubra todo el espacio sin
+        deformarse, recortando los bordes si es necesario.
+        Es el comportamiento típico de las imágenes de perfil.
+    */
+    transition: transform 0.3s ease;
+    /* Transición suave de 0.3 segundos al hacer hover. */
+    }
+
+    .producto-card:hover .producto-imagen-wrapper img {
+    /*
+        Cuando el ratón está sobre la tarjeta, la imagen se
+        amplía ligeramente (efecto de zoom sutil).
+    */
+    transform: scale(1.02);
+    /* Escala la imagen al 102% de su tamaño original. */
+    }
+
+    .producto-imagen-wrapper .sin-imagen {
+    /*
+        Placeholder que se muestra cuando el producto no tiene
+        imagen. Es un icono de cámara con estilo.
+    */
+    font-size: 2.8rem;
+    /* Tamaño de fuente grande. */
+    opacity: 0.4;
+    /* Opacidad del 40% para que sea más tenue. */
+    color: #888;
+    /* Color gris. */
+    }
+
+    .producto-nombre {
+    /*
+        Nombre del producto. Se muestra con peso seminegrita y
+        color claro.
+    */
+    font-weight: 600;
+    /* Peso de fuente seminegrita. */
+    margin: 0.4rem 0 0.2rem;
+    /* Margen: 0.4rem arriba, 0 a los lados, 0.2rem abajo. */
+    font-family: var(--font-sans);
+    /* Fuente sans-serif definida en la hoja global. */
+    font-size: 1rem;
+    /* Tamaño de fuente de 1rem (tamaño base). */
+    color: #f0ece6;
+    /* Color claro (blanco roto). */
+    line-height: 1.3;
+    /* Altura de línea de 1.3 para mejorar la legibilidad. */
+    }
+
+    .producto-precio {
+    /*
+        Precio del producto. Se muestra en color rosado, con
+        tamaño grande y en negrita.
+    */
+    color: var(--accent-berry-pink);
+    /* Color de acento rosado. */
+    font-size: 1.3rem;
+    /* Tamaño de fuente de 1.3rem. */
+    font-weight: 700;
+    /* Negrita (peso 700). */
+    font-family: var(--font-sans);
+    /* Fuente sans-serif. */
+    margin: 0.2rem 0;
+    /* Margen vertical de 0.2rem. */
+    }
+
+    .stock-badge {
+    /*
+        Etiqueta que muestra la cantidad de unidades disponibles
+        en stock. Es pequeña y tiene un fondo oscuro.
+    */
+    font-size: 0.7rem;
+    /* Tamaño de fuente pequeño. */
+    background: rgba(0,0,0,0.6);
+    /* Fondo negro semitransparente. */
+    display: inline-block;
+    /* Se comporta como un bloque en línea (solo ocupa su contenido). */
+    padding: 2px 12px;
+    /* Relleno interior: 2px arriba/abajo, 12px a los lados. */
+    border-radius: 20px;
+    /* Bordes redondeados. */
+    margin: 4px 0 8px;
+    /* Margen: 4px arriba, 0 a los lados, 8px abajo. */
+    color: #bbb;
+    /* Color gris claro. */
+    }
+
+    .btn-agregar {
+    /*
+        Botón para agregar el producto al carrito. Tiene un fondo
+        de color brillante, texto oscuro, y bordes redondeados.
+    */
+    background: var(--berry-lumina);
+    /* Fondo con el color de acento brillante. */
+    border: none;
+    /* Sin borde. */
+    padding: 8px 20px;
+    /* Relleno interior: 8px arriba/abajo, 20px a los lados. */
+    border-radius: 40px;
+    /* Bordes muy redondeados (cápsula). */
+    font-weight: 700;
+    /* Negrita. */
+    font-size: 0.85rem;
+    /* Tamaño de fuente de 0.85rem. */
+    cursor: pointer;
+    /* El cursor cambia a mano al pasar por encima. */
+    color: #0a0514;
+    /* Color de texto muy oscuro. */
+    transition: all 0.2s ease;
+    /* Transición suave de 0.2 segundos para todas las propiedades. */
+    width: 100%;
+    /* Ancho completo del contenedor (la tarjeta). */
+    max-width: 160px;
+    /* Ancho máximo de 160px para que no se estire demasiado. */
+    margin-top: 4px;
+    /* Margen superior de 4px. */
+    display: inline-flex;
+    /* Flexbox en línea para alinear el icono y el texto. */
+    align-items: center;
+    /* Centra verticalmente. */
+    justify-content: center;
+    /* Centra horizontalmente. */
+    gap: 6px;
+    /* Espacio de 6px entre el icono y el texto. */
+    }
+
+    .btn-agregar:hover {
+    /*
+        Estilo cuando el ratón está encima del botón.
+    */
+    background: #ff8fa3;
+    /* Fondo rosado más claro. */
+    transform: scale(1.02);
+    /* Aumenta ligeramente el tamaño. */
+    box-shadow: 0 4px 15px rgba(255,107,129,0.4);
+    /* Sombra rosada para dar brillo. */
+    }
+
+    .btn-agregar:active {
+    /*
+        Estilo cuando se hace clic en el botón (estado activo).
+    */
+    transform: scale(0.96);
+    /* Se reduce ligeramente para dar sensación de pulsación. */
+    }
+
+    .volver {
+    /*
+        Contenedor del botón para volver a la página de inicio.
+        Está centrado horizontalmente.
+    */
+    text-align: center;
+    margin: 2.5rem 0 1.5rem;
+    /* Margen: 2.5rem arriba, 0 a los lados, 1.5rem abajo. */
+    }
+
+    .volver .btn-ver-todos {
+    /*
+        Botón para volver al inicio. Tiene el mismo estilo que
+        los otros botones de la página.
+    */
+    background: var(--berry-lumina);
+    /* Fondo de color brillante. */
+    padding: 12px 32px;
+    /* Relleno interior. */
+    border-radius: 60px;
+    /* Bordes muy redondeados. */
+    text-decoration: none;
+    /* Elimina el subrayado típico de los enlaces. */
+    color: #0a0514;
+    /* Color de texto oscuro. */
+    font-weight: 700;
+    /* Negrita. */
+    display: inline-block;
+    /* Se comporta como un bloque en línea. */
+    transition: 0.2s;
+    /* Transición suave de 0.2 segundos. */
+    border: none;
+    /* Sin borde. */
+    cursor: pointer;
+    /* Cambia el cursor a mano al pasar por encima. */
+    }
+
+    .volver .btn-ver-todos:hover {
+    /*
+        Estilo cuando el ratón está encima del botón de volver.
+    */
+    background: #ff8fa3;
+    /* Fondo rosado más claro. */
+    transform: scale(1.02);
+    /* Aumenta ligeramente el tamaño. */
+    }
+
+    /* ==========================================================
+    ESTILOS PARA EL MODAL (ventana emergente)
+    ========================================================== */
+    .modal-producto {
+    /*
+        El modal es una ventana emergente que aparece encima de
+        todo cuando el usuario hace clic en "Agregar". Muestra
+        los detalles del producto y permite elegir la cantidad.
+    */
+    position: fixed;
+    /* Fijo en la ventana (no se mueve al hacer scroll). */
+    top: 0;
+    left: 0;
+    /* Ocupa toda la pantalla. */
+    width: 100%;
+    height: 100%;
+    /* Ancho y alto completos. */
+    background: rgba(0,0,0,0.92);
+    /* Fondo negro muy opaco (92% opacidad). */
+    backdrop-filter: blur(12px);
+    /* Desenfoque del fondo detrás del modal. */
+    display: flex;
+    /* Flexbox para centrar el contenido. */
+    align-items: center;
+    justify-content: center;
+    /* Centra el contenido vertical y horizontalmente. */
+    z-index: 2100;
+    /* Número alto para que esté por encima de todos los demás elementos. */
+    visibility: hidden;
+    /* Oculto por defecto (no visible). */
+    opacity: 0;
+    /* Completamente transparente. */
+    transition: 0.25s ease;
+    /* Transición suave de 0.25 segundos para mostrar/ocultar. */
+    }
+
+    .modal-producto.active {
+    /*
+        Cuando el modal tiene la clase 'active', se vuelve visible.
+    */
+    visibility: visible;
+    /* Visible. */
+    opacity: 1;
+    /* Completamente opaco. */
+    }
+
+    .modal-contenido {
+    /*
+        Contenido del modal: una tarjeta con los detalles del
+        producto, selector de cantidad y botones de acción.
+    */
+    background: #1e1a2f;
+    /* Fondo oscuro. */
+    border-radius: 48px;
+    /* Esquinas muy redondeadas. */
+    max-width: 420px;
+    /* Ancho máximo de 420px. */
+    width: 90%;
+    /* Ancho del 90% en pantallas pequeñas. */
+    padding: 2rem 1.8rem;
+    /* Relleno interior. */
+    text-align: center;
+    /* Centra el texto. */
+    border: 1px solid var(--berry-lumina);
+    /* Borde de color brillante. */
+    box-shadow: 0 30px 50px rgba(0,0,0,0.6);
+    /* Sombra grande y oscura para dar profundidad. */
+    position: relative;
+    /* Posición relativa para que los hijos se posicionen dentro. */
+    }
+
+    .modal-contenido h3 {
+    /*
+        Título del producto dentro del modal.
+    */
+    font-family: var(--font-title);
+    /* Fuente de títulos. */
+    font-size: 1.6rem;
+    /* Tamaño grande. */
+    color: var(--golden-hour);
+    /* Color dorado. */
+    margin-bottom: 0.3rem;
+    /* Margen inferior. */
+    }
+
+    .modal-contenido .modal-precio {
+    /*
+        Precio del producto dentro del modal.
+    */
+    font-size: 1.4rem;
+    /* Tamaño grande. */
+    color: var(--accent-berry-pink);
+    /* Color rosado. */
+    font-weight: 700;
+    /* Negrita. */
+    }
+
+    .cantidad-selector {
+    /*
+        Contenedor de los controles para aumentar/disminuir la
+        cantidad. Usa flexbox para alinear los botones y el input.
+    */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.2rem;
+    /* Espacio de 1.2rem entre los elementos. */
+    margin: 1.2rem 0;
+    /* Margen vertical de 1.2rem. */
+    }
+
+    .cantidad-selector button {
+    /*
+        Botones para disminuir o aumentar la cantidad (- y +).
+    */
+    background: var(--berry-lumina);
+    /* Fondo de color brillante. */
+    border: none;
+    /* Sin borde. */
+    width: 44px;
+    height: 44px;
+    /* Tamaño cuadrado de 44x44px. */
+    border-radius: 50%;
+    /* Botones circulares. */
+    font-size: 1.6rem;
+    /* Tamaño de fuente grande para el símbolo. */
+    cursor: pointer;
+    /* Cursor de mano al pasar por encima. */
+    font-weight: 700;
+    /* Negrita. */
+    color: #0a0514;
+    /* Color de texto oscuro. */
+    transition: 0.15s;
+    /* Transición suave de 0.15 segundos. */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Centra el contenido dentro del botón. */
+    }
+
+    .cantidad-selector button:hover {
+    /*
+        Estilo cuando el ratón está encima de los botones de cantidad.
+    */
+    background: #ff8fa3;
+    /* Fondo rosado más claro. */
+    transform: scale(1.05);
+    /* Aumenta ligeramente el tamaño. */
+    }
+
+    .cantidad-selector button:active {
+    /*
+        Estilo cuando se hace clic en los botones de cantidad.
+    */
+    transform: scale(0.92);
+    /* Se reduce ligeramente. */
+    }
+
+    .cantidad-input {
+    /*
+        Input numérico donde el usuario puede escribir la cantidad
+        deseada.
+    */
+    width: 80px;
+    /* Ancho fijo de 80px. */
+    text-align: center;
+    /* Centra el texto. */
+    font-size: 1.3rem;
+    /* Tamaño de fuente grande. */
+    padding: 8px;
+    /* Relleno interior. */
+    border-radius: 40px;
+    /* Bordes redondeados. */
+    border: 1px solid rgba(255,255,255,0.2);
+    /* Borde semitransparente. */
+    background: #2a2438;
+    /* Fondo oscuro. */
+    color: white;
+    /* Texto blanco. */
+    font-weight: 600;
+    /* Seminegrita. */
+    }
+
+    .modal-botones {
+    /*
+        Contenedor de los botones de acción dentro del modal.
+        Usa flexbox para organizarlos.
+    */
+    display: flex;
+    flex-wrap: wrap;
+    /* Permite que los botones se envuelvan si no caben. */
+    gap: 0.8rem;
+    /* Espacio de 0.8rem entre botones. */
+    justify-content: center;
+    /* Centra los botones horizontalmente. */
+    margin-top: 1.5rem;
+    /* Margen superior de 1.5rem. */
+    }
+
+    .modal-botones button {
+    /*
+        Estilos base para todos los botones dentro del modal.
+    */
+    background: none;
+    /* Sin fondo. */
+    border: 1px solid var(--accent-berry-pink);
+    /* Borde del color de acento. */
+    padding: 8px 18px;
+    /* Relleno interior. */
+    border-radius: 40px;
+    /* Bordes redondeados. */
+    cursor: pointer;
+    /* Cursor de mano. */
+    font-weight: 600;
+    /* Seminegrita. */
+    transition: 0.2s;
+    /* Transición suave. */
+    color: white;
+    /* Texto blanco. */
+    font-size: 0.9rem;
+    /* Tamaño de fuente. */
+    }
+
+    .modal-botones button:hover {
+    /*
+        Estilo cuando el ratón está encima de los botones del modal.
+    */
+    background: rgba(255,107,129,0.15);
+    /* Fondo rosado tenue. */
+    border-color: #ff8fa3;
+    /* Borde rosado más claro. */
+    }
+
+    .btn-fav {
+    /*
+        Botón específico para agregar a favoritos. Tiene un color
+        naranja/dorado para distinguirlo.
+    */
+    border-color: #ffb347 !important;
+    /* Borde naranja (con !important para sobrescribir el estilo base). */
+    color: #ffb347 !important;
+    /* Texto naranja. */
+    }
+
+    .btn-fav:hover {
+    /*
+        Estilo hover para el botón de favoritos.
+    */
+    background: rgba(255,179,71,0.15) !important;
+    /* Fondo naranja tenue. */
+    }
+
+    .btn-cerrar-modal {
+    /*
+        Botón para cerrar el modal. Tiene un color gris.
+    */
+    border-color: #666 !important;
+    /* Borde gris. */
+    color: #aaa !important;
+    /* Texto gris claro. */
+    }
+
+    .btn-cerrar-modal:hover {
+    /*
+        Estilo hover para el botón de cerrar.
+    */
+    background: rgba(255,255,255,0.05) !important;
+    /* Fondo blanco muy tenue. */
+    }
+
+    /* ==========================================================
+    ESTILOS PARA EL TOAST (mensaje emergente)
+    ========================================================== */
+    .toast-custom {
+    /*
+        El toast es un mensaje que aparece en la parte inferior
+        de la pantalla para confirmar o informar sobre acciones
+        (como agregar al carrito o a favoritos).
+    */
+    position: fixed;
+    /* Fijo en la ventana. */
+    bottom: 30px;
+    /* A 30px del borde inferior. */
+    left: 50%;
+    /* Centrado horizontalmente. */
+    transform: translateX(-50%);
+    /* Ajuste fino para centrar exactamente. */
+    background: #2ecc71;
+    /* Fondo verde (por defecto, para éxito). */
+    color: white;
+    /* Texto blanco. */
+    padding: 12px 28px;
+    /* Relleno interior. */
+    border-radius: 60px;
+    /* Bordes muy redondeados. */
+    z-index: 3000;
+    /* Muy por encima de todo. */
+    font-weight: 600;
+    /* Seminegrita. */
+    box-shadow: 0 6px 25px rgba(0,0,0,0.4);
+    /* Sombra para resaltar. */
+    transition: 0.25s ease;
+    /* Transición suave para mostrar/ocultar. */
+    opacity: 0;
+    /* Completamente transparente por defecto. */
+    pointer-events: none;
+    /* El toast no debe interferir con clics en otros elementos. */
+    font-family: 'Montserrat', sans-serif;
+    /* Fuente sans-serif. */
+    font-size: 0.95rem;
+    /* Tamaño de fuente. */
+    display: flex;
+    /* Flexbox para alinear el icono y el texto. */
+    align-items: center;
+    gap: 10px;
+    /* Espacio entre el icono y el texto. */
+    }
+
+    .toast-custom.show {
+    /*
+        Cuando el toast tiene la clase 'show', se vuelve visible.
+    */
+    opacity: 1;
+    /* Completamente opaco. */
+    }
+
+    .toast-custom.error {
+    /*
+        Variante del toast para mensajes de error: fondo rojo.
+    */
+    background: #e74c3c;
+    /* Rojo intenso. */
+    }
+
+    .toast-custom i {
+    /*
+        Icono dentro del toast.
+    */
+    font-size: 1.2rem;
+    /* Tamaño de fuente de 1.2rem. */
+    }
+
+    /* ==========================================================
+    ESTILOS RESPONSIVOS (para diferentes tamaños de pantalla)
+    ========================================================== */
+
+    @media (max-width: 600px) {
+    /*
+        Estilos que se aplican cuando el ancho de la pantalla es
+        de 600px o menos (tabletas y móviles).
+    */
+    .productos-grid {
+        /* En pantallas pequeñas, las tarjetas de productos se
+        hacen más pequeñas y hay menos espacio entre ellas. */
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 0.8rem;
+    }
+    .local-nombre {
+        /* El nombre del local se hace más pequeño. */
+        font-size: 1.2rem;
+    }
+    .modal-contenido {
+        /* El modal se reduce el relleno. */
+        padding: 1.5rem;
+    }
+    .producto-imagen-wrapper {
+        /* La altura de las imágenes se reduce. */
+        height: 120px;
+    }
+    }
+
+    @media (max-width: 440px) {
+    /*
+        Estilos para pantallas muy pequeñas (móviles de menos de
+        440px de ancho).
+    */
+    .productos-grid {
+        /* En móviles muy pequeños, las tarjetas se distribuyen en
+        dos columnas fijas. */
+        grid-template-columns: 1fr 1fr;
+        gap: 0.6rem;
+    }
+    .producto-card {
+        /* Las tarjetas se reducen el relleno. */
+        padding: 0.6rem;
+    }
+    .producto-nombre {
+        /* El nombre del producto se hace más pequeño. */
+        font-size: 0.85rem;
+    }
+    .producto-precio {
+        /* El precio se hace más pequeño. */
+        font-size: 1.05rem;
+    }
+    .btn-agregar {
+        /* El botón de agregar se hace más pequeño y ocupa todo
+        el ancho disponible. */
+        font-size: 0.75rem;
+        padding: 6px 12px;
+        max-width: 100%;
+    }
+    .producto-imagen-wrapper {
+        /* Las imágenes se reducen aún más. */
+        height: 100px;
+    }
+    }
+</style>
+</head>
+
+<body>
+<!--
+    ==========================================================
+    CUERPO DE LA PÁGINA (contenido visible)
+    ==========================================================
+-->
+
+<div class="app-wrapper">
+    <!--
+    Contenedor principal de la aplicación. Agrupa todo el
+    contenido visible de la página.
+    -->
+
+    <header class="site-header">
+    <!--
+        Encabezado de la página. Contiene el logo, los enlaces
+        al perfil y al carrito. La clase "site-header" viene
+        definida en la hoja de estilos global (blooma_global.css).
+    -->
+    <a href="/inicio" class="logo">🍓 BLOOMA · MERCADO MELCHOR OCAMPO</a>
+    <!--
+        Logo de la página. Es un enlace que lleva a la página
+        de inicio ("/inicio"). Incluye un emoji de fresa y el
+        nombre del mercado.
+    -->
+
+    <div class="header-actions">
+        <!--
+        Contenedor de las acciones del encabezado: enlaces al
+        perfil, cerrar sesión y al carrito.
+        -->
+        {% if session.usuario_id %}
+        <!--
+            Sintaxis de Jinja2: si el usuario tiene una sesión
+            activa (es decir, está logueado), se muestran los
+            enlaces a "Perfil" y "Salir".
+        -->
+        <a href="/perfil"><span class="icon-symbol">👤</span> <span class="icon-label">Perfil</span></a>
+        <!--
+            Enlace a la página de perfil del usuario. Incluye un
+            icono de usuario (👤) y la etiqueta "Perfil".
+        -->
+        <a href="/logout"><span class="icon-symbol">🚪</span> <span class="icon-label">Salir</span></a>
+        <!--
+            Enlace para cerrar sesión. Incluye un icono de puerta
+            (🚪) y la etiqueta "Salir".
+        -->
+        {% else %}
+        <!--
+            Si el usuario no está logueado, se muestra el enlace
+            "Entrar".
+        -->
+        <a href="/login"><span class="icon-symbol">🔐</span> <span class="icon-label">Entrar</span></a>
+        <!--
+            Enlace a la página de inicio de sesión. Incluye un
+            icono de candado (🔐) y la etiqueta "Entrar".
+        -->
+        {% endif %}
+
+        <div class="cart-icon" onclick="window.location.href='/carrito'">
+        <!--
+            Botón/icono del carrito. Al hacer clic, redirige a la
+            página del carrito ("/carrito").
+        -->
+        <span class="cart-symbol">🛒</span>
+        <!-- Icono de carrito de compras. -->
+        <span class="cart-count" id="cart-count">0</span>
+        <!--
+            Contador que muestra el número de artículos en el
+            carrito. Se actualiza dinámicamente con JavaScript.
+            Inicialmente muestra "0".
+        -->
+        <span class="icon-label">Carrito</span>
+        <!-- Etiqueta "Carrito". -->
+        </div>
+    </div>
+    </header>
+
+    <div class="productos-container">
+    <!--
+        Contenedor principal de los productos. Aquí se muestra
+        la lista de todos los productos agrupados por local.
+    -->
+
+    <h1 style="text-align:center; margin-bottom:2rem; font-family: var(--font-title); color: var(--golden-hour);">
+        <!--
+        Título de la página: "Todos los productos del mercado".
+        Está centrado, con la fuente de títulos y color dorado.
+        -->
+        <i class="fas fa-basket-shopping"></i> Todos los productos del mercado
+        <!-- Icono de cesta de compras de Font Awesome. -->
+    </h1>
+
+    {% if grupos %}
+        <!--
+        Sintaxis de Jinja2: si la variable 'grupos' (pasada desde
+        Flask) contiene datos, se muestran los grupos de locales
+        y sus productos. Si no, se muestra un mensaje de que no
+        hay productos.
+        -->
+        {% for grupo in grupos %}
+        <!--
+        Bucle de Jinja2 que itera sobre cada grupo (local) en la
+        lista 'grupos'. Cada grupo contiene el nombre del local,
+        la categoría y una lista de productos.
+        -->
+        <div class="local-group">
+        <!--
+            Tarjeta que agrupa todos los productos de un mismo local.
+        -->
+        <div class="local-header">
+            <!--
+            Cabecera del grupo: nombre del local y categoría.
+            -->
+            <span class="local-nombre">
+            <i class="fas fa-store"></i> {{ grupo.local_nombre }}
+            <!--
+                Icono de tienda de Font Awesome y el nombre del
+                local (obtenido de la variable 'grupo.local_nombre').
+            -->
+            </span>
+            <span class="local-categoria">{{ grupo.categoria }}</span>
+            <!--
+            Etiqueta con la categoría del local (ej. "Frutas").
+            -->
+        </div>
+
+        <div class="productos-grid">
+            <!--
+            Cuadrícula que contiene las tarjetas de los productos
+            de este local.
+            -->
+            {% for producto in grupo.productos %}
+            <!--
+            Bucle de Jinja2 que itera sobre cada producto dentro
+            del grupo actual.
+            -->
+            <div class="producto-card"
+            data-id="{{ producto.id }}"
+            data-nombre="{{ producto.nombre|lower|e }}"
+            data-precio="{{ producto.precio|e }}"
+            data-stock="{{ producto.stock|e }}"
+            data-imagen="{{ producto.imagen_url if producto.imagen_url else '' }}">
+            <!--
+                Tarjeta de un producto individual. Los atributos
+                "data-*" (data-id, data-nombre, etc.) almacenan
+                información del producto que JavaScript puede leer
+                cuando el usuario interactúa con la tarjeta.
+            -->
+            <div class="producto-imagen-wrapper">
+                <!--
+                Contenedor de la imagen del producto.
+                -->
+                {% if producto.imagen_url %}
+                <!--
+                    Si el producto tiene una URL de imagen, se
+                    muestra la imagen.
+                -->
+                <img src="{{ producto.imagen_url }}" alt="{{ producto.nombre }}" loading="lazy">
+                <!--
+                    La imagen se carga con el atributo "loading="lazy""
+                    para que solo se cargue cuando esté cerca del
+                    área visible (mejora el rendimiento).
+                -->
+                {% else %}
+                <!--
+                    Si no hay imagen, se muestra un icono de cámara
+                    como placeholder.
+                -->
+                <span class="sin-imagen">📷</span>
+                {% endif %}
+            </div>
+
+            <div class="producto-nombre">{{ producto.nombre }}</div>
+            <!--
+                Nombre del producto.
+            -->
+
+            <div class="producto-precio">${{ "%.2f"|format(producto.precio) }}</div>
+            <!--
+                Precio del producto. Se formatea con dos decimales
+                usando el filtro 'format' de Jinja2.
+            -->
+
+            <div class="stock-badge">📦 {{ producto.stock }} disponibles</div>
+            <!--
+                Etiqueta que muestra la cantidad de unidades disponibles
+                en stock. Incluye un icono de caja (📦).
+            -->
+
+            <button class="btn-agregar" data-id="{{ producto.id }}">
+                <!--
+                Botón para agregar el producto al carrito.
+                Al hacer clic, se abre un modal para elegir la
+                cantidad.
+                -->
+                <i class="fas fa-plus-circle"></i> Agregar
+                <!--
+                Icono de "más" (círculo con signo +) y el texto
+                "Agregar".
+                -->
+            </button>
+            </div>
+            {% endfor %}
+            <!-- Fin del bucle de productos -->
+        </div>
+        <!-- Fin de .productos-grid -->
+        </div>
+        <!-- Fin de .local-group -->
+        {% endfor %}
+        <!-- Fin del bucle de grupos -->
+    {% else %}
+        <!--
+        Si no hay grupos (es decir, no hay productos registrados),
+        se muestra un mensaje informativo.
+        -->
+        <p style="text-align:center; font-size:1.2rem; color: var(--text-mist); padding:3rem 0;">
+        <i class="fas fa-seedling" style="font-size:2rem; display:block; margin-bottom:0.5rem;"></i>
+        No hay productos registrados aún.<br>
+        <span style="font-size:0.9rem;">Visita pronto, ¡estamos creciendo! 🍇</span>
+        </p>
+    {% endif %}
+
+    <div class="volver">
+        <!--
+        Botón para volver a la página de inicio.
+        -->
+        <a href="/inicio" class="btn-ver-todos">
+        <i class="fas fa-arrow-left"></i> Volver al inicio
+        <!--
+            Icono de flecha hacia la izquierda y el texto.
+        -->
+        </a>
+    </div>
+    </div>
+    <!-- Fin de .productos-container -->
+
+    <footer style="text-align:center; padding:2rem 0 1rem; font-size:0.8rem; opacity:0.7; border-top:1px solid rgba(255,255,255,0.05);">
+    <!--
+        Pie de página de la página. Contiene un mensaje sobre los
+        productos frescos y artesanales, con un icono de semilla.
+    -->
+    <i class="fas fa-seedling"></i> Productos frescos, artesanales y con esencia de Melchor Ocampo.
+    </footer>
+</div>
+<!-- Fin de .app-wrapper -->
+
+<!--
+    ==========================================================
+    MODAL DEL PRODUCTO (ventana emergente)
+    ==========================================================
+    Este modal aparece cuando el usuario hace clic en "Agregar"
+    en una tarjeta de producto. Permite seleccionar la cantidad
+    y luego agregar al carrito o a favoritos.
+-->
+<div id="productModal" class="modal-producto">
+    <!--
+    El modal está oculto por defecto (tiene la clase 'modal-producto'
+    sin la clase 'active'). Se muestra añadiendo la clase 'active'
+    desde JavaScript.
+    -->
+    <div class="modal-contenido">
+    <!--
+        Contenido del modal.
+    -->
+    <h3 id="modalProductoNombre"></h3>
+    <!--
+        Título del producto. Se actualiza desde JavaScript con el
+        nombre del producto seleccionado.
+    -->
+    <p class="modal-precio">$<span id="modalProductoPrecio">0</span> MXN</p>
+    <!--
+        Precio del producto. El valor se actualiza desde JavaScript.
+        El texto "MXN" significa pesos mexicanos.
+    -->
+    <div class="cantidad-selector">
+        <!--
+        Selector de cantidad: botones para disminuir/aumentar y
+        un input numérico.
+        -->
+        <button id="decrementQty" aria-label="Disminuir cantidad">−</button>
+        <!--
+        Botón para disminuir la cantidad en 1. El atributo
+        "aria-label" mejora la accesibilidad para lectores de
+        pantalla.
+        -->
+        <input type="number" id="modalCantidad" value="1" min="1" class="cantidad-input">
+        <!--
+        Input numérico donde el usuario puede escribir la cantidad.
+        El valor inicial es 1, el mínimo es 1.
+        -->
+        <button id="incrementQty" aria-label="Aumentar cantidad">+</button>
+        <!--
+        Botón para aumentar la cantidad en 1.
+        -->
+    </div>
+
+    <div class="modal-botones">
+        <!--
+        Botones de acción del modal.
+        -->
+        <button id="modalAgregarCarrito"><i class="fas fa-cart-plus"></i> Agregar al carrito</button>
+        <!--
+        Botón para agregar el producto al carrito con la cantidad
+        seleccionada.
+        -->
+        <button id="modalAgregarFavorito" class="btn-fav"><i class="fas fa-heart"></i> Favorito</button>
+        <!--
+        Botón para agregar el producto a la lista de favoritos.
+        Tiene la clase 'btn-fav' para un estilo especial (color
+        naranja).
+        -->
+        <button id="modalCerrar" class="btn-cerrar-modal"><i class="fas fa-times"></i> Cerrar</button>
+        <!--
+        Botón para cerrar el modal sin hacer ninguna acción.
+        -->
+    </div>
+    </div>
+</div>
+
+<!--
+    ==========================================================
+    TOAST (mensaje emergente)
+    ==========================================================
+    Este elemento se usa para mostrar mensajes breves al usuario
+    (ej. "Producto agregado al carrito"). Está oculto por defecto
+    y se muestra desde JavaScript.
+-->
+<div id="toastMsg" class="toast-custom"></div>
+
+<!--
+    ==========================================================
+    BLOQUE DE JAVASCRIPT
+    ==========================================================
+    Este código maneja la interacción del usuario: apertura del
+    modal, agregar al carrito, agregar a favoritos, actualizar
+    el contador del carrito, y mostrar mensajes (toast).
+-->
+<script>
+    // ============================================================
+// BLOQUE PRINCIPAL DE JAVASCRIPT PARA LA PÁGINA DE TODOS LOS PRODUCTOS
+// ============================================================
+// ESTE CÓDIGO MANEJA LA INTERACCIÓN DEL USUARIO:
+// - APERTURA Y CIERRE DEL MODAL DE PRODUCTO
+// - AGREGAR PRODUCTOS AL CARRITO (CON ACTUALIZACIÓN VISUAL DEL STOCK)
+// - AGREGAR PRODUCTOS A FAVORITOS
+// - ACTUALIZACIÓN DEL CONTADOR DEL CARRITO EN EL ENCABEZADO
+// - MOSTRAR MENSAJES TOAST (NOTIFICACIONES EMERGENTES)
+// ============================================================
+
+// ============================================================
+// 1. CONFIGURACIÓN INICIAL Y VARIABLES GLOBALES
+// ============================================================
+
+// Se obtiene el ID del usuario desde la sesión de Flask.
+// Si no hay sesión, el valor es 'False'. Se convierte a JSON
+// para que sea seguro usarlo en JavaScript.
+const usuarioLogueado = {{ session.get('usuario_id', False)|tojson }};
+
+// Variable que guarda los datos del producto que se está
+// viendo en el modal actualmente. Inicialmente es null.
+let currentProducto = null;
+
+// Variable que guarda el stock del producto actual.
+// Se usa para validar que la cantidad no supere el stock disponible.
+let currentStock = 0;
+
+// ============================================================
+// 2. FUNCIÓN PARA MOSTRAR EL TOAST (MENSAJE EMERGENTE)
+// ============================================================
+// DESCRIPCIÓN: MUESTRA UN MENSAJE EMERGENTE EN LA PARTE INFERIOR
+// DE LA PANTALLA. EL MENSAJE PUEDE SER DE ÉXITO (VERDE) O DE ERROR (ROJO).
+// PARÁMETROS:
+//   - msg: EL TEXTO DEL MENSAJE A MOSTRAR.
+//   - isError: BOOLEANO (TRUE PARA ERROR, FALSE PARA ÉXITO).
+function showToast(msg, isError = false) {
+    // Obtiene el elemento del DOM que representa el toast.
+    const toast = document.getElementById('toastMsg');
+    // Inserta el mensaje con un icono según sea error o éxito.
+    // Se usa un operador ternario para elegir la clase del icono.
+    toast.innerHTML = `<i class="fas ${isError ? 'fa-exclamation-triangle' : 'fa-check-circle'}"></i> ${msg}`;
+    // Añade la clase 'show' para hacerlo visible, y la clase 'error' si es necesario.
+    toast.className = 'toast-custom show' + (isError ? ' error' : '');
+    // Limpia cualquier temporizador anterior para evitar que se superpongan.
+    clearTimeout(toast._timer);
+    // Después de 3.2 segundos, oculta el toast.
+    toast._timer = setTimeout(() => toast.classList.remove('show'), 3200);
+}
+
+// ============================================================
+// 3. FUNCIÓN PARA ACTUALIZAR EL CONTADOR DEL CARRITO
+// ============================================================
+// DESCRIPCIÓN: CONSULTA EL CARRITO DEL USUARIO A TRAVÉS DE LA API
+// Y ACTUALIZA EL NÚMERO QUE SE MUESTRA JUNTO AL ICONO DEL CARRITO
+// EN EL ENCABEZADO.
+async function actualizarContadorCarrito() {
+    // Si el usuario no está logueado, no se hace nada.
+    if (!usuarioLogueado) return;
+    try {
+        // Hace una petición GET a la API para obtener el carrito.
+        const res = await fetch('/api/carrito');
+        // Si la respuesta no es correcta, se sale silenciosamente.
+        if (!res.ok) return;
+        // Convierte la respuesta a JSON.
+        const data = await res.json();
+        // Inicializa el total de items en 0.
+        let total = 0;
+        // Si existe la propiedad 'items', suma las cantidades.
+        if (data.items) {
+            // Usa reduce para sumar todas las cantidades.
+            total = data.items.reduce((a, b) => a + b.cantidad, 0);
+        }
+        // Actualiza el contador en el DOM.
+        document.getElementById('cart-count').innerText = total;
+    } catch(e) {
+        // Si hay un error, se ignora silenciosamente para no interrumpir.
+    }
+}
+
+// ============================================================
+// 4. FUNCIÓN PARA ACTUALIZAR EL STOCK VISUAL EN UNA TARJETA DE PRODUCTO
+// ============================================================
+// DESCRIPCIÓN: BUSCA LA TARJETA DEL PRODUCTO POR SU ID Y RESTA LA CANTIDAD
+// AGREGADA, ACTUALIZANDO EL ATRIBUTO 'data-stock' Y EL TEXTO DEL BADGE.
+// SI EL STOCK LLEGA A CERO, DESHABILITA EL BOTÓN DE AGREGAR Y CAMBIA SU ASPECTO.
+// PARÁMETROS:
+//   - productoId: EL ID DEL PRODUCTO QUE SE AGREGÓ.
+//   - cantidad: LA CANTIDAD QUE SE AGREGÓ AL CARRITO.
+function actualizarStockEnTarjeta(productoId, cantidad) {
+    // Busca la tarjeta cuyo atributo 'data-id' coincida con el productoId.
+    const card = document.querySelector(`.producto-card[data-id="${productoId}"]`);
+    // Si no se encuentra la tarjeta, termina la función.
+    if (!card) return;
+
+    // Obtiene el stock actual desde el atributo 'data-stock' y lo convierte a número.
+    let stockActual = parseInt(card.dataset.stock, 10);
+    // Si no es un número válido, termina la función.
+    if (isNaN(stockActual)) return;
+
+    // Calcula el nuevo stock restando la cantidad agregada.
+    let nuevoStock = stockActual - cantidad;
+    // Asegura que el stock nunca sea negativo.
+    if (nuevoStock < 0) nuevoStock = 0;
+
+    // Actualiza el atributo 'data-stock' de la tarjeta con el nuevo valor.
+    card.dataset.stock = nuevoStock;
+
+    // Busca el elemento con clase 'stock-badge' dentro de la tarjeta.
+    const badge = card.querySelector('.stock-badge');
+    // Si existe el badge, actualiza su texto.
+    if (badge) {
+        // Cambia el texto para mostrar el nuevo stock disponible.
+        badge.textContent = `📦 ${nuevoStock} disponibles`;
+        // Si el stock llegó a cero, cambia el color a rojo y deshabilita el botón.
+        if (nuevoStock === 0) {
+            // Cambia el color del texto del badge a rojo.
+            badge.style.color = '#e74c3c';
+            // Busca el botón de agregar dentro de la tarjeta.
+            const btn = card.querySelector('.btn-agregar');
+            // Si existe el botón, lo deshabilita y cambia su apariencia.
+            if (btn) {
+                // Deshabilita el botón para que no se pueda hacer clic.
+                btn.disabled = true;
+                // Reduce la opacidad para indicar que está inactivo.
+                btn.style.opacity = '0.5';
+                // Cambia el cursor a 'not-allowed'.
+                btn.style.cursor = 'not-allowed';
+                // Cambia el texto e icono del botón.
+                btn.innerHTML = '<i class="fas fa-times-circle"></i> Agotado';
+            }
+        }
+    }
+}
+
+// ============================================================
+// 5. FUNCIONES PARA ABRIR Y CERRAR EL MODAL DE PRODUCTO
+// ============================================================
+
+// DESCRIPCIÓN: ABRE EL MODAL CON LOS DATOS DEL PRODUCTO SELECCIONADO.
+// VERIFICA QUE EL USUARIO ESTÉ LOGUEADO; SI NO, REDIRIGE AL LOGIN.
+// PARÁMETRO: producto - OBJETO CON ID, NOMBRE, PRECIO Y STOCK.
+function abrirModalProducto(producto) {
+    // Si el usuario no está logueado, muestra un mensaje y redirige al login.
+    if (!usuarioLogueado) {
+        // Muestra un toast de error.
+        showToast('Debes iniciar sesión para agregar productos', true);
+        // Redirige a la página de login después de 1.2 segundos.
+        setTimeout(() => window.location.href = '/login', 1200);
+        // Termina la función.
+        return;
+    }
+
+    // Guarda el producto actual en la variable global.
+    currentProducto = producto;
+    // Guarda el stock disponible.
+    currentStock = producto.stock;
+    // Actualiza el nombre del producto en el modal.
+    document.getElementById('modalProductoNombre').innerText = producto.nombre;
+    // Actualiza el precio (formateado con 2 decimales).
+    document.getElementById('modalProductoPrecio').innerText = producto.precio.toFixed(2);
+    // Reinicia la cantidad a 1.
+    document.getElementById('modalCantidad').value = 1;
+    // Añade la clase 'active' para hacer visible el modal.
+    document.getElementById('productModal').classList.add('active');
+}
+
+// DESCRIPCIÓN: CIERRA EL MODAL Y LIMPIA LA VARIABLE DEL PRODUCTO ACTUAL.
+function cerrarModalProducto() {
+    // Elimina la clase 'active' para ocultar el modal.
+    document.getElementById('productModal').classList.remove('active');
+    // Limpia el producto actual.
+    currentProducto = null;
+}
+
+// ============================================================
+// 6. FUNCIÓN PARA AGREGAR UN PRODUCTO AL CARRITO (VÍA API)
+// ============================================================
+// DESCRIPCIÓN: ENVÍA UNA PETICIÓN POST AL SERVIDOR PARA AGREGAR
+// UN PRODUCTO AL CARRITO DEL USUARIO. SI LA OPERACIÓN ES EXITOSA,
+// ACTUALIZA EL CONTADOR DEL CARRITO Y EL STOCK VISUAL EN LA TARJETA.
+// PARÁMETROS:
+//   - productoId: EL ID DEL PRODUCTO A AGREGAR.
+//   - cantidad: LA CANTIDAD DE UNIDADES.
+async function agregarAlCarrito(productoId, cantidad) {
+    try {
+        // Realiza la petición fetch a la API de agregar al carrito.
+        const res = await fetch('/api/carrito/agregar', {
+            // Método POST para enviar datos.
+            method: 'POST',
+            // Indica que se envía contenido JSON.
+            headers: { 'Content-Type': 'application/json' },
+            // Convierte los datos a JSON y los envía en el cuerpo de la petición.
+            body: JSON.stringify({ id: productoId, cantidad: cantidad })
+        });
+        // Convierte la respuesta del servidor a JSON.
+        const data = await res.json();
+        // Si la respuesta indica éxito...
+        if (data.success) {
+            // Muestra un mensaje de confirmación.
+            showToast(`✅ ${cantidad} unidad(es) agregada(s) al carrito`);
+            // Actualiza el contador del carrito en el encabezado.
+            actualizarContadorCarrito();
+            // ACTUALIZA EL STOCK VISUAL EN LA TARJETA DEL PRODUCTO.
+            actualizarStockEnTarjeta(productoId, cantidad);
+            // Cierra el modal.
+            cerrarModalProducto();
+        } else if (data.error === 'login requerido') {
+            // Si el error es que no está logueado, redirige al login.
+            window.location.href = '/login';
+        } else {
+            // Si hay otro error, lo muestra en un toast.
+            showToast(data.error || 'Error al agregar', true);
+        }
+    } catch(e) {
+        // Si hay un error de conexión, muestra un mensaje.
+        showToast('Error de conexión', true);
+    }
+}
+
+// ============================================================
+// 7. FUNCIÓN PARA AGREGAR UN PRODUCTO A FAVORITOS (VÍA API)
+// ============================================================
+// DESCRIPCIÓN: ENVÍA UNA PETICIÓN POST AL SERVIDOR PARA GUARDAR
+// EL PRODUCTO EN LA LISTA DE FAVORITOS DEL USUARIO.
+// PARÁMETRO: productoId - EL ID DEL PRODUCTO A FAVORITAR.
+async function agregarAFavoritos(productoId) {
+    try {
+        // Realiza la petición fetch a la API de favoritos.
+        const res = await fetch('/api/favoritos/agregar', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ producto_id: productoId })
+        });
+        // Convierte la respuesta a JSON.
+        const data = await res.json();
+        // Si la respuesta es exitosa...
+        if (data.success) {
+            // Muestra un mensaje de éxito.
+            showToast('❤️ Producto guardado en favoritos');
+            // Cierra el modal.
+            cerrarModalProducto();
+        } else if (data.error === 'Ya existe') {
+            // Si el producto ya está en favoritos, lo informa.
+            showToast('Este producto ya está en tus favoritos', false);
+        } else if (data.error === 'login') {
+            // Si no está logueado, redirige al login.
+            window.location.href = '/login';
+        } else {
+            // Muestra cualquier otro error.
+            showToast(data.error || 'Error al guardar', true);
+        }
+    } catch(e) {
+        // Si hay error de conexión, lo muestra.
+        showToast('Error de conexión', true);
+    }
+}
+
+// ============================================================
+// 8. ASIGNACIÓN DE EVENTOS A LOS ELEMENTOS DEL MODAL
+// ============================================================
+
+// Evento para cerrar el modal al hacer clic en el botón "Cerrar".
+document.getElementById('modalCerrar').addEventListener('click', cerrarModalProducto);
+
+// Evento para el botón "Agregar al carrito" dentro del modal.
+document.getElementById('modalAgregarCarrito').addEventListener('click', async () => {
+    // Si no hay producto seleccionado, no hacer nada.
+    if (!currentProducto) return;
+    // Obtiene la cantidad del input.
+    let cantidad = parseInt(document.getElementById('modalCantidad').value);
+    // Si la cantidad no es un número válido o es menor a 1, se establece a 1.
+    if (isNaN(cantidad) || cantidad < 1) cantidad = 1;
+    // Si la cantidad excede el stock, muestra un mensaje de error.
+    if (cantidad > currentStock) {
+        showToast(`Solo hay ${currentStock} unidades disponibles`, true);
+        return;
+    }
+    // Llama a la función para agregar al carrito.
+    await agregarAlCarrito(currentProducto.id, cantidad);
+});
+
+// Evento para el botón "Favorito" dentro del modal.
+document.getElementById('modalAgregarFavorito').addEventListener('click', async () => {
+    // Si no hay producto seleccionado, no hacer nada.
+    if (!currentProducto) return;
+    // Llama a la función para agregar a favoritos.
+    await agregarAFavoritos(currentProducto.id);
+});
+
+// Evento para el botón de disminuir cantidad (-) en el modal.
+document.getElementById('decrementQty').addEventListener('click', () => {
+    // Obtiene el valor actual de cantidad.
+    let qty = parseInt(document.getElementById('modalCantidad').value);
+    // Si la cantidad es mayor a 1, disminuye en 1.
+    if (qty > 1) {
+        document.getElementById('modalCantidad').value = qty - 1;
+    }
+});
+
+// Evento para el botón de aumentar cantidad (+) en el modal.
+document.getElementById('incrementQty').addEventListener('click', () => {
+    // Obtiene el valor actual de cantidad.
+    let qty = parseInt(document.getElementById('modalCantidad').value);
+    // Si la cantidad es menor que el stock, aumenta en 1.
+    if (qty < currentStock) {
+        document.getElementById('modalCantidad').value = qty + 1;
+    } else {
+        // Si se alcanza el stock, muestra un aviso.
+        showToast(`Máximo ${currentStock} unidades`, false);
+    }
+});
+
+// Evento cuando el usuario cambia manualmente la cantidad en el input numérico.
+document.getElementById('modalCantidad').addEventListener('change', function() {
+    // Convierte el valor a número.
+    let val = parseInt(this.value);
+    // Si no es válido o es menor a 1, lo fija a 1.
+    if (isNaN(val) || val < 1) this.value = 1;
+    // Si supera el stock, lo limita al stock máximo.
+    if (val > currentStock) {
+        this.value = currentStock;
+        showToast(`Stock máximo: ${currentStock}`, false);
+    }
+});
+
+// Cerrar el modal al hacer clic fuera del contenido del modal (fondo oscuro).
+window.addEventListener('click', (e) => {
+    // Obtiene el elemento del modal.
+    const modal = document.getElementById('productModal');
+    // Si el clic fue en el fondo (no en el contenido), se cierra el modal.
+    if (e.target === modal) {
+        cerrarModalProducto();
+    }
+});
+
+// ============================================================
+// 9. ASIGNACIÓN DE EVENTOS A LOS BOTONES "AGREGAR" DE CADA PRODUCTO
+// ============================================================
+// DESCRIPCIÓN: SELECCIONA TODOS LOS BOTONES CON CLASE 'btn-agregar'
+// Y LES ASIGNA UN EVENTO 'click' QUE ABRE EL MODAL CON LOS DATOS
+// DEL PRODUCTO CORRESPONDIENTE.
+
+document.querySelectorAll('.btn-agregar').forEach(btn => {
+    // Asigna un evento 'click' a cada botón.
+    btn.addEventListener('click', (e) => {
+        // Evita que el evento se propague hacia el elemento padre (la tarjeta).
+        e.stopPropagation();
+        // Obtiene la tarjeta (el contenedor '.producto-card') que contiene el botón.
+        const card = btn.closest('.producto-card');
+        // Si no se encuentra la tarjeta, no hace nada.
+        if (!card) return;
+
+        // Obtiene los datos del producto desde los atributos 'data-*' de la tarjeta.
+        const id = parseInt(card.dataset.id);
+        const nombre = card.dataset.nombre;
+        const precio = parseFloat(card.dataset.precio);
+        const stock = parseInt(card.dataset.stock);
+
+        // Abre el modal con los datos del producto.
+        abrirModalProducto({ id, nombre, precio, stock });
+    });
+});
+
+// ============================================================
+// 10. ACTUALIZACIÓN INICIAL DEL CONTADOR DEL CARRITO
+// ============================================================
+// DESCRIPCIÓN: AL CARGAR LA PÁGINA, SE LLAMA A LA FUNCIÓN
+// 'actualizarContadorCarrito' PARA MOSTRAR EL NÚMERO CORRECTO
+// DE PRODUCTOS EN EL CARRITO.
+
+actualizarContadorCarrito();
+
+// ============================================================
+// 11. MENSAJE EN CONSOLA PARA INDICAR QUE LA PÁGINA ESTÁ LISTA
+// ============================================================
+// DESCRIPCIÓN: MUESTRA UN MENSAJE EN LA CONSOLA DEL NAVEGADOR
+// PARA QUE LOS DESARROLLADORES SEPAN QUE EL SCRIPT SE EJECUTÓ.
+
+console.log('🛒 Página de todos los productos - Stock visual actualizado');
+</script>
+</body>
+</html>

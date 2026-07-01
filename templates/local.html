@@ -1,0 +1,838 @@
+<!-- ===================================================================== -->
+<!-- BLOQUE: DECLARACIÓN DEL TIPO DE DOCUMENTO Y ESTRUCTURA INICIAL HTML -->
+<!-- ===================================================================== -->
+<!DOCTYPE html>   <!-- Indica al navegador que se trata de un documento HTML5 -->
+<html lang="es">  <!-- Inicia el elemento raíz del documento, con idioma español -->
+<head>            <!-- Inicio de la cabecera, contiene metadatos y enlaces a recursos -->
+    <!-- ===================================================================== -->
+    <!-- METADATOS: CODIFICACIÓN, VIEWPORT Y TÍTULO DE LA PÁGINA -->
+    <!-- ===================================================================== -->
+    <meta charset="UTF-8">   <!-- Establece la codificación UTF-8 para soportar caracteres especiales -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">  
+    <!-- Define el área visible, ancho del dispositivo, escala inicial y permite zoom al usuario -->
+    <title>{{ local.nombre }} · {{ local.categoria }} · Mercado Melchor Ocampo</title>  
+    <!-- Título dinámico con el nombre, categoría del local y el mercado (se reemplaza con datos del backend) -->
+
+    <!-- ===================================================================== -->
+    <!-- FUENTES DE GOOGLE: SE IMPORTAN FAMILIAS TIPOGRÁFICAS PERSONALIZADAS -->
+    <!-- ===================================================================== -->
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Montserrat:wght@200;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Enlaza con Google Fonts para cargar las fuentes: Cormorant Garamond, Montserrat, Playfair Display y Cinzel -->
+
+    <!-- ===================================================================== -->
+    <!-- FONT AWESOME: ICONOS VECTORIALES PARA LA INTERFAZ -->
+    <!-- ===================================================================== -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Carga la hoja de estilos de Font Awesome 6 para usar iconos (fas, far, fab) -->
+
+    <!-- ===================================================================== -->
+    <!-- HOJAS DE ESTILO EXTERNAS: GLOBALES Y FAVICON -->
+    <!-- ===================================================================== -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/blooma_global.css') }}">
+    <!-- Hoja de estilos global del proyecto (variables, reset, etc.) generada con Flask url_for -->
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/iconic.png') }}">
+    <!-- Ícono que aparece en la pestaña del navegador (favicon) -->
+
+    <!-- ===================================================================== -->
+    <!-- BLOQUE DE ESTILOS INTERNOS: PERSONALIZACIÓN EXCLUSIVA PARA ESTA VISTA -->
+    <!-- ===================================================================== -->
+    <style>
+        /* --- CONTENEDOR PRINCIPAL (efecto vidrio sobre el fondo) --- */
+        .app-wrapper {
+            background: rgba(255, 255, 255, 0.75) !important;   /* Fondo blanco semitransparente con alta prioridad */
+            backdrop-filter: blur(8px) !important;              /* Aplica desenfoque al fondo subyacente (efecto vidrio) */
+            border-radius: 48px;                                /* Bordes muy redondeados */
+            border: 1px solid var(--gold-soft);                /* Borde sutil con color dorado suave (variable CSS) */
+            box-shadow: var(--card-shadow);                    /* Sombra definida en variable global */
+            transition: var(--transition);                     /* Transición suave para cambios de estado */
+            padding: 20px;                                     /* Espaciado interno de 20 píxeles */
+        }
+
+        /* --- TARJETAS DE INFORMACIÓN (blooma-card) --- */
+        .blooma-card {
+            background: rgba(255, 255, 255, 0.9) !important;   /* Fondo blanco muy opaco (casi sólido) */
+            backdrop-filter: blur(4px);                        /* Ligero desenfoque para efecto vidrio */
+            border-radius: var(--radius-card, 32px);           /* Bordes redondeados, con fallback a 32px */
+            padding: 1.5rem;                                   /* Relleno interior de 1.5 rem (unidad relativa) */
+            border: 1px solid var(--gold-soft);               /* Borde dorado suave */
+            box-shadow: var(--shadow-soft);                   /* Sombra suave definida globalmente */
+            color: var(--text-primary) !important;            /* Color de texto principal con alta prioridad */
+        }
+        .blooma-card p, .blooma-card li {                     /* Estilos para párrafos y listas dentro de tarjetas */
+            color: var(--text-secondary) !important;          /* Color de texto secundario */
+            font-size: 0.95rem;                               /* Tamaño de fuente ligeramente reducido */
+            line-height: 1.5;                                 /* Altura de línea para legibilidad */
+        }
+        .blooma-card h3 {                                     /* Encabezados de nivel 3 dentro de tarjetas */
+            font-family: var(--font-display);                /* Fuente decorativa (display) */
+            font-size: 1.4rem;                                /* Tamaño grande */
+            margin-bottom: 1rem;                              /* Margen inferior para separación */
+            color: var(--wine-main) !important;              /* Color vino principal */
+            display: flex;                                   /* Usa flexbox para alinear icono y texto */
+            align-items: center;                              /* Centra verticalmente */
+            gap: 0.6rem;                                     /* Espacio entre el icono y el texto */
+            border-left: 3px solid var(--wine-main);         /* Línea izquierda decorativa */
+            padding-left: 0.8rem;                             /* Espaciado a la izquierda */
+        }
+        .blooma-card ul {                                     /* Listas sin viñetas */
+            list-style: none;                                 /* Elimina los puntos de lista */
+            padding-left: 0;                                  /* Elimina el sangrado izquierdo */
+        }
+        .blooma-card li {                                     /* Elementos de lista */
+            padding: 0.4rem 0;                                /* Espaciado vertical reducido */
+            border-bottom: 1px dashed rgba(139, 26, 43, 0.15); /* Línea inferior discontinua con color vino tenue */
+        }
+
+        /* --- CABECERA DEL LOCAL --- */
+        .local-header-custom {
+            display: flex;                                    /* Contenedor flexible */
+            justify-content: space-between;                   /* Distribuye los hijos a los extremos */
+            align-items: center;                              /* Centra verticalmente */
+            flex-wrap: wrap;                                  /* Permite envolver en pantallas pequeñas */
+            gap: 1rem;                                       /* Espacio entre elementos */
+            margin-bottom: 2rem;                              /* Margen inferior */
+        }
+        .local-header-custom h1 {                             /* Título principal del local */
+            font-family: var(--font-display);                /* Fuente decorativa */
+            font-size: 2rem;                                  /* Tamaño grande */
+            background: linear-gradient(135deg, var(--text-primary), var(--gold-main), var(--wine-main));
+            /* Gradiente lineal de tres colores: primario, dorado y vino */
+            -webkit-background-clip: text;                    /* Recorta el fondo al texto (webkit) */
+            background-clip: text;                            /* Recorta el fondo al texto (estándar) */
+            color: transparent;                               /* Hace transparente el color de texto para mostrar el gradiente */
+        }
+        .local-header-custom h1 i {                           /* Icono dentro del título */
+            background: none;                                 /* Sin fondo para que herede el gradiente */
+            color: var(--wine-main);                          /* Color vino para el icono */
+            margin-right: 0.5rem;                             /* Espacio a la derecha */
+        }
+
+        /* --- BADGE DE CATEGORÍA --- */
+        .categoria-badge {
+            background: rgba(212, 175, 55, 0.15);             /* Fondo dorado muy tenue */
+            backdrop-filter: blur(4px);                       /* Desenfoque para efecto vidrio */
+            border: 1px solid var(--golden-hour);            /* Borde dorado (hora dorada) */
+            border-radius: 40px;                              /* Bordes completamente redondeados */
+            padding: 0.3rem 1.2rem;                           /* Relleno vertical y horizontal */
+            font-size: 0.8rem;                                /* Texto pequeño */
+            font-weight: 600;                                 /* Negrita */
+            color: var(--wine-main) !important;              /* Color vino */
+            display: inline-block;                            /* Se comporta como bloque en línea */
+        }
+
+        /* --- CÓDIGO DEL LOCAL --- */
+        .codigo-local {
+            background: rgba(139, 26, 43, 0.08);             /* Fondo vino muy tenue */
+            border-radius: 40px;                              /* Bordes redondeados */
+            padding: 0.5rem 1.2rem;                           /* Relleno */
+            font-size: 0.8rem;                                /* Texto pequeño */
+            font-weight: 500;                                 /* Seminegrita */
+            font-family: var(--font-sans);                   /* Fuente sans-serif */
+            border: 1px solid rgba(139, 26, 43, 0.2);        /* Borde vino tenue */
+            color: var(--text-primary) !important;           /* Color de texto principal */
+        }
+
+        /* --- CUADRÍCULA DE INFORMACIÓN --- */
+        .info-grid {
+            display: grid;                                    /* Usa CSS Grid */
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            /* Columnas automáticas con ancho mínimo de 300px y máximo flexible */
+            gap: 2rem;                                       /* Espacio entre columnas y filas */
+            margin-bottom: 2.5rem;                            /* Margen inferior */
+        }
+
+        /* --- PRODUCTOS: ENCABEZADO, BUSCADOR, ORDEN --- */
+        .productos-header {
+            display: flex;                                    /* Contenedor flexible */
+            flex-wrap: wrap;                                  /* Envuelve en pantallas pequeñas */
+            justify-content: space-between;                   /* Espacia elementos a los extremos */
+            align-items: center;                              /* Centra verticalmente */
+            margin: 2rem 0 1.2rem;                            /* Márgenes superior e inferior */
+            gap: 1rem;                                       /* Espacio entre elementos */
+        }
+        .productos-header h2 {                                /* Título de la sección productos */
+            font-family: var(--font-display);                /* Fuente decorativa */
+            font-size: 1.8rem;                                /* Tamaño grande */
+            color: var(--wine-main) !important;              /* Color vino */
+        }
+
+        .buscador-wrapper {                                   /* Contenedor del buscador */
+            display: flex;                                    /* Flexbox */
+            gap: 0.8rem;                                     /* Espacio entre input y botón */
+            background: rgba(255, 255, 255, 0.8);            /* Fondo blanco semitransparente */
+            backdrop-filter: blur(12px);                      /* Desenfoque marcado */
+            border-radius: 60px;                              /* Bordes muy redondeados */
+            padding: 0.2rem 0.2rem 0.2rem 1rem;               /* Relleno: izq más grande, derecha pequeño */
+            border: 1px solid var(--gold-soft);              /* Borde dorado suave */
+        }
+        .buscador-wrapper input {                             /* Campo de texto */
+            background: transparent;                          /* Fondo transparente para efecto vidrio */
+            border: none;                                     /* Sin borde */
+            padding: 0.6rem 0.8rem;                           /* Relleno interno */
+            color: var(--text-primary) !important;           /* Color de texto principal */
+            font-family: var(--font-sans);                   /* Fuente sans-serif */
+            width: 220px;                                    /* Ancho fijo */
+        }
+        .buscador-wrapper input::placeholder {                /* Estilo del texto de marcador de posición */
+            color: var(--text-secondary) !important;         /* Color secundario */
+            opacity: 0.7;                                    /* Opacidad reducida */
+        }
+        .buscador-wrapper button {                            /* Botón de filtrar */
+            background: var(--wine-main);                    /* Fondo vino */
+            border: none;                                     /* Sin borde */
+            padding: 0.5rem 1.2rem;                           /* Relleno */
+            border-radius: 60px;                              /* Bordes redondeados */
+            font-weight: 600;                                 /* Negrita */
+            font-family: var(--font-sans);                   /* Fuente sans-serif */
+            color: #FFFFFF;                                   /* Texto blanco */
+            cursor: pointer;                                  /* Cambia cursor a mano */
+            transition: 0.2s;                                 /* Transición suave */
+        }
+        .buscador-wrapper button:hover {                      /* Estado hover del botón */
+            background: var(--gold-main);                    /* Fondo dorado */
+            color: #0a0514;                                   /* Texto oscuro */
+            transform: scale(0.97);                           /* Ligera reducción de tamaño */
+        }
+
+        .btn-ver-todos {                                      /* Botón "Ver todo" */
+            background: var(--wine-light);                   /* Fondo vino claro */
+            border: 1px solid var(--wine-main);              /* Borde vino */
+            padding: 0.5rem 1.2rem;                           /* Relleno */
+            border-radius: 60px;                              /* Bordes redondeados */
+            font-weight: 600;                                 /* Negrita */
+            font-family: var(--font-sans);                   /* Fuente sans-serif */
+            color: var(--text-primary);                      /* Color principal */
+            cursor: pointer;                                  /* Cursor mano */
+            transition: 0.2s;                                 /* Transición */
+        }
+        .btn-ver-todos:hover {                                /* Hover del botón */
+            background: var(--wine-main);                    /* Fondo vino */
+            color: #FFFFFF;                                   /* Texto blanco */
+            transform: scale(0.97);                           /* Reducción */
+        }
+
+        .sort-btn {                                           /* Botón de ordenar */
+            background: var(--wine-light);                   /* Fondo vino claro */
+            border: 1px solid var(--wine-main);              /* Borde vino */
+            padding: 0.5rem 1.2rem;                           /* Relleno */
+            border-radius: 60px;                              /* Bordes redondeados */
+            font-weight: 600;                                 /* Negrita */
+            font-family: var(--font-sans);                   /* Fuente sans-serif */
+            color: var(--text-primary);                      /* Color principal */
+            cursor: pointer;                                  /* Cursor mano */
+            transition: 0.2s;                                 /* Transición */
+        }
+        .sort-btn:hover {                                     /* Hover del botón ordenar */
+            background: var(--wine-main);                    /* Fondo vino */
+            color: #FFFFFF;                                   /* Texto blanco */
+            transform: scale(0.97);                           /* Reducción */
+        }
+
+        /* --- ESTADÍSTICAS DE PRODUCTOS --- */
+        .productos-stats {
+            display: flex;                                    /* Flexbox */
+            align-items: center;                              /* Centrado vertical */
+            gap: 1.2rem;                                     /* Espacio */
+            flex-wrap: wrap;                                  /* Envuelve */
+            margin-bottom: 1.8rem;                            /* Margen inferior */
+        }
+        .stats-badge {                                        /* Etiqueta de estadísticas */
+            background: rgba(255, 255, 255, 0.7);            /* Fondo blanco semitransparente */
+            backdrop-filter: blur(8px);                       /* Desenfoque */
+            border-radius: 40px;                              /* Bordes redondeados */
+            padding: 0.4rem 1.2rem;                           /* Relleno */
+            font-size: 0.85rem;                               /* Tamaño de fuente */
+            font-weight: 500;                                 /* Seminegrita */
+            border: 1px solid var(--gold-soft);              /* Borde dorado suave */
+            color: var(--text-primary) !important;           /* Color principal */
+        }
+        .sort-selector {                                      /* Contenedor del selector de orden */
+            display: flex;                                    /* Flexbox */
+            align-items: center;                              /* Centrado vertical */
+            gap: 0.8rem;                                     /* Espacio */
+            margin-left: auto;                                /* Empuja a la derecha (auto margin) */
+        }
+        .sort-selector select {                               /* Selector desplegable */
+            background: rgba(255, 255, 255, 0.8);            /* Fondo blanco semitransparente */
+            border: 1px solid var(--gold-soft);              /* Borde dorado suave */
+            border-radius: 40px;                              /* Bordes redondeados */
+            padding: 0.5rem 1rem;                             /* Relleno */
+            color: var(--text-primary) !important;           /* Color principal */
+            font-family: var(--font-sans);                   /* Fuente sans-serif */
+            cursor: pointer;                                  /* Cursor mano */
+        }
+
+        /* --- CUADRÍCULA DE PRODUCTOS --- */
+        .product-grid {
+            margin: 1.5rem 0 2rem;                            /* Márgenes */
+            display: grid;                                    /* CSS Grid */
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); 
+            /* Columnas automáticas con ancho mínimo 220px */
+            gap: 1.5rem;                                     /* Espacio entre tarjetas */
+        }
+        .product-card {                                       /* Tarjeta de producto */
+            background: rgba(255, 255, 255, 0.85);            /* Fondo blanco casi opaco */
+            border-radius: 24px;                              /* Bordes redondeados */
+            padding: 1rem;                                    /* Relleno */
+            text-align: center;                               /* Texto centrado */
+            transition: transform 0.25s ease, box-shadow 0.25s ease; /* Transiciones suaves */
+            border: 1px solid var(--gold-soft);              /* Borde dorado suave */
+            display: flex;                                    /* Flexbox para organización interna */
+            flex-direction: column;                           /* Columna vertical */
+            align-items: center;                              /* Centrado horizontal */
+            color: var(--text-primary) !important;           /* Color principal */
+        }
+        .product-card:hover {                                 /* Hover de la tarjeta */
+            transform: translateY(-6px);                      /* Eleva la tarjeta */
+            background: rgba(255, 255, 255, 0.95);            /* Fondo más opaco */
+            border-color: var(--gold-main);                  /* Borde dorado más intenso */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);          /* Sombra pronunciada */
+        }
+        .product-card .nombre-prod {                          /* Nombre del producto */
+            font-family: var(--font-serif);                  /* Fuente serif */
+            font-weight: 700;                                 /* Negrita */
+            font-size: 1.4rem;                                /* Tamaño grande */
+            margin-bottom: 0.4rem;                            /* Margen inferior */
+            color: var(--wine-main) !important;              /* Color vino */
+        }
+        .product-card .precio-prod {                          /* Precio del producto */
+            font-size: 1.5rem;                                /* Tamaño grande */
+            font-weight: 700;                                 /* Negrita */
+            font-family: var(--font-sans);                   /* Fuente sans-serif */
+            color: var(--wine-main) !important;              /* Color vino */
+            margin: 0.6rem 0 0.2rem;                          /* Márgenes */
+        }
+
+        /* --- ESTADOS DE PRODUCTO (badges) --- */
+        .estado-detalle {                                     /* Insignia de estado */
+            display: inline-flex;                             /* Flex en línea */
+            align-items: center;                              /* Centra vertical */
+            gap: 0.4rem;                                     /* Espacio entre icono y texto */
+            font-size: 0.7rem;                                /* Texto pequeño */
+            font-weight: 600;                                 /* Negrita */
+            padding: 0.25rem 0.9rem;                          /* Relleno */
+            border-radius: 50px;                              /* Bordes redondeados */
+            background: rgba(0, 0, 0, 0.05);                  /* Fondo gris tenue */
+            width: fit-content;                               /* Ajusta al contenido */
+        }
+        .estado-detalle.disponible {                          /* Estado disponible */
+            background: rgba(46, 204, 113, 0.15);             /* Fondo verde tenue */
+            color: #155724 !important;                        /* Texto verde oscuro */
+            border: 1px solid #2ecc71;                       /* Borde verde */
+        }
+        .estado-detalle.agotado {                             /* Estado agotado */
+            background: rgba(255, 107, 129, 0.15);            /* Fondo rojo tenue */
+            color: #721C24 !important;                        /* Texto rojo oscuro */
+            border: 1px solid var(--berry-lumina);           /* Borde rojo (variable) */
+        }
+        .estado-detalle.stock-bajo {                          /* Stock bajo */
+            background: rgba(212, 175, 55, 0.15);             /* Fondo dorado tenue */
+            color: #8B7A3A !important;                        /* Texto dorado oscuro */
+            border: 1px solid var(--golden-hour);            /* Borde dorado */
+        }
+        .stock-extra {                                        /* Información adicional de stock */
+            font-size: 0.7rem;                                /* Texto pequeño */
+            color: var(--text-secondary);                    /* Color secundario */
+            margin-top: 0.4rem;                               /* Margen superior */
+        }
+
+        /* --- MENSAJE SIN RESULTADOS --- */
+        .sin-resultados {                                     /* Mensaje cuando no hay coincidencias */
+            text-align: center;                               /* Centrado */
+            padding: 2.5rem;                                  /* Relleno */
+            background: rgba(255, 255, 255, 0.8);            /* Fondo blanco semitransparente */
+            border-radius: 48px;                              /* Bordes redondeados */
+            backdrop-filter: blur(8px);                       /* Desenfoque */
+            grid-column: 1 / -1;                              /* Ocupa toda la anchura del grid */
+            color: var(--text-secondary);                    /* Color secundario */
+        }
+
+        /* --- FOOTER Y BOTÓN VOLVER --- */
+        .footer-local {                                       /* Pie de página */
+            margin-top: 3rem;                                 /* Margen superior */
+            text-align: center;                               /* Centrado */
+            padding-top: 2rem;                                /* Relleno superior */
+            border-top: 1px solid var(--gold-soft);          /* Línea divisoria dorada */
+        }
+        .btn-volver {                                         /* Botón para volver al mercado */
+            background: rgba(255, 255, 255, 0.8);            /* Fondo blanco semitransparente */
+            border: 2px solid var(--wine-main);              /* Borde vino grueso */
+            padding: 0.6rem 2rem;                             /* Relleno */
+            border-radius: 60px;                              /* Bordes redondeados */
+            color: var(--text-primary) !important;           /* Color principal */
+            text-decoration: none;                            /* Sin subrayado */
+            font-weight: 600;                                 /* Negrita */
+            transition: 0.2s;                                 /* Transición */
+            display: inline-block;                            /* Bloque en línea */
+        }
+        .btn-volver:hover {                                   /* Hover del botón */
+            background: var(--wine-main);                    /* Fondo vino */
+            color: #FFFFFF !important;                        /* Texto blanco */
+            border-color: var(--wine-main);                  /* Borde vino */
+        }
+        .footer-local p {                                     /* Párrafo del pie */
+            margin-top: 1.5rem;                               /* Margen superior */
+            font-size: 0.75rem;                               /* Texto pequeño */
+            opacity: 0.8;                                     /* Opacidad */
+            color: var(--text-secondary) !important;         /* Color secundario */
+        }
+        .footer-local a {                                     /* Enlaces en el pie */
+            color: var(--wine-main) !important;              /* Color vino */
+            text-decoration: none;                            /* Sin subrayado */
+        }
+        .footer-local a:hover {                               /* Hover de enlaces */
+            color: var(--gold-main) !important;              /* Color dorado */
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 760px) {                           /* Estilos para pantallas de hasta 760px */
+            .local-header-custom {
+                flex-direction: column;                       /* Columna en lugar de fila */
+                align-items: flex-start;                      /* Alinea al inicio */
+            }
+            .sort-selector {
+                margin-left: 0;                               /* Anula el margen automático */
+                width: 100%;                                  /* Ocupa todo el ancho */
+                justify-content: space-between;               /* Espacia elementos */
+            }
+            .buscador-wrapper input {
+                width: 150px;                                 /* Reduce el ancho del input */
+            }
+            .app-wrapper {
+                padding: 15px;                                /* Reduce el padding del contenedor */
+            }
+        }
+    </style>  <!-- Fin de los estilos internos -->
+</head>       <!-- Fin de la cabecera -->
+
+<!-- ===================================================================== -->
+<!-- CUERPO DEL DOCUMENTO: CONTENIDO VISIBLE DE LA PÁGINA -->
+<!-- ===================================================================== -->
+<body>        <!-- Inicio del cuerpo de la página -->
+
+<!-- ===================================================================== -->
+<!-- CONTENEDOR PRINCIPAL (APP-WRAPPER): APLICA EFECTO VIDRIO Y CENTRA -->
+<!-- ===================================================================== -->
+<div class="app-wrapper">   <!-- Contenedor principal con clase app-wrapper para estilos -->
+
+    <!-- ===================================================================== -->
+    <!-- CABECERA DEL LOCAL: NOMBRE, CATEGORÍA Y CÓDIGO -->
+    <!-- ===================================================================== -->
+    <div class="local-header-custom">   <!-- Contenedor con clase para la cabecera personalizada -->
+        <div>                           <!-- Bloque izquierdo: nombre y categoría -->
+            <h1>                        <!-- Título principal con icono y nombre dinámico -->
+                <i class="fas fa-store"></i>   <!-- Icono de tienda -->
+                {{ local.nombre }}              <!-- Nombre del local (variable de plantilla) -->
+            </h1>
+            <div class="categoria-badge">      <!-- Insignia de categoría -->
+                <i class="fas fa-tag"></i>      <!-- Icono de etiqueta -->
+                {{ local.categoria }}           <!-- Categoría del local (variable) -->
+            </div>
+        </div>
+        <div class="codigo-local">              <!-- Bloque derecho: código del local -->
+            <i class="fas fa-qrcode"></i>       <!-- Icono de código QR -->
+            Código: {{ codigo }}                <!-- Texto fijo y código dinámico -->
+        </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- CUADRÍCULA DE INFORMACIÓN: DUEÑO, CONTACTO, HORARIO, PAGOS, UBICACIÓN -->
+    <!-- ===================================================================== -->
+    <div class="info-grid">                     <!-- Contenedor grid con dos tarjetas -->
+
+        <!-- TARJETA 1: DUEÑO, CONTACTO Y HORARIO -->
+        <div class="blooma-card">               <!-- Tarjeta con clase blooma-card -->
+            <h3>                                <!-- Encabezado con icono -->
+                <i class="fas fa-user-tie"></i>   <!-- Icono de dueño -->
+                Dueñ@ y contacto
+            </h3>
+            <p><strong>{{ dueno.nombre }}</strong></p>   <!-- Nombre del dueño en negrita -->
+            <p>                                             <!-- Línea de teléfono -->
+                <i class="fas fa-phone-alt"></i>            <!-- Icono de teléfono -->
+                {{ dueno.telefono or 'No registrado' }}     <!-- Teléfono o mensaje por defecto -->
+                <br>                                        <!-- Salto de línea -->
+                <i class="fas fa-envelope"></i>             <!-- Icono de correo -->
+                {{ dueno.correo }}                          <!-- Correo electrónico -->
+            </p>
+            <h3 style="margin-top: 1.2rem;">               <!-- Segundo encabezado con margen superior -->
+                <i class="fas fa-clock"></i>                <!-- Icono de reloj -->
+                Horario semanal
+            </h3>
+            <p>                                             <!-- Horario -->
+                <i class="far fa-calendar-alt"></i>         <!-- Icono de calendario -->
+                Lunes a sábado: 9:00 - 19:30                <!-- Horario de lunes a sábado -->
+                <br>                                        <!-- Salto -->
+                <i class="fas fa-sun"></i>                  <!-- Icono de sol -->
+                Domingo: 9:00 - 16:00                       <!-- Horario domingo -->
+            </p>
+        </div>
+
+        <!-- TARJETA 2: MÉTODOS DE PAGO Y UBICACIÓN -->
+        <div class="blooma-card">
+            <h3>
+                <i class="fas fa-credit-card"></i>          <!-- Icono de tarjeta de crédito -->
+                Métodos de pago
+            </h3>
+            <p>                                             <!-- Lista de métodos de pago con iconos -->
+                <i class="fas fa-money-bill-wave"></i>      <!-- Efectivo -->
+                Efectivo ·
+                <i class="fab fa-cc-visa"></i>              <!-- Visa -->
+                Tarjetas ·
+                <i class="fas fa-mobile-alt"></i>           <!-- Transferencia móvil -->
+                Transferencia ·
+                <i class="fab fa-mercadopago"></i>          <!-- MercadoPago -->
+                MercadoPago
+            </p>
+            <h3 style="margin-top: 1.2rem;">               <!-- Encabezado ubicación -->
+                <i class="fas fa-map-marker-alt"></i>       <!-- Icono de mapa -->
+                Ubicación en el mercado
+            </h3>
+            <p>{{ local.ubicacion }}</p>                    <!-- Ubicación dinámica -->
+        </div>
+    </div>  <!-- Fin de info-grid -->
+
+    <!-- ===================================================================== -->
+    <!-- GALERÍA MULTIMEDIA PÚBLICA (SI EXISTEN ELEMENTOS) -->
+    <!-- ===================================================================== -->
+    {% if multimedia and multimedia|length > 0 %}   <!-- Condición: si hay multimedia -->
+    <div class="blooma-card" style="margin-bottom: 2rem;">   <!-- Tarjeta con margen inferior -->
+        <h3><i class="fas fa-images"></i> Galería multimedia</h3>   <!-- Título con icono -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; margin-top: 1rem;">
+            <!-- Grid para mostrar los elementos multimedia -->
+            {% for item in multimedia %}   <!-- Bucle sobre cada elemento multimedia -->
+            <div style="background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(4px); border-radius: 16px; overflow: hidden; border: 1px solid var(--gold-soft); transition: 0.2s; box-shadow: 0 4px 12px rgba(0,0,0,0.04);">
+                <!-- Contenedor de cada ítem con efecto vidrio y sombra -->
+                {% if item.tipo == 'foto' %}   <!-- Si es foto -->
+                    <img src="/multimedia/{{ item.file_id }}" alt="{{ item.descripcion or item.filename }}" 
+                        style="width:100%; height:150px; object-fit:cover; cursor:pointer; display:block;" 
+                        onclick="window.open('/multimedia/{{ item.file_id }}', '_blank')" loading="lazy">
+                    <!-- Muestra imagen con tamaño fijo, cursor puntero, abre en nueva pestaña al hacer clic, carga perezosa -->
+                {% elif item.tipo == 'video' %}   <!-- Si es video -->
+                    <video controls style="width:100%; height:150px; object-fit:cover; background:#000; display:block;">
+                        <source src="/multimedia/{{ item.file_id }}">   <!-- Fuente del video -->
+                        Tu navegador no soporta video.   <!-- Mensaje alternativo -->
+                    </video>
+                {% elif item.tipo == 'audio' %}   <!-- Si es audio -->
+                    <div style="padding: 2rem 0.8rem; text-align:center; background: rgba(0,0,0,0.03);">
+                        <i class="fas fa-music" style="font-size:2.5rem; color: var(--wine-main);"></i>
+                        <!-- Icono musical -->
+                        <audio controls style="width:100%; margin-top:0.6rem;">
+                            <source src="/multimedia/{{ item.file_id }}">   <!-- Fuente del audio -->
+                            Tu navegador no soporta audio.   <!-- Mensaje alternativo -->
+                        </audio>
+                    </div>
+                {% endif %}   <!-- Fin de condición de tipo -->
+                {% if item.descripcion %}   <!-- Si hay descripción -->
+                    <p style="padding: 0.5rem 0.8rem; margin:0; font-size:0.75rem; color: var(--text-secondary); border-top: 1px solid rgba(0,0,0,0.05); font-family: var(--font-sans);">
+                        {{ item.descripcion }}   <!-- Muestra la descripción -->
+                    </p>
+                {% endif %}   <!-- Fin de descripción -->
+            </div>   <!-- Fin del contenedor del ítem -->
+            {% endfor %}   <!-- Fin del bucle multimedia -->
+        </div>   <!-- Fin del grid multimedia -->
+    </div>   <!-- Fin de la tarjeta de galería -->
+    {% endif %}   <!-- Fin de la condición multimedia -->
+
+    <!-- ===================================================================== -->
+    <!-- SECCIÓN DE PRODUCTOS: ENCABEZADO, BUSCADOR Y ESTADÍSTICAS -->
+    <!-- ===================================================================== -->
+    <div class="productos-header">   <!-- Encabezado de productos -->
+        <h2><i class="fas fa-box-open"></i> Nuestros productos</h2>   <!-- Título con icono -->
+        <div class="buscador-wrapper">   <!-- Contenedor del buscador -->
+            <input type="text" id="buscarProducto" placeholder="🔍 Buscar por nombre...">
+            <!-- Campo de texto para filtrar productos -->
+            <button id="btnBuscarProducto"><i class="fas fa-filter"></i> Filtrar</button>
+            <!-- Botón para ejecutar el filtro -->
+        </div>
+    </div>
+
+    <div class="productos-stats">   <!-- Barra de estadísticas y controles de orden -->
+        <span class="stats-badge"><i class="fas fa-cubes"></i> Total productos: <strong id="totalProductosCount">{{ productos|length }}</strong></span>
+        <!-- Muestra el total de productos (se actualizará con JavaScript) -->
+        <button id="verTodosProductos" class="btn-ver-todos"><i class="fas fa-eye"></i> ✨ Ver todo</button>
+        <!-- Botón para restablecer el filtro y mostrar todos los productos -->
+        <div class="sort-selector">   <!-- Selector de ordenamiento -->
+            <select id="sortSelect">   <!-- Desplegable con opciones de orden -->
+                <option value="default">📌 Orden original</option>   <!-- Opción por defecto -->
+                <option value="price_asc">💰 Precio: menor a mayor</option>   <!-- Precio ascendente -->
+                <option value="price_desc">💰 Precio: mayor a menor</option>   <!-- Precio descendente -->
+            </select>
+            <button id="aplicarSortBtn" class="sort-btn"><i class="fas fa-arrow-up-wide-short"></i> Ordenar</button>
+            <!-- Botón para aplicar el orden seleccionado -->
+        </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- CUADRÍCULA DE PRODUCTOS (GENERADA DINÁMICAMENTE CON JINJA2) -->
+    <!-- ===================================================================== -->
+    <div id="productosGrid" class="product-grid">   <!-- Contenedor grid con id para JavaScript -->
+        {% for p in productos %}   <!-- Bucle sobre cada producto -->
+        <div class="product-card"   
+            data-nombre="{{ p.nombre|lower }}"   
+            data-precio-raw="{{ p.precio|replace('$','')|replace(',','')|trim }}"  
+            data-estado="{{ p.estado }}"  
+            data-stock="{{ p.stock if p.stock else 0 }}">   <!-- Stock (0 si no existe) -->
+            <div class="nombre-prod">{{ p.nombre }}</div>   <!-- Nombre del producto -->
+            <div class="estado-detalle   
+                {% if p.estado == 'disponible' %}disponible   
+                {% elif p.estado == 'agotado' %}agotado   
+                {% else %}stock-bajo{% endif %}">   <!-- En otro caso, 'stock-bajo' -->
+                {% if p.estado == 'disponible' %}   <!-- Contenido según estado -->
+                    <i class="fas fa-check-circle"></i> Disponible   <!-- Icono y texto -->
+                {% elif p.estado == 'agotado' %}
+                    <i class="fas fa-times-circle"></i> Agotado
+                {% else %}
+                    <i class="fas fa-exclamation-triangle"></i> Stock bajo
+                    {% if p.stock %}({{ p.stock }} restantes){% endif %}   <!-- Muestra stock si existe -->
+                {% endif %}
+            </div>
+            <div class="precio-prod">{{ p.precio }}</div>   <!-- Precio del producto -->
+            {% if p.estado != 'disponible' and p.estado != 'agotado' and p.stock %}   <!-- Si está en stock bajo y hay stock -->
+            <div class="stock-extra"><i class="fas fa-hourglass-half"></i> ¡Últimas piezas!</div>
+            <!-- Mensaje de advertencia -->
+            {% elif p.estado == 'disponible' %}   <!-- Si está disponible -->
+            <div class="stock-extra"><i class="fas fa-seedling"></i> Producto fresco</div>
+            <!-- Mensaje de frescura -->
+            {% endif %}   <!-- Fin de condición -->
+        </div>   <!-- Fin de la tarjeta de producto -->
+        {% endfor %}   <!-- Fin del bucle de productos -->
+    </div>   <!-- Fin del grid de productos -->
+
+    <!-- ===================================================================== -->
+    <!-- SEGUNDA CUADRÍCULA DE INFORMACIÓN: AVISOS Y OFERTAS -->
+    <!-- ===================================================================== -->
+    <div class="info-grid" style="margin-top: 2rem;">   <!-- Grid con margen superior -->
+        <!-- TARJETA DE AVISOS -->
+        <div class="blooma-card">
+            <h3><i class="fas fa-bullhorn"></i> 📢 Avisos del puesto</h3>   <!-- Título con icono -->
+            <ul>   <!-- Lista de avisos -->
+                {% for line in (local.anuncios or '').split('\n') if line.strip() %}   <!-- Itera líneas no vacías de anuncios -->
+                <li><i class="fas fa-hand-sparkles" style="color: var(--golden-hour);"></i> {{ line }}</li>
+                <!-- Cada aviso con icono -->
+                {% else %}   <!-- Si no hay avisos -->
+                <li><i class="fas fa-store-alt"></i> Pregunta por nuestras novedades semanales</li>
+                <!-- Mensaje por defecto -->
+                {% endfor %}   <!-- Fin del bucle -->
+            </ul>
+        </div>
+        <!-- TARJETA DE OFERTAS -->
+        <div class="blooma-card">
+            <h3><i class="fas fa-fire"></i> 🔥 Ofertas activas</h3>   <!-- Título con icono -->
+            <ul>   <!-- Lista de ofertas -->
+                {% for line in (local.ofertas or '').split('\n') if line.strip() %}   <!-- Itera líneas no vacías de ofertas -->
+                <li><i class="fas fa-tag" style="color: var(--berry-lumina);"></i> {{ line }}</li>
+                <!-- Cada oferta con icono -->
+                {% else %}   <!-- Si no hay ofertas -->
+                <li><i class="fas fa-gift"></i> Lleva 3 productos y recibe un descuento especial</li>
+                <!-- Mensaje por defecto -->
+                {% endfor %}   <!-- Fin del bucle -->
+            </ul>
+        </div>
+    </div>   <!-- Fin de info-grid -->
+
+    <!-- ===================================================================== -->
+    <!-- TARJETA "SOBRE NOSOTROS" (DESCRIPCIÓN DEL LOCAL) -->
+    <!-- ===================================================================== -->
+    <div class="blooma-card" style="margin: 2rem 0;">   <!-- Tarjeta con márgenes -->
+        <h3><i class="fas fa-star"></i> Sobre nosotros</h3>   <!-- Título -->
+        <p>{{ local.descripcion or 'Somos un negocio comprometido con la calidad, la tradición y el trato cercano. En cada producto ponemos esmero para que tu visita al Mercado Melchor Ocampo sea una experiencia única. ¡Gracias por preferir el comercio local!' }}</p>
+        <!-- Descripción dinámica o texto por defecto -->
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- PIE DE PÁGINA: BOTÓN VOLVER, CONTACTO DE SOPORTE -->
+    <!-- ===================================================================== -->
+    <div class="footer-local">   <!-- Contenedor del pie -->
+        <a href="{{ url_for('index') }}" class="btn-volver"><i class="fas fa-arrow-left"></i> Volver al mercado</a>
+        <!-- Enlace a la página principal (index) con icono -->
+        <p style="margin-top: 1.5rem; font-size: 0.75rem; opacity: 0.7;">
+            <!-- Párrafo de soporte y horarios -->
+            <i class="fas fa-envelope"></i> ¿Necesitas ayuda? <a href="mailto:blooma.xoko@gmail.com" style="color: var(--berry-lumina);">blooma.xoko@gmail.com</a> — Horarios sujetos a cambios en días festivos
+            <!-- Correo de contacto con enlace mailto -->
+        </p>
+    </div>
+
+</div>   <!-- Fin del contenedor app-wrapper -->
+
+<!-- ===================================================================== -->
+<!-- BLOQUE DE JAVASCRIPT: FUNCIONALIDAD DE FILTRADO, ORDEN Y CONTADOR -->
+<!-- ===================================================================== -->
+<script>
+// FUNCIÓN ANÓNIMA AUTOEJECUTABLE PARA AISLAR VARIABLES Y EVITAR CONTAMINACIÓN GLOBAL
+(function() {
+    // OBTENER REFERENCIAS A ELEMENTOS DEL DOM
+    const grid = document.getElementById('productosGrid');   // Contenedor de productos
+    const searchInput = document.getElementById('buscarProducto');   // Campo de búsqueda
+    const btnSearch = document.getElementById('btnBuscarProducto');   // Botón de filtrar
+    const btnVerTodos = document.getElementById('verTodosProductos');   // Botón "Ver todo"
+    const totalSpan = document.getElementById('totalProductosCount');   // Span para total de productos visibles
+    const sortSelect = document.getElementById('sortSelect');   // Selector de orden
+    const applySortBtn = document.getElementById('aplicarSortBtn');   // Botón de ordenar
+
+    // VARIABLES DE ESTADO
+    let currentSearchTerm = '';   // Término de búsqueda actual
+    let currentSort = 'default';   // Tipo de orden actual
+
+    // FUNCIÓN PARA OBTENER TODAS LAS TARJETAS DE PRODUCTO COMO ARRAY
+    function getAllCards() {
+        // Convierte la NodeList de elementos con clase 'product-card' a array
+        return Array.from(grid.querySelectorAll('.product-card'));
+    }
+
+    // FUNCIÓN PARA ACTUALIZAR EL CONTADOR DE PRODUCTOS VISIBLES Y MOSTRAR MENSAJE "SIN RESULTADOS"
+    function updateVisibleCount() {
+        // Filtra las tarjetas visibles (style.display no es 'none')
+        const visible = getAllCards().filter(card => card.style.display !== 'none').length;
+        totalSpan.innerText = visible;   // Actualiza el contador
+
+        let noResultDiv = document.getElementById('customNoResult');   // Busca el mensaje de sin resultados
+        if (visible === 0 && getAllCards().length > 0) {   // Si no hay visibles pero sí hay tarjetas totales
+            if (!noResultDiv) {   // Si el mensaje no existe, lo crea
+                const emptyMsg = document.createElement('div');
+                emptyMsg.id = 'customNoResult';
+                emptyMsg.className = 'sin-resultados';
+                emptyMsg.innerHTML = '<i class="fas fa-searching"></i> 🍃 No encontramos productos que coincidan con "<strong id="searchTermDisplay"></strong>"<br><button id="resetEmptyBtn" class="btn-ver-todos" style="margin-top:1rem;">Mostrar todo</button>';
+                grid.appendChild(emptyMsg);   // Agrega el mensaje al grid
+                // Asigna evento al botón "Mostrar todo" dentro del mensaje
+                document.getElementById('resetEmptyBtn').addEventListener('click', () => {
+                    searchInput.value = '';   // Limpia el campo de búsqueda
+                    currentSearchTerm = '';   // Reinicia el término
+                    aplicarFiltroYOrden();    // Vuelve a aplicar filtro y orden
+                });
+            }
+            const termSpan = document.getElementById('searchTermDisplay');
+            if (termSpan) termSpan.innerText = currentSearchTerm || '—';   // Muestra el término buscado
+            if (noResultDiv) noResultDiv.style.display = 'flex';   // Asegura que sea visible
+        } else {   // Si hay resultados
+            if (noResultDiv) noResultDiv.style.display = 'none';   // Oculta el mensaje
+        }
+    }
+
+    // FUNCIÓN PARA FILTRAR PRODUCTOS POR TÉRMINO DE BÚSQUEDA
+    function filterByTerm(term) {
+        const cards = getAllCards();
+        const lowerTerm = term.trim().toLowerCase();   // Normaliza el término
+        cards.forEach(card => {
+            const nombreAttr = card.getAttribute('data-nombre') || '';   // Obtiene el nombre en minúsculas
+            if (lowerTerm === '' || nombreAttr.includes(lowerTerm)) {
+                card.style.display = '';   // Muestra la tarjeta
+            } else {
+                card.style.display = 'none';   // Oculta la tarjeta
+            }
+        });
+        updateVisibleCount();   // Actualiza el contador
+    }
+
+    // FUNCIÓN PARA ORDENAR PRODUCTOS SEGÚN EL TIPO SELECCIONADO
+    function sortProducts(sortType) {
+        const cards = getAllCards();
+        if (sortType === 'default') {   // Orden original (por índice de creación)
+            // Si no tienen atributo de orden original, se lo asignamos
+            if (!cards[0] || !cards[0].hasAttribute('data-original-order')) {
+                cards.forEach((card, idx) => card.setAttribute('data-original-order', idx));
+            }
+            cards.sort((a, b) => {
+                const orderA = parseInt(a.getAttribute('data-original-order') || 0);
+                const orderB = parseInt(b.getAttribute('data-original-order') || 0);
+                return orderA - orderB;   // Orden ascendente por índice original
+            });
+        } else if (sortType === 'price_asc' || sortType === 'price_desc') {
+            cards.sort((a, b) => {
+                let priceA = parseFloat(a.getAttribute('data-precio-raw')) || 0;   // Precio numérico
+                let priceB = parseFloat(b.getAttribute('data-precio-raw')) || 0;
+                if (sortType === 'price_asc') return priceA - priceB;   // Menor a mayor
+                else return priceB - priceA;   // Mayor a menor
+            });
+        }
+        // Reinserta las tarjetas en el grid en el nuevo orden
+        cards.forEach(card => grid.appendChild(card));
+    }
+
+    // FUNCIÓN QUE APLICA EL FILTRO Y EL ORDEN SIMULTÁNEAMENTE
+    function aplicarFiltroYOrden() {
+        sortProducts(currentSort);   // Ordena según el tipo actual
+        filterByTerm(currentSearchTerm);   // Filtra según el término actual
+    }
+
+    // FUNCIÓN PARA EJECUTAR LA BÚSQUEDA (se dispara desde el botón o tecla Enter)
+    function performSearch() {
+        currentSearchTerm = searchInput.value;   // Actualiza el término
+        aplicarFiltroYOrden();   // Vuelve a aplicar
+    }
+
+    // FUNCIÓN PARA RESTABLECER LA BÚSQUEDA (muestra todos)
+    function resetSearch() {
+        searchInput.value = '';   // Vacía el campo
+        currentSearchTerm = '';   // Limpia el término
+        aplicarFiltroYOrden();   // Muestra todos
+    }
+
+    // FUNCIÓN PARA APLICAR EL ORDEN SELECCIONADO
+    function applySort() {
+        currentSort = sortSelect.value;   // Actualiza el tipo de orden
+        aplicarFiltroYOrden();   // Vuelve a aplicar
+    }
+
+    // FUNCIÓN PARA ASEGURAR QUE CADA TARJETA TENGA LOS ATRIBUTOS DE DATOS NECESARIOS
+    function asegurarDataCards() {
+        const cards = getAllCards();
+        cards.forEach((card, idx) => {
+            // Si falta el atributo data-nombre, lo extrae del elemento .nombre-prod
+            if (!card.getAttribute('data-nombre')) {
+                const nombreElem = card.querySelector('.nombre-prod');
+                if (nombreElem) card.setAttribute('data-nombre', nombreElem.innerText.toLowerCase());
+            }
+            // Si falta data-precio-raw, lo calcula desde .precio-prod
+            if (!card.getAttribute('data-precio-raw')) {
+                const precioElem = card.querySelector('.precio-prod');
+                if (precioElem) {
+                    let raw = precioElem.innerText.replace(/[^0-9.,]/g, '').replace(',', '.');   // Limpia y convierte coma a punto
+                    let num = parseFloat(raw);
+                    if (isNaN(num)) num = 0;   // Si no es número, asigna 0
+                    card.setAttribute('data-precio-raw', num);
+                }
+            }
+            // Si no tiene orden original, se lo asigna
+            if (!card.hasAttribute('data-original-order')) {
+                card.setAttribute('data-original-order', idx);
+            }
+        });
+    }
+
+    // =====================================================================
+    // ASIGNACIÓN DE EVENTOS A LOS ELEMENTOS DE CONTROL
+    // =====================================================================
+    btnSearch.addEventListener('click', performSearch);   // Clic en botón filtrar
+    searchInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') performSearch(); });   // Enter en input
+    btnVerTodos.addEventListener('click', resetSearch);   // Clic en "Ver todo"
+    applySortBtn.addEventListener('click', applySort);   // Clic en "Ordenar"
+
+    // =====================================================================
+    // FUNCIÓN DE INICIALIZACIÓN: ASEGURA DATOS, ORDENA Y FILTRA POR DEFECTO
+    // =====================================================================
+    function init() {
+        asegurarDataCards();   // Asegura atributos
+        currentSearchTerm = '';   // Sin filtro
+        currentSort = 'default';   // Orden original
+        sortSelect.value = 'default';   // Sincroniza el select
+        sortProducts('default');   // Ordena originalmente
+        filterByTerm('');   // Muestra todos
+        updateVisibleCount();   // Actualiza contador
+    }
+
+    init();   // Ejecuta la inicialización
+
+    // =====================================================================
+    // BÚSQUEDA EN TIEMPO REAL (CON DEBOUNCE) MIENTRAS SE ESCRIBE
+    // =====================================================================
+    let deb;   // Variable para el timeout
+    searchInput.addEventListener('input', () => {
+        clearTimeout(deb);   // Cancela el timeout anterior
+        deb = setTimeout(performSearch, 280);   // Ejecuta después de 280 ms de inactividad
+    });
+
+})();   // Fin de la función autoejecutable
+</script>   <!-- Fin del bloque JavaScript -->
+
+</body>   <!-- Fin del cuerpo -->
+</html>   <!-- Fin del documento HTML -->

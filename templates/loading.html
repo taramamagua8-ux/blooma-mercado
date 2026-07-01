@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<!--
+  ============================================================
+  DOCUMENTACIÓN DETALLADA - PÁGINA DE CARGA (loading.html)
+  ============================================================
+  Este archivo es una página web que se muestra mientras se
+  carga la aplicación principal. Contiene animaciones visuales
+  y una barra de progreso para entretener al usuario mientras
+  espera. Está diseñada para usarse con el framework Flask,
+  por lo que algunas rutas de imágenes usan "url_for" para
+  generar direcciones dinámicas.
+  
+  A continuación se explica cada línea de código, pensado para
+  personas que nunca han programado. Los comentarios están en
+  español y son lo más claros posible.
+-->
+
+<html lang="es">
+<!--
+  La etiqueta <html> es el contenedor raíz de toda la página web.
+  El atributo lang="es" indica que el contenido está en español,
+  útil para motores de búsqueda y lectores de pantalla.
+-->
+<head>
+    <!--
+      La cabecera <head> contiene información sobre la página que
+      no se muestra directamente en el navegador, pero es esencial
+      para su funcionamiento y estilo.
+    -->
+
+    <meta charset="UTF-8">
+    <!--
+      Esta etiqueta <meta> define la codificación de caracteres
+      como UTF-8, que permite usar letras con acentos, ñ y
+      caracteres especiales sin problemas.
+    -->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--
+      <meta name="viewport"> controla cómo se muestra la página
+      en dispositivos móviles. "width=device-width" ajusta el
+      ancho al tamaño de la pantalla del dispositivo, y
+      "initial-scale=1.0" establece el nivel de zoom inicial
+      normal (sin ampliar ni reducir).
+    -->
+
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/starus/iconic.png') }}">
+    <!--
+      <link> se usa para enlazar recursos externos. Aquí se
+      establece el ícono que aparece en la pestaña del navegador
+      (favicon). La ruta se genera con "url_for", una función de
+      Flask que construye la dirección correcta hacia la carpeta
+      'static/img/starus/iconic.png'. Nota: esta línea está
+      duplicada más abajo; la primera es la que realmente se usa,
+      la segunda probablemente es un error, pero la dejamos tal
+      cual.
+    -->
+
+    <title>Cargando...</title>
+    <!--
+      <title> define el texto que aparece en la pestaña del
+      navegador. En este caso, mientras la página está cargando,
+      se muestra "Cargando...".
+    -->
+
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/iconic.png') }}">
+    <!--
+      Segundo intento de favicon, con otra ruta. Es probable que
+      la primera sea la correcta y esta sea un respaldo o un
+      error. Se mantiene por si acaso.
+    -->
+
+    <style>
+        /*
+          La etiqueta <style> contiene las reglas de estilo CSS
+          que dan formato y apariencia a todos los elementos de
+          la página. El CSS es el lenguaje que controla colores,
+          tamaños, posiciones y animaciones.
+        */
+
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap');
+        /*
+          @import es una instrucción CSS que trae una fuente
+          (letra) desde Google Fonts. Aquí se carga la familia
+          'Cinzel', con pesos (grosor) 400 (normal) y 700
+          (negrita). Esto permite usar esa fuente en toda la
+          página para darle un estilo elegante y medieval.
+        */
+
+        body, html {
+            /*
+              "body" es el cuerpo de la página, y "html" es el
+              elemento raíz. Ambos se estilizan juntos para que
+              ocupen toda la altura y anchura disponible.
+            */
+            margin: 0; padding: 0; height: 100%; width: 100%;
+            /*
+              margin: 0 y padding: 0 eliminan cualquier espacio
+              exterior o interior por defecto que el navegador
+              añade. height: 100% y width: 100% hacen que el
+              cuerpo ocupe todo el alto y ancho de la ventana.
+            */
+            overflow: hidden; background-color: #05050a;
+            /*
+              overflow: hidden evita que aparezcan barras de
+              desplazamiento aunque el contenido se salga de la
+              pantalla. background-color: #05050a asigna un color
+              de fondo muy oscuro (casi negro) como respaldo.
+            */
+            display: flex; flex-direction: column; 
+            /*
+              display: flex activa el modelo de caja flexible
+              (Flexbox) para alinear los elementos fácilmente.
+              flex-direction: column los coloca en columna (uno
+              debajo de otro) en lugar de fila.
+            */
+            justify-content: center; align-items: center;
+            /*
+              justify-content: center centra los elementos
+              verticalmente (en columna) en el centro del
+              contenedor. align-items: center los centra
+              horizontalmente.
+            */
+            cursor: default; font-family: 'Cinzel', serif;
+            /*
+              cursor: default indica que el cursor del ratón
+              tendrá la forma normal (no cambia a mano o texto).
+              font-family: 'Cinzel', serif aplica la fuente
+              Cinzel, y si no carga, usa una fuente genérica con
+              remates (serif).
+            */
+        }
+
+        /* Imagen de Fondo Principal - Ruta adaptada con url_for */
+        .fondo-background {
+            /*
+              Esta clase se aplica a un <div> que contendrá la
+              imagen de fondo. El punto '.' indica que es una
+              clase CSS.
+            */
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            /*
+              position: absolute lo saca del flujo normal y lo
+              coloca en una posición absoluta respecto a su
+              contenedor (que es el body). top:0, left:0 lo pegan
+              a la esquina superior izquierda. width y height 100%
+              hacen que ocupe toda la pantalla.
+            */
+            background-image: url('{{ url_for("static", filename="img/fondos/carga.png") }}');
+            /*
+              background-image define la imagen de fondo. Usa
+              url_for para generar la ruta a 'static/img/fondos/
+              carga.png' dentro de la aplicación Flask.
+            */
+            background-size: cover; background-position: center;
+            /*
+              background-size: cover hace que la imagen cubra
+              todo el área sin deformarse, recortando si es
+              necesario. background-position: center la centra.
+            */
+            z-index: 1; filter: brightness(0.3);
+            /*
+              z-index: 1 establece el orden de apilamiento
+              (profundidad). Un valor mayor significa que está
+              más arriba. Aquí se pone 1 para que esté encima del
+              fondo negro pero por debajo de otros elementos.
+              filter: brightness(0.3) oscurece la imagen al 30%
+              de su brillo original, para que el contenido
+              encima sea más visible.
+            */
+        }
+
+        /* Sistema central más grande */
+        .constellation-loader {
+            /*
+              Esta clase envuelve todo el conjunto de los anillos
+              giratorios y el reloj central. Se llama "loader"
+              porque es el indicador de carga visual.
+            */
+            position: relative;
+            /*
+              position: relative permite que los elementos hijos
+              con position: absolute se posicionen en relación a
+              este contenedor en lugar de al body.
+            */
+            width: 80vh; height: 80vh; 
+            /*
+              width y height usan la unidad vh (viewport height),
+              que es el 1% de la altura de la ventana. 80vh
+              significa el 80% de la altura de la pantalla.
+              Así el tamaño se adapta a la ventana.
+            */
+            max-width: 700px; max-height: 700px;
+            /*
+              Para pantallas muy grandes, se limita el tamaño
+              máximo a 700px para que no sea demasiado enorme.
+            */
+            display: flex; justify-content: center; align-items: center;
+            /*
+              display: flex convierte este contenedor en flexible
+              para centrar a su hijo (el reloj) usando
+              justify-content y align-items.
+            */
+            z-index: 10; pointer-events: none;
+            /*
+              z-index: 10 lo coloca por encima del fondo (que
+              tiene z-index 1). pointer-events: none hace que los
+              clics del ratón atraviesen este elemento, es decir,
+              no interferirá con las interacciones de otros
+              elementos que estén debajo (como las constelaciones
+              flotantes).
+            */
+        }
+
+        /* Reloj central - Ruta adaptada */
+        .reloj-central {
+            /*
+              Clase para el elemento que representa un reloj o
+              círculo central con una imagen.
+            */
+            position: absolute;
+            /*
+              Posicionamiento absoluto dentro del contenedor
+              .constellation-loader, que es relative.
+            */
+            background-image: url('{{ url_for("static", filename="img/reloj.png") }}');
+            /*
+              Imagen de fondo: el reloj. Se usa url_for para
+              cargar la imagen desde 'static/img/reloj.png'.
+            */
+            background-size: contain; background-repeat: no-repeat;
+            background-position: center;
+            /*
+              background-size: contain ajusta la imagen para que
+              quepa completamente dentro del elemento sin
+              deformarse, pero puede dejar bordes vacíos.
+              background-repeat: no-repeat evita que se repita.
+              background-position: center la centra.
+            */
+            width: 35%; height: 35%;
+            /*
+              El tamaño del reloj es el 35% del ancho y alto de
+              su contenedor padre (.constellation-loader).
+            */
+            filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.6));
+            /*
+              drop-shadow añade una sombra externa al elemento
+              (no a la imagen, sino al contenedor) de color
+              blanco con opacidad 0.6 y un desenfoque de 20px,
+              creando un resplandor alrededor.
+            */
+            animation: girar 25s linear infinite; 
+            /*
+              animation aplica una animación llamada "girar"
+              que dura 25 segundos, con ritmo lineal (velocidad
+              constante) y se repite infinitamente. Esto hará
+              que el reloj gire lentamente.
+            */
+        }
+
+        /* Orbes con velocidades ajustadas */
+        .orbe {
+            /*
+              Clase para los anillos concéntricos que giran
+              alrededor del reloj. Cada uno es un círculo con
+              borde y un pequeño punto luminoso.
+            */
+            position: absolute; border-radius: 50%;
+            /*
+              position: absolute para colocarlos dentro del
+              contenedor .constellation-loader. border-radius:
+              50% los convierte en círculos perfectos.
+            */
+            border: 1px solid rgba(210, 215, 230, 0.3);
+            /*
+              border: un borde de 1 píxel de grosor, color gris
+              claro con transparencia (0.3 de opacidad). Esto
+              dibuja el anillo.
+            */
+            animation: girar 30s linear infinite;
+            /*
+              Por defecto, estos orbes también tienen la
+              animación "girar", pero con duración de 30s, que
+              se sobrescribirá en cada uno individualmente con
+              reglas más específicas (nth-child).
+            */
+        }
+
+        .orbe::before {
+            /*
+              ::before es un pseudoelemento que se inserta como
+              primer hijo del elemento .orbe. Se usa para crear
+              el pequeño punto brillante que viaja sobre el anillo.
+            */
+            content: ''; position: absolute;
+            /*
+              content: '' es obligatorio para que el
+              pseudoelemento aparezca, aunque esté vacío.
+              position: absolute lo posiciona dentro del .orbe.
+            */
+            background: #fff; border-radius: 50%;
+            /*
+              background: #fff color blanco. border-radius: 50%
+              lo hace redondo.
+            */
+            box-shadow: 0 0 10px 2px white;
+            /*
+              Sombra con resplandor blanco para que el punto
+              parezca luminoso.
+            */
+            width: 5px; height: 5px; top: 50%; left: -2.5px;
+            /*
+              Tamaño del punto: 5x5 píxeles. top: 50% lo coloca
+              a la mitad de la altura del anillo, y left: -2.5px
+              lo desplaza a la izquierda para que quede justo en
+              el borde del círculo (porque el punto está centrado
+              en el eje X, pero al tener left negativo, sobresale
+              por la izquierda). Así parece que está orbitando.
+            */
+        }
+
+        .orbe:nth-child(2) { width: 100%; height: 100%; animation-duration: 40s; }
+        /*
+          nth-child(2) selecciona el segundo .orbe (el primero es
+          el reloj, que no es orbe). Le da un tamaño del 100% del
+          contenedor, y su animación dura 40 segundos (más lento).
+        */
+        .orbe:nth-child(3) { width: 85%; height: 85%; animation-duration: 35s; animation-direction: reverse; }
+        /*
+          El tercer orbe (o segundo anillo) tiene 85% de tamaño,
+          duración 35s y gira en dirección inversa (reverse) para
+          dar variedad.
+        */
+        .orbe:nth-child(4) { width: 70%; height: 70%; animation-duration: 25s; }
+        /*
+          Cuarto orbe: 70% de tamaño, 25s de duración, sentido
+          normal.
+        */
+        .orbe:nth-child(5) { width: 55%; height: 55%; animation-duration: 20s; animation-direction: reverse; }
+        /*
+          Quinto orbe: 55%, 20s, inverso.
+        */
+        .orbe:nth-child(6) { width: 40%; height: 40%; animation-duration: 12s; }
+        /*
+          Sexto orbe: 40%, 12s, normal.
+        */
+
+        /* Barra de carga */
+        .loading-container {
+            /*
+              Contenedor de la barra de progreso y el texto
+              "Cargando".
+            */
+            z-index: 20;
+            /*
+              z-index: 20 lo coloca por encima de los demás
+              elementos (fondo z-index 1, loader z-index 10).
+            */
+            margin-top: 30px;
+            /*
+              Separación hacia arriba respecto al loader.
+            */
+            text-align: center;
+            /*
+              Centra el texto horizontalmente.
+            */
+            width: 350px;
+            /*
+              Ancho fijo de 350px para que la barra tenga un
+              tamaño definido.
+            */
+        }
+
+        .loading-text {
+            /*
+              Clase para el texto "Cargando".
+            */
+            color: #d1d1d1;
+            /*
+              Color gris claro.
+            */
+            font-size: 1.4rem;
+            /*
+              Tamaño de fuente relativo a la raíz (1.4rem = 1.4
+              veces el tamaño de fuente base del navegador).
+            */
+            letter-spacing: 5px;
+            /*
+              Espacio entre letras de 5 píxeles para dar un
+              aspecto más espaciado.
+            */
+            text-transform: uppercase;
+            /*
+              Convierte el texto a mayúsculas.
+            */
+            margin-bottom: 15px;
+            /*
+              Margen inferior de 15px para separar del texto de
+              la barra.
+            */
+            animation: pulseText 2s ease-in-out infinite;
+            /*
+              Aplica una animación de "pulso" que hace que el
+              texto cambie de opacidad y tamaño suavemente, cada
+              2 segundos y de forma infinita.
+            */
+            text-shadow: 0 0 10px rgba(255,255,255,0.4);
+            /*
+              Sombra de texto blanca con opacidad 0.4 y
+              desenfoque de 10px, para dar un brillo sutil.
+            */
+        }
+
+        .progress-bar-outline {
+            /*
+              El contorno exterior de la barra de progreso.
+            */
+            width: 100%;
+            /*
+              Ancho completo del contenedor .loading-container.
+            */
+            height: 8px;
+            /*
+              Altura de la barra.
+            */
+            border: 1px solid rgba(192, 192, 192, 0.4);
+            /*
+              Borde de 1px gris con transparencia.
+            */
+            padding: 2px;
+            /*
+              Relleno interior de 2px para separar el borde del
+              relleno interno.
+            */
+            border-radius: 10px;
+            /*
+              Bordes redondeados.
+            */
+            background: rgba(255, 255, 255, 0.05);
+            /*
+              Fondo muy tenue blanco.
+            */
+            overflow: hidden;
+            /*
+              overflow: hidden asegura que el relleno interior
+              no se desborde y se recorte con las esquinas
+              redondeadas.
+            */
+        }
+
+        .progress-fill {
+            /*
+              El relleno que se mueve dentro de la barra,
+              simulando el progreso.
+            */
+            height: 100%;
+            /*
+              Altura completa de la barra exterior.
+            */
+            width: 0%;
+            /*
+              Ancho inicial 0%, luego la animación lo lleva al
+              100%.
+            */
+            background: linear-gradient(90deg, transparent, #ffffff, transparent);
+            /*
+              Fondo degradado: de transparente a blanco a
+              transparente en dirección horizontal (90deg).
+            */
+            background-size: 200% 100%;
+            /*
+              El tamaño del degradado es el doble del ancho,
+              para que al moverse cree el efecto de barra
+              brillante.
+            */
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+            /*
+              Sombra blanca alrededor del relleno.
+            */
+            border-radius: 10px;
+            /*
+              Bordes redondeados para que coincida con el
+              contorno.
+            */
+            animation: loadingFill 6s ease-in-out infinite, gradientMove 2s linear infinite;
+            /*
+              Aplica dos animaciones simultáneas:
+              - loadingFill: cambia el ancho de 0% a 100% en 6s,
+                con aceleración y desaceleración (ease-in-out),
+                repitiendo infinitamente.
+              - gradientMove: mueve la posición del degradado
+                para que parezca que la luz se desplaza,
+                durando 2s, lineal e infinito.
+            */
+        }
+
+        /* Animaciones */
+        @keyframes girar { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        /*
+          Definición de la animación "girar": comienza en 0
+          grados y termina en 360 grados, es decir, una rotación
+          completa.
+        */
+        
+        @keyframes pulseText {
+            0%, 100% { opacity: 0.5; transform: scale(0.98); }
+            50% { opacity: 1; transform: scale(1.02); }
+        }
+        /*
+          Animación "pulseText": en los momentos inicial y final
+          (0% y 100%) la opacidad es 0.5 y la escala 0.98 (ligera
+          reducción). En el 50% la opacidad es 1 y escala 1.02
+          (aumento). Esto produce un efecto de latido.
+        */
+
+        @keyframes loadingFill {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+        /*
+          "loadingFill": simplemente cambia el ancho del
+          elemento de 0% a 100%.
+        */
+
+        @keyframes gradientMove {
+            0% { background-position: 100% 0%; }
+            100% { background-position: -100% 0%; }
+        }
+        /*
+          "gradientMove": mueve la posición del fondo degradado
+          desde el 100% del eje X (derecha) hasta -100% (izquierda),
+          creando el efecto de barra de luz que se desplaza.
+        */
+
+        .constelacion-flotante {
+            /*
+              Clase para los pequeños iconos de constelaciones
+              que flotan aleatoriamente por la pantalla.
+            */
+            position: absolute;
+            /*
+              Posicionamiento absoluto respecto al body (o al
+              primer padre con posición relativa, que en este
+              caso es el body, porque no hay otro).
+            */
+            width: 80px; height: 80px;
+            /*
+              Tamaño fijo de 80x80 píxeles.
+            */
+            background-size: contain; background-repeat: no-repeat;
+            /*
+              La imagen de fondo se ajusta para contener dentro
+              del cuadro, sin repetir.
+            */
+            z-index: 5; filter: drop-shadow(0 0 8px rgba(200, 220, 255, 0.5));
+            /*
+              z-index: 5 los sitúa por encima del fondo (z-index 1)
+              pero debajo del loader (z-index 10) y de la barra
+              (z-index 20). drop-shadow les da un brillo azulado.
+            */
+            transition: transform 0.2s ease-out;
+            /*
+              transition hace que cualquier cambio en la
+              propiedad transform (como escalado o rotación) se
+              haga de forma suave durante 0.2 segundos. Aquí no
+              se usa directamente, pero podría usarse en el
+              futuro.
+            */
+        }
+    </style>
+</head>
+<body>
+    <!--
+      El <body> contiene todo el contenido visible de la página.
+    -->
+
+    <div class="fondo-background"></div>
+    <!--
+      Un div con la clase 'fondo-background' que muestra la
+      imagen de fondo oscurecida.
+    -->
+
+    <div class="constellation-loader">
+        <!--
+          Contenedor principal de los anillos giratorios y el reloj.
+        -->
+        <div class="reloj-central"></div>
+        <!--
+          El reloj central, que es una imagen que gira.
+        -->
+        <div class="orbe"></div><div class="orbe"></div>
+        <!--
+          Dos anillos (orbes) que se añaden inmediatamente.
+          Recuerda que el primero de estos será el segundo hijo
+          del contenedor, y así sucesivamente.
+        -->
+        <div class="orbe"></div><div class="orbe"></div>
+        <!--
+          Otros dos anillos.
+        -->
+        <div class="orbe"></div>
+        <!--
+          El sexto orbe (total 5 orbess + 1 reloj = 6 hijos).
+        -->
+    </div>
+
+    <div class="loading-container">
+        <!--
+          Contenedor de la barra de progreso y el texto.
+        -->
+        <div class="loading-text">Cargando</div>
+        <!--
+          Texto "Cargando" con la animación de pulso.
+        -->
+        <div class="progress-bar-outline">
+            <!--
+              Borde exterior de la barra.
+            -->
+            <div class="progress-fill"></div>
+            <!--
+              Relleno interior que se mueve.
+            -->
+        </div>
+    </div>
+
+    <script>
+        /*
+          El bloque <script> contiene código JavaScript, que
+          es un lenguaje de programación que se ejecuta en el
+          navegador para hacer la página interactiva y dinámica.
+          Aquí se encarga de crear y animar las constelaciones
+          flotantes, y de redirigir a la página principal después
+          de unos segundos.
+        */
+
+        // Constelaciones flotantes (con-1.png a con-7.png) desde static/img/starus/
+        const numConstelaciones = 7;
+        // Se define una constante (un valor que no cambia) con el
+        // número de constelaciones que habrá: 7.
+
+        const constelaciones = [];
+        // Se declara una variable (const) que será un arreglo
+        // (lista) donde guardaremos cada objeto de constelación
+        // con su posición, velocidad, etc. Por ahora está vacío.
+
+        const mouse = { x: -1000, y: -1000 };
+        // Se crea un objeto con propiedades x e y que
+        // representan la posición del ratón. Inicialmente se
+        // ponen valores negativos muy lejanos para que no
+        // afecten hasta que el ratón se mueva realmente.
+
+        window.addEventListener('mousemove', (e) => {
+            /*
+              Se añade un "escuchador" de eventos al objeto
+              window (la ventana del navegador). Cuando ocurra
+              el evento 'mousemove' (movimiento del ratón), se
+              ejecutará la función que actualiza las coordenadas
+              del mouse con las del evento (e.clientX e e.clientY).
+            */
+            mouse.x = e.clientX;
+            // Guarda la coordenada horizontal del ratón.
+            mouse.y = e.clientY;
+            // Guarda la coordenada vertical.
+        });
+
+        // Base URL para imágenes estáticas (evita problemas con rutas relativas)
+        const staticStarusPath = '/static/img/starus/';
+        /*
+          Se define una ruta base para las imágenes de las
+          constelaciones. Como la página se sirve con Flask,
+          los archivos estáticos están en '/static/...'. Al
+          usar esta ruta fija, nos aseguramos de que funcione
+          incluso si la página se ve desde diferentes rutas.
+        */
+
+        for (let i = 1; i <= numConstelaciones; i++) {
+            /*
+              Bucle 'for' que se repite desde i=1 hasta
+              i=numConstelaciones (7). En cada vuelta, crea un
+              elemento constelación.
+            */
+            const el = document.createElement('div');
+            // Crea un nuevo elemento HTML <div> y lo guarda en
+            // la variable 'el'.
+            el.className = 'constelacion-flotante';
+            // Asigna la clase CSS 'constelacion-flotante' a ese
+            // div, para que herede los estilos que definimos.
+            // Ruta correcta para Flask: /static/img/starus/con-X.png
+            el.style.backgroundImage = `url('${staticStarusPath}con-${i}.png')`;
+            /*
+              Define la imagen de fondo del div usando la ruta
+              base más el nombre del archivo, que es 'con-1.png',
+              'con-2.png', ..., 'con-7.png'. La sintaxis con
+              backticks (`) permite insertar variables dentro
+              del string.
+            */
+            document.body.appendChild(el);
+            // Añade este div al final del <body> de la página,
+            // haciéndolo visible.
+
+            constelaciones.push({
+                /*
+                  Añade un objeto al arreglo 'constelaciones'
+                  con las propiedades de este elemento:
+                */
+                el: el,
+                // referencia al elemento HTML.
+                x: Math.random() * (window.innerWidth - 100) + 50,
+                // Posición horizontal inicial aleatoria: genera
+                // un número entre 0 y 1, lo multiplica por el
+                // ancho de la ventana menos 100 (para que no se
+                // salga) y le suma 50 para centrar.
+                y: Math.random() * (window.innerHeight - 100) + 50,
+                // Similar para la vertical.
+                vx: (Math.random() - 0.5) * 1.5,
+                // Velocidad horizontal: número aleatorio entre
+                // -0.75 y 0.75 (porque (random-0.5)*1.5).
+                vy: (Math.random() - 0.5) * 1.5,
+                // Velocidad vertical similar.
+                size: 80
+                // Tamaño fijo de 80px (coincide con el CSS).
+            });
+        }
+
+        function animate() {
+            /*
+              Esta función se llama repetidamente (en cada
+              fotograma) para actualizar la posición de las
+              constelaciones.
+            */
+            constelaciones.forEach(c => {
+                /*
+                  forEach recorre cada objeto 'c' del arreglo
+                  'constelaciones'.
+                */
+                c.x += c.vx;
+                // Suma la velocidad horizontal a la posición X.
+                c.y += c.vy;
+                // Suma la velocidad vertical a la posición Y.
+
+                if (c.x <= 0 || c.x >= window.innerWidth - c.size) {
+                    /*
+                      Si la constelación se sale por el borde
+                      izquierdo (x<=0) o derecho (x >= ancho
+                      ventana - tamaño), entonces:
+                    */
+                    c.vx *= -1;
+                    // Invierte la velocidad horizontal para que
+                    // rebote.
+                    c.x = c.x <= 0 ? 1 : window.innerWidth - c.size - 1;
+                    /*
+                      Corrige la posición para que no quede fuera:
+                      si es menor o igual a 0, la pone en 1; si es
+                      mayor, la coloca justo en el límite menos 1.
+                    */
+                }
+                if (c.y <= 0 || c.y >= window.innerHeight - c.size) {
+                    // Similar para el borde superior e inferior.
+                    c.vy *= -1;
+                    c.y = c.y <= 0 ? 1 : window.innerHeight - c.size - 1;
+                }
+
+                const dx = (c.x + c.size/2) - mouse.x;
+                // Diferencia en X entre el centro de la
+                // constelación y la posición del ratón.
+                const dy = (c.y + c.size/2) - mouse.y;
+                // Diferencia en Y.
+                const dist = Math.sqrt(dx*dx + dy*dy);
+                // Distancia euclidiana (teorema de Pitágoras)
+                // entre el centro y el ratón.
+                const radioRepulsion = 150;
+                // Radio de repulsión: si el ratón está a menos
+                // de 150px, la constelación se alejará.
+
+                if (dist < radioRepulsion) {
+                    /*
+                      Si la distancia es menor que el radio de
+                      repulsión, se aplica una fuerza para
+                      empujar la constelación lejos del ratón.
+                    */
+                    const fuerza = (radioRepulsion - dist) / radioRepulsion;
+                    // Calcula un factor de fuerza: 1 cuando están
+                    // muy cerca, 0 cuando están en el borde.
+                    c.vx += (dx / dist) * fuerza * 0.5;
+                    // Añade a la velocidad horizontal una
+                    // componente que aleja la constelación del
+                    // ratón. Se multiplica por 0.5 para suavizar.
+                    c.vy += (dy / dist) * fuerza * 0.5;
+                    // Lo mismo para la vertical.
+                }
+
+                const maxVel = 2.5;
+                // Velocidad máxima permitida.
+                c.vx = Math.max(Math.min(c.vx, maxVel), -maxVel);
+                // Limita la velocidad horizontal entre -maxVel y
+                // maxVel usando Math.min y Math.max.
+                c.vy = Math.max(Math.min(c.vy, maxVel), -maxVel);
+                // Lo mismo para vertical.
+
+                c.el.style.left = `${c.x}px`;
+                // Asigna la posición izquierda en píxeles al
+                // elemento HTML.
+                c.el.style.top = `${c.y}px`;
+                // Asigna la posición superior.
+            });
+
+            requestAnimationFrame(animate);
+            /*
+              requestAnimationFrame es una función del navegador
+              que pide que se ejecute la función 'animate' en el
+              próximo fotograma (aproximadamente 60 veces por
+              segundo). Esto crea un bucle de animación continuo.
+            */
+        }
+
+        animate();
+        // Llama a la función por primera vez para iniciar la
+        // animación.
+
+        // Redirección a la ruta de inicio de Flask después de 3 segundos
+        setTimeout(() => {
+            /*
+              setTimeout ejecuta la función que se le pasa después
+              de un cierto número de milisegundos. Aquí son 3000
+              milisegundos (3 segundos).
+            */
+            window.location.href = "{{ url_for('index') }}";
+            /*
+              Cambia la URL de la ventana a la ruta principal de
+              la aplicación Flask (generada con url_for('index')),
+              lo que provoca que el navegador navegue a esa
+              página, terminando así la pantalla de carga.
+            */
+        }, 3000);
+    </script>
+</body>
+</html>

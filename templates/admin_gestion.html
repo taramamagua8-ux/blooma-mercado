@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="es">   <!-- El idioma de la página es español -->
+<head>
+    <!-- ============================================================
+        META-INFORMACIÓN Y CONFIGURACIÓN BÁSICA
+        ============================================================ -->
+    <meta charset="UTF-8">    <!-- Juego de caracteres UTF-8 para usar acentos y letras especiales -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- La vista se ajusta al ancho del dispositivo (móvil, tablet, etc.) y no tiene zoom inicial -->
+
+    <title>Blooma Admin · Gestión de Comerciantes, Proveedores y Empleados</title>
+    <!-- Título que aparece en la pestaña del navegador -->
+
+    <!-- ============================================================
+        FUENTES DE GOOGLE (tipografías elegantes)
+        ============================================================ -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <!-- Precarga la conexión con el servidor de Google Fonts para que vaya más rápido -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Conexión segura a los recursos de fuentes -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,500;0,700;1,400&family=Montserrat:wght@200;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Carga cuatro familias de fuentes: Cinzel, Cormorant Garamond y Montserrat,
+        con distintos grosores para usar en títulos y textos -->
+
+    <!-- ============================================================
+        FONT AWESOME (iconos)
+        ============================================================ -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Importa la librería de iconos Font Awesome, que permite usar
+        iconos como <i class="fas fa-users-cog"></i> -->
+
+    <!-- ============================================================
+        HOJA DE ESTILOS GLOBAL (diseño general)
+        ============================================================ -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/blooma_global.css') }}">
+    <!-- Aquí se usa una sintaxis especial de Jinja que genera la ruta correcta al archivo CSS. -->
+
+    <!-- ============================================================
+        FAVICON (icono pequeño en la pestaña)
+        ============================================================ -->
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/iconic.png') }}">
+    <!-- Muestra un icono personalizado en la pestaña del navegador -->
+</head>
+
+<body>
+    <!-- ============================================================
+        CONTENEDOR PRINCIPAL DEL ADMINISTRADOR
+        ============================================================ -->
+    <div class="admin-container">
+        <!-- Este div envuelve todo el contenido para darle un estilo
+            centrado y con fondo, siguiendo la hoja de estilos global -->
+
+        <!-- ============================================================
+                ENCABEZADO (HEADER) CON TÍTULO Y BOTÓN DE SALIR
+                ============================================================ -->
+        <div class="admin-header">
+            <!-- Div que contiene el título y el botón de cerrar sesión -->
+            <div>
+                <!-- Subdiv para el título y subtítulo -->
+                <h1><i class="fas fa-users-cog"></i> Blooma · Gestión de Comerciantes, Proveedores y Empleados</h1>
+                <!-- Título principal con un icono de engranaje y usuarios -->
+                <p>Panel administrativo · Control total</p>
+                <!-- Subtítulo descriptivo -->
+            </div>
+            <a href="/logout" class="btn-logout"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a>
+            <!-- Enlace que lleva a la ruta /logout para cerrar la sesión.
+                El icono es una puerta con flecha de salida. -->
+        </div>
+
+        <!-- ============================================================
+            TARJETAS DE ESTADÍSTICAS (totales)
+            ============================================================ -->
+        <div class="stats-grid">
+            <!-- Contenedor en forma de cuadrícula para las tarjetas -->
+            <div class="stat-card">
+                <div class="stat-number" id="totalDuenos">-</div>
+                <!-- Este div mostrará el número total de comerciantes.
+                    Al inicio muestra un guion, luego JavaScript lo actualizará -->
+                <div class="stat-label">Comerciantes/Dueños</div>
+                <!-- Etiqueta descriptiva -->
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalProveedores">-</div>
+                <!-- Total de proveedores -->
+                <div class="stat-label">Proveedores</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalEmpleados">-</div>
+                <!-- Total de empleados -->
+                <div class="stat-label">Empleados</div>
+            </div>
+        </div>
+
+        <!-- ============================================================
+            PESTAÑAS PARA NAVEGAR ENTRE LOS TRES TIPOS DE REGISTROS
+            ============================================================ -->
+        <div class="admin-tabs">
+            <!-- Contenedor de los botones de pestaña -->
+            <button class="tab-btn active" data-tab="duenos">🏪 Comerciantes (Dueños)</button>
+            <!-- Botón activo por defecto (se ve resaltado). data-tab="duenos" identifica qué panel mostrar -->
+            <button class="tab-btn" data-tab="proveedores">🚚 Proveedores</button>
+            <!-- Botón para la pestaña de proveedores -->
+            <button class="tab-btn" data-tab="empleados">👥 Empleados</button>
+            <!-- Botón para la pestaña de empleados -->
+        </div>
+
+        <!-- ============================================================
+            PANEL DE COMERCIANTES (DUEÑOS)
+            ============================================================ -->
+        <div id="duenos" class="tab-pane active-pane">
+            <!-- Este div es el panel de la pestaña "duenos". Tiene la clase "active-pane" para mostrarse al inicio.
+                Los otros paneles están ocultos hasta que se haga clic en su pestaña. -->
+
+            <!-- Botón para crear un nuevo comerciante -->
+            <div style="text-align: right; margin-bottom: 15px;">
+                <!-- Estilos en línea: alinear a la derecha y margen inferior -->
+                <button class="btn-sm btn-success" onclick="openCreateModal('dueno')">
+                    <!-- Al hacer clic se llama a la función openCreateModal con el tipo 'dueno' -->
+                    <i class="fas fa-plus"></i> Nuevo Comerciante
+                    <!-- Icono de más y texto -->
+                </button>
+            </div>
+
+            <!-- Tabla donde se listan los comerciantes -->
+            <div class="data-table">
+                <table>
+                    <!-- Cabecera de la tabla con los nombres de las columnas -->
+                    <thead>
+                        <tr>
+                            <th>ID</th>                <!-- Identificador único -->
+                            <th>Nombre</th>            <!-- Nombre completo -->
+                            <th>Correo</th>            <!-- Correo electrónico -->
+                            <th>Documento</th>         <!-- Documento de identidad -->
+                            <th>Nombre Local</th>      <!-- Nombre del negocio -->
+                            <th>Código Local</th>      <!-- Código interno del local -->
+                            <th>Categoría</th>         <!-- Categoría del negocio -->
+                            <th>Acciones</th>          <!-- Botones de editar / eliminar -->
+                        </tr>
+                    </thead>
+                    <tbody id="duenosTable">
+                        <!-- El cuerpo de la tabla se llena dinámicamente con JavaScript.
+                            Aquí se mostrarán filas con los datos de cada comerciante. -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ============================================================
+            PANEL DE PROVEEDORES
+            ============================================================ -->
+        <div id="proveedores" class="tab-pane">
+            <!-- Este panel está oculto inicialmente (no tiene la clase active-pane) -->
+
+            <!-- Botón para crear un nuevo proveedor -->
+            <div style="text-align: right; margin-bottom: 15px;">
+                <button class="btn-sm btn-success" onclick="openCreateModal('proveedor')">
+                    <i class="fas fa-plus"></i> Nuevo Proveedor
+                </button>
+            </div>
+
+            <div class="data-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre / Empresa</th>   <!-- Razón social -->
+                            <th>Contacto</th>           <!-- Persona de contacto -->
+                            <th>Teléfono</th>
+                            <th>Correo</th>
+                            <th>Dirección</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="proveedoresTable">
+                        <!-- Aquí JavaScript pondrá los proveedores -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ============================================================
+            PANEL DE EMPLEADOS
+            ============================================================ -->
+        <div id="empleados" class="tab-pane">
+            <!-- Panel de empleados, oculto inicialmente -->
+
+            <div style="text-align: right; margin-bottom: 15px;">
+                <button class="btn-sm btn-success" onclick="openCreateModal('empleado')">
+                    <i class="fas fa-plus"></i> Nuevo Empleado
+                </button>
+            </div>
+
+            <div class="data-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Correo</th>
+                            <th>Rol</th>               <!-- Ej. administrador, vendedor -->
+                            <th>Local Asignado (ID)</th> <!-- ID del local al que pertenece -->
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="empleadosTable">
+                        <!-- Aquí JavaScript pondrá los empleados -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- Fin del contenedor principal -->
+
+    <!-- ============================================================
+        VENTANA MODAL (emergente) PARA CREAR / EDITAR REGISTROS
+        ============================================================ -->
+    <div id="genericModal" class="modal">
+        <!-- Esta es la capa oscura de fondo que cubre toda la pantalla cuando se abre el modal -->
+        <div class="modal-content">
+            <!-- El contenido blanco que aparece en el centro -->
+            <span class="close-modal">&times;</span>
+            <!-- Una "X" para cerrar el modal, al hacer clic se ejecuta el evento definido en JavaScript -->
+
+            <h3 id="modalTitle">Editar</h3>
+            <!-- Título que cambia según si se está creando o editando -->
+
+            <form id="modalForm">
+                <!-- Formulario que contiene los campos dinámicos -->
+                <input type="hidden" id="editId">
+                <!-- Campo oculto para almacenar el ID del registro que se está editando (vacío si es nuevo) -->
+                <input type="hidden" id="entityType">
+                <!-- Campo oculto para saber si es "dueno", "proveedor" o "empleado" -->
+
+                <div id="dynamicFields">
+                    <!-- Aquí se inyectan los campos del formulario según el tipo de entidad.
+                        Lo genera la función renderDynamicFields() en JavaScript -->
+                </div>
+
+                <button type="submit" class="btn-sm btn-success" style="margin-top: 20px;">Guardar</button>
+                <!-- Botón para enviar el formulario. Al hacer clic, se ejecuta el evento submit que
+                    hemos definido en JavaScript para guardar los datos en la API. -->
+            </form>
+        </div>
+    </div>
+
+    <!-- ============================================================
+        JAVASCRIPT – TODA LA LÓGICA DE FUNCIONAMIENTO
+        ============================================================ -->
+    <script>
+        // ============================================================
+        // 1. CONFIGURACIÓN DE ENDPOINTS DE LA API
+        //    Aquí definimos las rutas a las que haremos peticiones para
+        //    obtener, crear, actualizar y eliminar cada tipo de registro.
+        // ============================================================
+        const API = {
+            duenos: '/api/admin/duenos',         // Ruta para comerciantes
+            proveedores: '/api/admin/proveedores', // Ruta para proveedores
+            empleados: '/api/admin/empleados'      // Ruta para empleados
+        };
+
+        // ============================================================
+        // 2. FUNCIONES PARA CARGAR LOS DATOS DESDE LA API
+        //    Cada función obtiene la lista de registros y los pinta en
+        //    la tabla correspondiente, además actualiza el contador.
+        // ============================================================
+
+        // ---- 2.1 Cargar comerciantes (dueños) ----
+        async function loadDuenos() {
+            // "async" indica que esta función puede esperar (await) respuestas
+            try {
+                // Intentamos obtener los datos de la API
+                const res = await fetch(API.duenos);
+                // fetch hace una petición HTTP a la URL. "await" espera la respuesta.
+                if (!res.ok) throw new Error('Error al cargar dueños');
+                // Si la respuesta no es OK (código 200), lanzamos un error.
+
+                const data = await res.json();
+                // Convertimos la respuesta a formato JSON (lista de objetos)
+
+                const tbody = document.getElementById('duenosTable');
+                // Buscamos el elemento <tbody> de la tabla de dueños
+
+                if (!data.length) {
+                    // Si no hay datos, mostramos un mensaje en la tabla
+                    tbody.innerHTML = '<tr><td colspan="8">No hay comerciantes registrados.</td></tr>';
+                    return;
+                }
+
+                // Si hay datos, generamos filas con map y join
+                tbody.innerHTML = data.map(d => `
+                    <tr>
+                        <td>${d.id}</td>
+                        <td>${escapeHtml(d.nombre)}</td>
+                        <td>${escapeHtml(d.correo)}</td>
+                        <td>${escapeHtml(d.documento_identidad || '—')}</td>
+                        <td>${escapeHtml(d.nombre_local || '—')}</td>
+                        <td>${escapeHtml(d.codigo_local || '—')}</td>
+                        <td>${escapeHtml(d.categoria || '—')}</td>
+                        <td>
+                            <button class="btn-sm btn-edit" onclick="editEntity('dueno', ${d.id})">Editar</button>
+                            <button class="btn-sm btn-danger" onclick="deleteEntity('dueno', ${d.id})">Eliminar</button>
+                        </td>
+                    </tr>
+                `).join('');
+                // Cada fila tiene botones que al hacer clic llaman a editEntity o deleteEntity
+                // con el tipo y el ID correspondiente.
+
+                // Actualizamos el contador de la tarjeta de estadísticas
+                document.getElementById('totalDuenos').innerText = data.length;
+
+            } catch (error) {
+                // Si ocurre algún error (red, servidor, etc.) lo mostramos en consola y en la tabla
+                console.error(error);
+                document.getElementById('duenosTable').innerHTML = '<tr><td colspan="8">Error al cargar datos.</td></tr>';
+            }
+        }
+
+        // ---- 2.2 Cargar proveedores ----
+        async function loadProveedores() {
+            try {
+                const res = await fetch(API.proveedores);
+                if (!res.ok) throw new Error('Error al cargar proveedores');
+                const data = await res.json();
+                const tbody = document.getElementById('proveedoresTable');
+
+                if (!data.length) {
+                    tbody.innerHTML = '<tr><td colspan="7">No hay proveedores registrados.</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = data.map(p => `
+                    <tr>
+                        <td>${p.id}</td>
+                        <td>${escapeHtml(p.nombre)}</td>
+                        <td>${escapeHtml(p.contacto_nombre || '—')}</td>
+                        <td>${escapeHtml(p.telefono || '—')}</td>
+                        <td>${escapeHtml(p.correo || '—')}</td>
+                        <td>${escapeHtml(p.direccion || '—')}</td>
+                        <td>
+                            <button class="btn-sm btn-edit" onclick="editEntity('proveedor', ${p.id})">Editar</button>
+                            <button class="btn-sm btn-danger" onclick="deleteEntity('proveedor', ${p.id})">Eliminar</button>
+                        </td>
+                    </tr>
+                `).join('');
+
+                document.getElementById('totalProveedores').innerText = data.length;
+
+            } catch (error) {
+                console.error(error);
+                document.getElementById('proveedoresTable').innerHTML = '<tr><td colspan="7">Error al cargar proveedores.</td></tr>';
+            }
+        }
+
+        // ---- 2.3 Cargar empleados ----
+        async function loadEmpleados() {
+            try {
+                const res = await fetch(API.empleados);
+                if (!res.ok) throw new Error('Error al cargar empleados');
+                const data = await res.json();
+                const tbody = document.getElementById('empleadosTable');
+
+                if (!data.length) {
+                    tbody.innerHTML = '<tr><td colspan="6">No hay empleados registrados.</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = data.map(e => `
+                    <tr>
+                        <td>${e.id}</td>
+                        <td>${escapeHtml(e.nombre)}</td>
+                        <td>${escapeHtml(e.correo)}</td>
+                        <td>${escapeHtml(e.rol)}</td>
+                        <td>${e.local_id || '—'}</td>
+                        <td>
+                            <button class="btn-sm btn-edit" onclick="editEntity('empleado', ${e.id})">Editar</button>
+                            <button class="btn-sm btn-danger" onclick="deleteEntity('empleado', ${e.id})">Eliminar</button>
+                        </td>
+                    </tr>
+                `).join('');
+
+                document.getElementById('totalEmpleados').innerText = data.length;
+
+            } catch (error) {
+                console.error(error);
+                document.getElementById('empleadosTable').innerHTML = '<tr><td colspan="6">Error al cargar empleados.</td></tr>';
+            }
+        }
+
+        // ============================================================
+        // 3. FUNCIÓN PARA ELIMINAR UN REGISTRO
+        //    Pide confirmación al usuario y envía una petición DELETE
+        // ============================================================
+        async function deleteEntity(type, id) {
+            // type: 'dueno', 'proveedor' o 'empleado'
+            // id: número identificador
+            if (!confirm(`¿Eliminar este registro?`)) return;
+            // Si el usuario cancela, no sigue
+
+            let endpoint = '';
+            // Construimos la URL según el tipo
+            if (type === 'dueno') endpoint = `${API.duenos}/${id}`;
+            else if (type === 'proveedor') endpoint = `${API.proveedores}/${id}`;
+            else if (type === 'empleado') endpoint = `${API.empleados}/${id}`;
+
+            try {
+                const res = await fetch(endpoint, { method: 'DELETE' });
+                // Enviamos una petición DELETE a esa URL
+
+                if (res.ok) {
+                    // Si la respuesta es exitosa (código 200 o 204)
+                    showMessage('Registro eliminado correctamente');
+                    // Recargamos la lista correspondiente para actualizar la tabla
+                    if (type === 'dueno') loadDuenos();
+                    else if (type === 'proveedor') loadProveedores();
+                    else loadEmpleados();
+                } else {
+                    // Si la respuesta no es OK, obtenemos el mensaje de error
+                    const err = await res.json();
+                    showMessage(err.message || 'Error al eliminar', true);
+                }
+            } catch (error) {
+                showMessage('Error de conexión', true);
+            }
+        }
+
+        // ============================================================
+        // 4. FUNCIONES PARA ABRIR EL MODAL (CREAR / EDITAR)
+        // ============================================================
+
+        // Variable global para recordar qué tipo de entidad se está gestionando
+        let currentModalType = null;
+
+        // ---- 4.1 Abrir modal para crear un nuevo registro ----
+        function openCreateModal(type) {
+            currentModalType = type;
+            document.getElementById('editId').value = ''; // ID vacío indica nuevo
+            document.getElementById('entityType').value = type;
+            // Cambiamos el título del modal
+            document.getElementById('modalTitle').innerText =
+                `Nuevo ${type === 'dueno' ? 'Comerciante' : (type === 'proveedor' ? 'Proveedor' : 'Empleado')}`;
+            // Renderizamos los campos del formulario (sin datos existentes)
+            renderDynamicFields(type, null);
+            // Mostramos el modal agregando la clase "active"
+            document.getElementById('genericModal').classList.add('active');
+        }
+
+        // ---- 4.2 Abrir modal para editar un registro existente ----
+        async function editEntity(type, id) {
+            // Guardamos el tipo y el ID
+            currentModalType = type;
+            document.getElementById('editId').value = id;
+            document.getElementById('entityType').value = type;
+            document.getElementById('modalTitle').innerText =
+                `Editar ${type === 'dueno' ? 'Comerciante' : (type === 'proveedor' ? 'Proveedor' : 'Empleado')}`;
+
+            // Construimos la URL para obtener los datos actuales
+            let endpoint = '';
+            if (type === 'dueno') endpoint = `${API.duenos}/${id}`;
+            else if (type === 'proveedor') endpoint = `${API.proveedores}/${id}`;
+            else endpoint = `${API.empleados}/${id}`;
+
+            try {
+                const res = await fetch(endpoint);
+                if (!res.ok) throw new Error('No se pudo obtener el registro');
+                const data = await res.json();
+                // Renderizamos los campos del formulario con los datos obtenidos
+                renderDynamicFields(type, data);
+                // Mostramos el modal
+                document.getElementById('genericModal').classList.add('active');
+            } catch (error) {
+                showMessage('Error al cargar datos para edición', true);
+            }
+        }
+
+        // ============================================================
+        // 5. FUNCIÓN PARA RENDERIZAR LOS CAMPOS DEL FORMULARIO
+        //    Según el tipo de entidad, muestra diferentes campos.
+        // ============================================================
+        function renderDynamicFields(type, existingData) {
+            // existingData es un objeto con los datos actuales (o null si es nuevo)
+            const container = document.getElementById('dynamicFields');
+            // Vaciamos el contenedor
+
+            if (type === 'dueno') {
+                // Campos para comerciante
+                container.innerHTML = `
+                    <label>Nombre completo:</label><input name="nombre" value="${escapeHtml(existingData?.nombre || '')}" required>
+                    <label>Correo electrónico:</label><input name="correo" type="email" value="${escapeHtml(existingData?.correo || '')}" required>
+                    <label>Documento de identidad:</label><input name="documento_identidad" value="${escapeHtml(existingData?.documento_identidad || '')}">
+                    <label>Nombre del local:</label><input name="nombre_local" value="${escapeHtml(existingData?.nombre_local || '')}">
+                    <label>Código del local:</label><input name="codigo_local" value="${escapeHtml(existingData?.codigo_local || '')}">
+                    <label>Categoría del negocio:</label><input name="categoria" value="${escapeHtml(existingData?.categoria || '')}">
+                `;
+            } else if (type === 'proveedor') {
+                // Campos para proveedor
+                container.innerHTML = `
+                    <label>Nombre / Razón social:</label><input name="nombre" value="${escapeHtml(existingData?.nombre || '')}" required>
+                    <label>Persona de contacto:</label><input name="contacto_nombre" value="${escapeHtml(existingData?.contacto_nombre || '')}">
+                    <label>Teléfono:</label><input name="telefono" value="${escapeHtml(existingData?.telefono || '')}">
+                    <label>Correo electrónico:</label><input name="correo" type="email" value="${escapeHtml(existingData?.correo || '')}">
+                    <label>Dirección:</label><textarea name="direccion">${escapeHtml(existingData?.direccion || '')}</textarea>
+                `;
+            } else if (type === 'empleado') {
+                // Campos para empleado
+                container.innerHTML = `
+                    <label>Nombre completo:</label><input name="nombre" value="${escapeHtml(existingData?.nombre || '')}" required>
+                    <label>Correo electrónico:</label><input name="correo" type="email" value="${escapeHtml(existingData?.correo || '')}" required>
+                    <label>Rol (empleado, administrador, etc.):</label><input name="rol" value="${escapeHtml(existingData?.rol || 'empleado')}">
+                    <label>ID del local al que pertenece:</label><input name="local_id" type="number" value="${existingData?.local_id || ''}">
+                `;
+            }
+        }
+
+        // ============================================================
+        // 6. MANEJAR EL ENVÍO DEL FORMULARIO (guardar cambios)
+        // ============================================================
+        document.getElementById('modalForm').onsubmit = async (e) => {
+            e.preventDefault(); // Evita que la página se recargue al enviar
+
+            const type = document.getElementById('entityType').value;
+            const id = document.getElementById('editId').value;
+            // Obtenemos todos los datos del formulario en un objeto FormData
+            const formData = new FormData(e.target);
+            // Convertimos FormData a un objeto JavaScript normal
+            const payload = Object.fromEntries(formData.entries());
+
+            let method = 'POST'; // Por defecto, creación
+            let url = '';
+            if (type === 'dueno') url = API.duenos;
+            else if (type === 'proveedor') url = API.proveedores;
+            else url = API.empleados;
+
+            if (id) {
+                // Si hay ID, es una actualización, usamos PUT
+                method = 'PUT';
+                url = `${url}/${id}`;
+            }
+
+            try {
+                const res = await fetch(url, {
+                    method: method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload) // Convertimos el objeto a JSON
+                });
+
+                if (res.ok) {
+                    showMessage(id ? 'Actualizado correctamente' : 'Creado correctamente');
+                    document.getElementById('genericModal').classList.remove('active');
+                    // Recargamos la tabla correspondiente
+                    if (type === 'dueno') loadDuenos();
+                    else if (type === 'proveedor') loadProveedores();
+                    else loadEmpleados();
+                } else {
+                    const error = await res.json();
+                    showMessage(error.message || 'Error al guardar', true);
+                }
+            } catch (err) {
+                showMessage('Error de conexión', true);
+            }
+        };
+
+        // ============================================================
+        // 7. CERRAR MODAL AL HACER CLIC EN LA "X"
+        // ============================================================
+        document.querySelector('.close-modal').onclick = () => {
+            document.getElementById('genericModal').classList.remove('active');
+        };
+
+        // ============================================================
+        // 8. FUNCIÓN PARA MOSTRAR MENSAJES EMERGENTES (FLASH)
+        // ============================================================
+        function showMessage(msg, isError = false) {
+            // Crea un div flotante que aparece en la parte superior
+            let div = document.createElement('div');
+            div.className = 'flash-msg';
+            div.style.background = isError ? '#b13e5a' : 'var(--berry-lumina)';
+            // Si es error, fondo rojo; si es éxito, color de la variable CSS
+            div.innerText = msg;
+            document.body.appendChild(div);
+            // Después de 3 segundos, se elimina automáticamente
+            setTimeout(() => div.remove(), 3000);
+        }
+
+        // ============================================================
+        // 9. FUNCIÓN PARA ESCAPAR CARACTERES ESPECIALES (seguridad)
+        //    Evita que se inyecte código HTML desde los datos.
+        // ============================================================
+        function escapeHtml(str) {
+            if (!str) return '';
+            // Reemplaza los caracteres &, <, > por sus entidades HTML
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
+                // También maneja caracteres Unicode (emojis) para que no se rompan
+                return c;
+            });
+        }
+
+        // ============================================================
+        // 10. CAMBIO DE PESTAÑAS (TABS)
+        //     Escucha clics en los botones de pestaña y muestra el panel
+        //     correspondiente, además carga los datos si es necesario.
+        // ============================================================
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Quita la clase "active" de todos los botones
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                // Añade la clase "active" al botón que se hizo clic
+                btn.classList.add('active');
+
+                // Oculta todos los paneles quitando "active-pane"
+                document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active-pane'));
+
+                const tabId = btn.dataset.tab; // 'duenos', 'proveedores' o 'empleados'
+                // Muestra el panel correspondiente
+                document.getElementById(tabId).classList.add('active-pane');
+
+                // Cada vez que se cambia a una pestaña, recarga los datos de esa tabla
+                if (tabId === 'duenos') loadDuenos();
+                else if (tabId === 'proveedores') loadProveedores();
+                else if (tabId === 'empleados') loadEmpleados();
+            });
+        });
+
+        // ============================================================
+        // 11. CARGA INICIAL AL ABRIR LA PÁGINA
+        //     Cargamos los tres tipos de datos para que las tablas y
+        //     contadores se muestren desde el principio.
+        // ============================================================
+        loadDuenos();
+        loadProveedores();
+        loadEmpleados();
+
+        // FIN DEL SCRIPT
+    </script>
+</body>
+</html>

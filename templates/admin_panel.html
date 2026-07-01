@@ -1,0 +1,1674 @@
+<!DOCTYPE html>
+<!-- DECLARA QUE EL DOCUMENTO ES HTML5, LA VERSIÓN MÁS RECIENTE DEL ESTÁNDAR -->
+<html lang="es">
+<!-- INICIA EL ELEMENTO RAÍZ DEL DOCUMENTO, ESPECIFICANDO EL IDIOMA COMO ESPAÑOL -->
+
+<head>
+    <!-- INICIA LA CABECERA, QUE CONTIENE METADATOS Y ENLACES A RECURSOS EXTERNOS -->
+
+    <meta charset="UTF-8">
+    <!-- DEFINE LA CODIFICACIÓN DE CARACTERES COMO UTF-8 PARA SOPORTAR ACENTOS Y CARACTERES ESPECIALES -->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- HACE QUE LA PÁGINA SEA RESPONSIVE, AJUSTÁNDOSE AL ANCHO DEL DISPOSITIVO Y SIN ZOOM INICIAL -->
+
+    <title>Blooma Admin · Panel de Control</title>
+    <!-- TÍTULO QUE SE MUESTRA EN LA PESTAÑA DEL NAVEGADOR -->
+
+    <!-- ENLACE DE PRECARGA PARA LAS FUENTES DE GOOGLE, MEJORA EL RENDIMIENTO -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <!-- ESTABLECE CONEXIÓN TEMPRANA CON EL DOMINIO DE GOOGLE FONTS -->
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- CONEXIÓN TEMPRANA CON EL DOMINIO DE LOS RECURSOS ESTÁTICOS DE GOOGLE FONTS, CON ATRIBUTO CROSSORIGIN -->
+
+    <!-- ENLACE A LA HOJA DE ESTILOS DE GOOGLE FONTS QUE IMPORTA VARIAS TIPOGRAFÍAS ELEGANTES -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,500;0,700;1,400&family=Montserrat:wght@200;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+    <!-- ENLACE A LA BIBLIOTECA DE ICONOS FONT AWESOME, VERSIÓN 6.0.0-BETA3, PARA USAR ICONOS VECTORIALES -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- ENLACE A LA HOJA DE ESTILOS GLOBAL DE BLOOMA, USANDO URL_FOR DE FLASK PARA GENERAR LA RUTA CORRECTA -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/blooma_global.css') }}">
+
+    <!-- ICONO DE LA PESTAÑA (FAVICON), TAMBIÉN GENERADO CON URL_FOR -->
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/iconic.png') }}">
+
+    <!-- ESTILOS CSS ESPECÍFICOS PARA ESTE PANEL DE ADMINISTRACIÓN, DEFINIDOS INTERNAMENTE -->
+    <style>
+        /* CONTENEDOR PRINCIPAL DEL PANEL, CENTRADO Y CON ANCHO MÁXIMO */
+        .admin-container {
+            max-width: 1400px;
+            /* ANCHO MÁXIMO DE 1400 PÍXELES */
+            margin: 1.5rem auto;
+            /* MARGEN SUPERIOR/INFERIOR DE 1.5REM Y CENTRADO HORIZONTAL AUTOMÁTICO */
+            padding: 0 1rem;
+            /* RELLENO LATERAL DE 1REM */
+        }
+
+        /* CABECERA DEL PANEL, CON FONDO SEMITRANSPARENTE Y EFECTO DE VIDRIO */
+        .admin-header {
+            display: flex;
+            /* UTILIZA EL MODELO DE CAJA FLEXIBLE */
+            justify-content: space-between;
+            /* DISTRIBUYE EL ESPACIO ENTRE LOS ELEMENTOS HIJOS */
+            align-items: center;
+            /* CENTRA LOS ELEMENTOS VERTICALMENTE */
+            flex-wrap: wrap;
+            /* PERMITE QUE LOS ELEMENTOS SE ENVUELVAN A LA SIGUIENTE LÍNEA SI NO CABEN */
+            gap: 1rem;
+            /* ESPACIO ENTRE LOS ELEMENTOS */
+            background: rgba(10, 5, 20, 0.7);
+            /* FONDO OSCURO SEMI-TRANSPARENTE */
+            backdrop-filter: blur(12px);
+            /* APLICA UN DESENFOQUE AL FONDO DETRÁS DEL ELEMENTO */
+            border-radius: 48px;
+            /* BORDES MUY REDONDEADOS */
+            padding: 1.2rem 2rem;
+            /* RELLENO INTERNO: ARRIBA/ABAJO 1.2REM, IZQUIERDA/DERECHA 2REM */
+            border: 1px solid rgba(255, 107, 129, 0.25);
+            /* BORDE ROSA SUAVE */
+            margin-bottom: 2rem;
+            /* MARGEN INFERIOR PARA SEPARAR DEL SIGUIENTE ELEMENTO */
+            color: var(--text-light);
+            /* COLOR DE TEXTO CLARO DEFINIDO EN LA VARIABLE CSS GLOBAL */
+        }
+
+        /* ESTILO DEL TÍTULO PRINCIPAL DENTRO DE LA CABECERA */
+        .admin-header h1 {
+            font-family: var(--font-title);
+            /* FUENTE PARA TÍTULOS DEFINIDA GLOBALMENTE */
+            font-size: 1.6rem;
+            /* TAMAÑO DE FUENTE */
+            color: var(--golden-hour);
+            /* COLOR DORADO DEFINIDO EN VARIABLES GLOBALES */
+            display: flex;
+            /* ALINEA EL ICONO Y EL TEXTO EN FILA */
+            align-items: center;
+            /* CENTRA VERTICALMENTE EL ICONO Y EL TEXTO */
+            gap: 0.8rem;
+            /* ESPACIO ENTRE EL ICONO Y EL TEXTO */
+        }
+
+        /* ESTILO DEL ICONO DENTRO DEL TÍTULO */
+        .admin-header h1 i {
+            color: var(--berry-lumina);
+            /* COLOR ROSA/BERRY DEFINIDO GLOBALMENTE */
+        }
+
+        /* ESTILO DEL PÁRRAFO DE BIENVENIDA EN LA CABECERA */
+        .admin-header p {
+            color: var(--text-mist);
+            /* COLOR GRIS CLARO */
+            font-size: 0.9rem;
+            /* TAMAÑO DE LETRA */
+            margin-top: 0.2rem;
+            /* MARGEN SUPERIOR PEQUEÑO */
+        }
+
+        /* BOTÓN DE CERRAR SESIÓN */
+        .btn-logout {
+            background: rgba(255, 107, 129, 0.15);
+            /* FONDO ROSA TRASLÚCIDO */
+            border: 1px solid var(--accent-berry-pink);
+            /* BORDE ROSA DEFINIDO GLOBALMENTE */
+            padding: 0.5rem 1.2rem;
+            /* RELLENO INTERNO */
+            border-radius: 40px;
+            /* BORDES REDONDEADOS */
+            color: white;
+            /* COLOR DEL TEXTO */
+            text-decoration: none;
+            /* QUITA EL SUBRAYADO DEL ENLACE */
+            font-weight: 600;
+            /* PESO DE LA FUENTE SEMI-NEGRITA */
+            transition: 0.2s;
+            /* TRANSICIÓN SUAVE PARA LOS EFECTOS HOVER */
+            display: inline-flex;
+            /* MUESTRA COMO ELEMENTO EN LÍNEA CON FLEX */
+            align-items: center;
+            /* CENTRA VERTICALMENTE EL ICONO Y TEXTO */
+            gap: 0.5rem;
+            /* ESPACIO ENTRE EL ICONO Y EL TEXTO */
+        }
+
+        /* EFECTO HOVER DEL BOTÓN DE CERRAR SESIÓN */
+        .btn-logout:hover {
+            background: rgba(255, 107, 129, 0.3);
+            /* AUMENTA LA OPACIDAD DEL FONDO AL PASAR EL RATÓN */
+            transform: translateY(-2px);
+            /* DESPLAZA EL BOTÓN LIGERAMENTE HACIA ARRIBA */
+        }
+
+        /* CUADRÍCULA DE TARJETAS DE ESTADÍSTICAS */
+        .stats-grid {
+            display: grid;
+            /* USA UN LAYOUT DE CUADRÍCULA */
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            /* COLUMNAS DE AL MENOS 150PX, SE AJUSTAN AUTOMÁTICAMENTE */
+            gap: 1rem;
+            /* ESPACIO ENTRE LAS TARJETAS */
+            margin-bottom: 2.5rem;
+            /* MARGEN INFERIOR */
+        }
+
+        /* CADA TARJETA DE ESTADÍSTICA */
+        .stat-card {
+            background: rgba(10, 5, 20, 0.7);
+            /* FONDO OSCURO SEMI-TRANSPARENTE */
+            backdrop-filter: blur(8px);
+            /* DESENFOQUE DEL FONDO */
+            border-radius: 28px;
+            /* BORDES REDONDEADOS */
+            padding: 1.2rem 1.5rem;
+            /* RELLENO INTERNO */
+            text-align: center;
+            /* TEXTO CENTRADO */
+            border: 1px solid rgba(255, 107, 129, 0.2);
+            /* BORDE ROSA TENUE */
+            color: var(--text-light);
+            /* COLOR DE TEXTO CLARO */
+        }
+
+        /* NÚMERO GRANDE DE LA ESTADÍSTICA */
+        .stat-number {
+            font-size: 2rem;
+            /* TAMAÑO GRANDE */
+            font-weight: 700;
+            /* NEGRITA */
+            color: var(--golden-hour);
+            /* COLOR DORADO */
+            font-family: var(--font-sans);
+            /* FUENTE SANS-SERIF GLOBAL */
+        }
+
+        /* ETIQUETA DESCRIPTIVA DEBAJO DEL NÚMERO */
+        .stat-label {
+            font-size: 0.75rem;
+            /* TAMAÑO PEQUEÑO */
+            color: var(--text-mist);
+            /* COLOR GRIS CLARO */
+            margin-top: 0.2rem;
+            /* MARGEN SUPERIOR */
+            text-transform: uppercase;
+            /* TEXTO EN MAYÚSCULAS */
+            letter-spacing: 0.5px;
+            /* ESPACIADO ENTRE LETRAS */
+        }
+
+        /* CONTENEDOR DE PESTAÑAS (TABS) */
+        .admin-tabs {
+            display: flex;
+            /* LAYOUT FLEXIBLE */
+            flex-wrap: wrap;
+            /* PERMITE ENVOLVER A LA SIGUIENTE LÍNEA */
+            gap: 0.5rem;
+            /* ESPACIO ENTRE BOTONES */
+            margin-bottom: 2rem;
+            /* MARGEN INFERIOR */
+            background: rgba(10, 5, 20, 0.5);
+            /* FONDO SEMITRANSPARENTE OSCURO */
+            backdrop-filter: blur(8px);
+            /* DESENFOQUE */
+            border-radius: 60px;
+            /* BORDES MUY REDONDEADOS */
+            padding: 0.4rem;
+            /* RELLENO INTERNO */
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            /* BORDE MUY TENUE */
+        }
+
+        /* BOTÓN DE PESTAÑA */
+        .tab-btn {
+            background: transparent;
+            /* FONDO TRANSPARENTE POR DEFECTO */
+            border: none;
+            /* SIN BORDE */
+            padding: 0.6rem 1.4rem;
+            /* RELLENO INTERNO */
+            border-radius: 40px;
+            /* BORDES REDONDEADOS */
+            color: var(--text-mist);
+            /* COLOR GRIS CLARO */
+            font-weight: 600;
+            /* SEMI-NEGRITA */
+            cursor: pointer;
+            /* CURSOR TIPO MANO */
+            transition: 0.2s;
+            /* TRANSICIÓN SUAVE */
+            font-family: var(--font-sans);
+            /* FUENTE SANS-SERIF GLOBAL */
+            font-size: 0.85rem;
+            /* TAMAÑO DE FUENTE */
+            white-space: nowrap;
+            /* EVITA QUE EL TEXTO SE DIVIDA EN VARIAS LÍNEAS */
+        }
+
+        /* EFECTO HOVER DEL BOTÓN DE PESTAÑA */
+        .tab-btn:hover {
+            color: white;
+            /* TEXTO BLANCO */
+            background: rgba(255, 255, 255, 0.05);
+            /* FONDO LIGERAMENTE BLANCO AL PASAR EL RATÓN */
+        }
+
+        /* BOTÓN DE PESTAÑA ACTIVO */
+        .tab-btn.active {
+            background: var(--berry-lumina);
+            /* FONDO ROSA/BERRY */
+            color: #0a0514;
+            /* TEXTO MUY OSCURO */
+            box-shadow: 0 4px 15px rgba(255, 107, 129, 0.3);
+            /* SOMBRA ROSA */
+        }
+
+        /* PANELES DE CONTENIDO (CADA PESTAÑA) */
+        .tab-pane {
+            display: none;
+            /* OCULTOS POR DEFECTO */
+            animation: fadeIn 0.3s ease;
+            /* ANIMACIÓN DE APARICIÓN SUAVE */
+        }
+
+        /* PANEL ACTIVO (VISIBLE) */
+        .tab-pane.active-pane {
+            display: block;
+            /* SE MUESTRA COMO BLOQUE */
+        }
+
+        /* DEFINICIÓN DE LA ANIMACIÓN FADEIN */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            /* COMIENZA INVISIBLE Y DESPLAZADO ABAJO */
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            /* TERMINA VISIBLE Y EN SU POSICIÓN ORIGINAL */
+        }
+
+        /* CONTENEDOR DE TABLA DE DATOS */
+        .data-table {
+            background: rgba(10, 5, 20, 0.6);
+            /* FONDO OSCURO SEMITRANSPARENTE */
+            backdrop-filter: blur(8px);
+            /* DESENFOQUE */
+            border-radius: 32px;
+            /* BORDES REDONDEADOS */
+            padding: 1.5rem;
+            /* RELLENO INTERNO */
+            border: 1px solid rgba(255, 107, 129, 0.15);
+            /* BORDE ROSA TENUE */
+            overflow-x: auto;
+            /* PERMITE DESPLAZAMIENTO HORIZONTAL SI LA TABLA ES ANCHA */
+            color: var(--text-light);
+            /* COLOR DE TEXTO CLARO */
+        }
+
+        /* ESTILO DE LA TABLA DENTRO DE DATA-TABLE */
+        .data-table table {
+            width: 100%;
+            /* OCUPA TODO EL ANCHO */
+            border-collapse: collapse;
+            /* COLAPSA LOS BORDES DE LAS CELDAS */
+            font-family: var(--font-sans);
+            /* FUENTE SANS-SERIF GLOBAL */
+            font-size: 0.85rem;
+            /* TAMAÑO DE LETRA */
+        }
+
+        /* ESTILO DE LAS CELDAS DE ENCABEZADO (TH) */
+        .data-table th {
+            text-align: left;
+            /* ALINEACIÓN A LA IZQUIERDA */
+            padding: 0.8rem 0.6rem;
+            /* RELLENO INTERNO */
+            color: var(--golden-hour);
+            /* COLOR DORADO */
+            border-bottom: 2px solid rgba(212, 175, 55, 0.3);
+            /* BORDE INFERIOR DORADO SEMI-TRANSPARENTE */
+            font-weight: 600;
+            /* SEMI-NEGRITA */
+            white-space: nowrap;
+            /* EVITA QUE EL TEXTO SE DIVIDA EN VARIAS LÍNEAS */
+        }
+
+        /* ESTILO DE LAS CELDAS DE DATOS (TD) */
+        .data-table td {
+            padding: 0.7rem 0.6rem;
+            /* RELLENO INTERNO */
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            /* BORDE INFERIOR MUY TENUE */
+            vertical-align: middle;
+            /* ALINEACIÓN VERTICAL CENTRADA */
+        }
+
+        /* EFECTO HOVER SOBRE LAS FILAS DE LA TABLA */
+        .data-table tr:hover td {
+            background: rgba(255, 107, 129, 0.04);
+            /* FONDO ROSA MUY SUAVE AL PASAR EL RATÓN */
+        }
+
+        /* MINIATURAS DE IMÁGENES DENTRO DE LA TABLA */
+        .data-table .imagen-thumb {
+            width: 40px;
+            /* ANCHO FIJO */
+            height: 40px;
+            /* ALTO FIJO */
+            object-fit: cover;
+            /* LA IMAGEN CUBRE EL CONTENEDOR RECORTANDO SI ES NECESARIO */
+            border-radius: 8px;
+            /* BORDES REDONDEADOS */
+            background: #1a1425;
+            /* FONDO DE RESPALDO OSCURO */
+        }
+
+        /* PLACEHOLDER PARA CUANDO NO HAY IMAGEN */
+        .data-table .sin-imagen {
+            width: 40px;
+            /* ANCHO FIJO */
+            height: 40px;
+            /* ALTO FIJO */
+            display: flex;
+            /* FLEX PARA CENTRAR EL ICONO */
+            align-items: center;
+            /* CENTRA VERTICALMENTE */
+            justify-content: center;
+            /* CENTRA HORIZONTALMENTE */
+            background: #1a1425;
+            /* FONDO OSCURO */
+            border-radius: 8px;
+            /* BORDES REDONDEADOS */
+            color: #666;
+            /* COLOR GRIS */
+            font-size: 1.2rem;
+            /* TAMAÑO DEL ICONO */
+        }
+
+        /* FORMULARIO PARA SUBIR IMAGEN (DENTRO DE LA TABLA) */
+        .subir-imagen-form {
+            display: inline-flex;
+            /* FLEX EN LÍNEA */
+            align-items: center;
+            /* CENTRA VERTICALMENTE */
+            gap: 0.3rem;
+            /* ESPACIO ENTRE ELEMENTOS */
+            font-size: 0.7rem;
+            /* TAMAÑO PEQUEÑO */
+            flex-wrap: wrap;
+            /* PERMITE ENVOLVER */
+        }
+
+        /* ESTILO DEL INPUT FILE DENTRO DEL FORMULARIO DE SUBIDA */
+        .subir-imagen-form input[type="file"] {
+            font-size: 0.6rem;
+            /* TAMAÑO PEQUEÑO */
+            color: #aaa;
+            /* COLOR GRIS CLARO */
+            max-width: 80px;
+            /* ANCHO MÁXIMO */
+            background: transparent;
+            /* FONDO TRANSPARENTE */
+            border: none;
+            /* SIN BORDE */
+        }
+
+        /* ESTILO DEL BOTÓN DE SUBIR DENTRO DEL FORMULARIO */
+        .subir-imagen-form button {
+            padding: 0.15rem 0.6rem;
+            /* RELLENO INTERNO */
+            font-size: 0.65rem;
+            /* TAMAÑO PEQUEÑO */
+        }
+
+        /* BOTÓN PEQUEÑO GENÉRICO */
+        .btn-sm {
+            padding: 0.25rem 0.8rem;
+            /* RELLENO INTERNO */
+            border-radius: 20px;
+            /* BORDES REDONDEADOS */
+            border: none;
+            /* SIN BORDE */
+            font-weight: 600;
+            /* SEMI-NEGRITA */
+            cursor: pointer;
+            /* CURSOR TIPO MANO */
+            transition: 0.15s;
+            /* TRANSICIÓN SUAVE */
+            font-size: 0.75rem;
+            /* TAMAÑO DE FUENTE */
+        }
+
+        /* EFECTO HOVER PARA BOTONES PEQUEÑOS */
+        .btn-sm:hover {
+            transform: scale(1.02);
+            /* AUMENTA LIGERAMENTE EL TAMAÑO AL PASAR EL RATÓN */
+        }
+
+        /* BOTÓN DE EDITAR */
+        .btn-edit {
+            background: rgba(52, 152, 219, 0.25);
+            /* FONDO AZUL TRANSLÚCIDO */
+            color: #85c1e9;
+            /* COLOR AZUL CLARO */
+        }
+
+        /* HOVER DEL BOTÓN EDITAR */
+        .btn-edit:hover {
+            background: rgba(52, 152, 219, 0.4);
+            /* FONDO MÁS OPACO */
+        }
+
+        /* BOTÓN DE PELIGRO (ELIMINAR) */
+        .btn-danger {
+            background: rgba(231, 76, 60, 0.25);
+            /* FONDO ROJO TRANSLÚCIDO */
+            color: #f1948a;
+            /* COLOR ROJO CLARO */
+        }
+
+        /* HOVER DEL BOTÓN PELIGRO */
+        .btn-danger:hover {
+            background: rgba(231, 76, 60, 0.4);
+            /* FONDO MÁS OPACO */
+        }
+
+        /* BOTÓN DE ÉXITO (GUARDAR, APROBAR) */
+        .btn-success {
+            background: var(--berry-lumina);
+            /* FONDO ROSA/BERRY */
+            color: #0a0514;
+            /* TEXTO OSCURO */
+        }
+
+        /* HOVER DEL BOTÓN ÉXITO */
+        .btn-success:hover {
+            background: #ff8fa3;
+            /* ROSA MÁS CLARO */
+        }
+
+        /* VENTANA MODAL (POP-UP) */
+        .modal {
+            display: none;
+            /* OCULTO POR DEFECTO */
+            position: fixed;
+            /* POSICIÓN FIJA EN LA PANTALLA */
+            top: 0;
+            /* PARTE SUPERIOR */
+            left: 0;
+            /* PARTE IZQUIERDA */
+            width: 100%;
+            /* ANCHO COMPLETO */
+            height: 100%;
+            /* ALTO COMPLETO */
+            background: rgba(0, 0, 0, 0.85);
+            /* FONDO NEGRO MUY OPACO */
+            backdrop-filter: blur(8px);
+            /* DESENFOQUE DEL FONDO */
+            align-items: center;
+            /* CENTRA VERTICALMENTE EL CONTENIDO */
+            justify-content: center;
+            /* CENTRA HORIZONTALMENTE EL CONTENIDO */
+            z-index: 3000;
+            /* ASEGURA QUE ESTÉ POR ENCIMA DE OTROS ELEMENTOS */
+        }
+
+        /* MODAL ACTIVO (VISIBLE) */
+        .modal.active {
+            display: flex;
+            /* SE MUESTRA COMO FLEX */
+        }
+
+        /* CONTENIDO DEL MODAL */
+        .modal-content {
+            background: #1e1a2f;
+            /* FONDO OSCURO */
+            border-radius: 48px;
+            /* BORDES MUY REDONDEADOS */
+            max-width: 500px;
+            /* ANCHO MÁXIMO */
+            width: 90%;
+            /* ANCHO RELATIVO */
+            padding: 2rem;
+            /* RELLENO INTERNO */
+            border: 1px solid var(--berry-lumina);
+            /* BORDE ROSA */
+            box-shadow: 0 30px 50px rgba(0, 0, 0, 0.6);
+            /* SOMBRA INTENSA */
+            max-height: 90vh;
+            /* ALTURA MÁXIMA DEL 90% DE LA VENTANA */
+            overflow-y: auto;
+            /* SCROLL VERTICAL SI EL CONTENIDO EXCEDE */
+            color: var(--text-light);
+            /* COLOR DE TEXTO CLARO */
+        }
+
+        /* TÍTULO DENTRO DEL MODAL */
+        .modal-content h3 {
+            font-family: var(--font-title);
+            /* FUENTE DE TÍTULOS GLOBAL */
+            color: var(--golden-hour);
+            /* COLOR DORADO */
+            margin-bottom: 1.2rem;
+            /* MARGEN INFERIOR */
+        }
+
+        /* ETIQUETAS DE LOS CAMPOS DEL FORMULARIO DEL MODAL */
+        .modal-content label {
+            display: block;
+            /* OCUPA TODO EL ANCHO */
+            margin: 0.8rem 0 0.3rem;
+            /* MÁRGENES SUPERIOR E INFERIOR */
+            font-weight: 500;
+            /* PESO MEDIO */
+            font-size: 0.9rem;
+            /* TAMAÑO */
+            color: #ddd;
+            /* COLOR GRIS CLARO */
+        }
+
+        /* CAMPOS DE ENTRADA Y SELECT DEL MODAL */
+        .modal-content input,
+        .modal-content select {
+            width: 100%;
+            /* ANCHO COMPLETO */
+            padding: 0.6rem 1rem;
+            /* RELLENO INTERNO */
+            background: rgba(0, 0, 0, 0.5);
+            /* FONDO OSCURO SEMI-TRANSPARENTE */
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            /* BORDE BLANCO TENUE */
+            border-radius: 30px;
+            /* BORDES REDONDEADOS */
+            color: white;
+            /* TEXTO BLANCO */
+            font-family: var(--font-sans);
+            /* FUENTE SANS-SERIF GLOBAL */
+            margin-bottom: 0.2rem;
+            /* MARGEN INFERIOR PEQUEÑO */
+        }
+
+        /* ESTILO DE ENFOQUE DE LOS CAMPOS DEL MODAL */
+        .modal-content input:focus,
+        .modal-content select:focus {
+            outline: none;
+            /* QUITA EL CONTORNO POR DEFECTO */
+            border-color: var(--berry-lumina);
+            /* CAMBIA EL BORDE A ROSA/BERRY AL ENFOCAR */
+        }
+
+        /* BOTÓN DE CERRAR (X) DEL MODAL */
+        .close-modal {
+            float: right;
+            /* FLOTA A LA DERECHA */
+            font-size: 1.8rem;
+            /* TAMAÑO GRANDE */
+            cursor: pointer;
+            /* CURSOR TIPO MANO */
+            color: #aaa;
+            /* COLOR GRIS */
+            transition: 0.2s;
+            /* TRANSICIÓN SUAVE */
+            line-height: 1;
+            /* ALTURA DE LÍNEA PARA EVITAR DESPLAZAMIENTO */
+        }
+
+        /* HOVER DEL BOTÓN CERRAR */
+        .close-modal:hover {
+            color: white;
+            /* SE VUELVE BLANCO AL PASAR EL RATÓN */
+        }
+
+        /* MENSAJE TIPO TOAST (NOTIFICACIÓN EMERGENTE) */
+        .flash-msg {
+            position: fixed;
+            /* POSICIÓN FIJA EN LA PANTALLA */
+            bottom: 30px;
+            /* DISTANCIA DESDE ABAJO */
+            left: 50%;
+            /* CENTRADO HORIZONTAL */
+            transform: translateX(-50%);
+            /* CORRIGE EL CENTRADO */
+            padding: 12px 28px;
+            /* RELLENO INTERNO */
+            border-radius: 60px;
+            /* BORDES MUY REDONDEADOS */
+            color: white;
+            /* TEXTO BLANCO */
+            font-weight: 600;
+            /* SEMI-NEGRITA */
+            z-index: 4000;
+            /* POR ENCIMA DEL MODAL */
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4);
+            /* SOMBRA */
+            font-family: var(--font-sans);
+            /* FUENTE SANS-SERIF GLOBAL */
+            background: var(--berry-lumina);
+            /* FONDO ROSA/BERRY */
+            animation: slideUp 0.3s ease;
+            /* ANIMACIÓN DE ENTRADA */
+        }
+
+        /* DEFINICIÓN DE LA ANIMACIÓN SLIDEUP PARA EL TOAST */
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(20px);
+            }
+            /* COMIENZA INVISIBLE Y ABAJO */
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+            /* TERMINA VISIBLE EN SU POSICIÓN */
+        }
+
+        /* ESTILOS RESPONSIVOS PARA PANTALLAS DE HASTA 768PX (TABLETS Y MÓVILES) */
+        @media (max-width: 768px) {
+            .admin-header {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
+            /* CAMBIA A COLUMNA Y ESTIRA */
+            .admin-tabs {
+                border-radius: 24px;
+                padding: 0.3rem;
+                gap: 0.3rem;
+                justify-content: center;
+            }
+            /* AJUSTA PADDING Y GAP */
+            .tab-btn {
+                font-size: 0.7rem;
+                padding: 0.4rem 0.8rem;
+            }
+            /* REDUCE TAMAÑO Y PADDING DE LOS BOTONES */
+            .data-table {
+                padding: 0.8rem;
+                font-size: 0.75rem;
+            }
+            /* REDUCE PADDING Y TAMAÑO DE FUENTE EN TABLAS */
+            .data-table th,
+            .data-table td {
+                padding: 0.4rem 0.3rem;
+            }
+            /* REDUCE PADDING DE CELDAS */
+        }
+
+        /* ESTILOS RESPONSIVOS PARA PANTALLAS DE HASTA 480PX (MÓVILES PEQUEÑOS) */
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            /* DOS COLUMNAS PARA LAS TARJETAS DE ESTADÍSTICAS */
+            .admin-header h1 {
+                font-size: 1.2rem;
+            }
+            /* REDUCE TAMAÑO DEL TÍTULO */
+        }
+    </style>
+    <!-- FIN DE LOS ESTILOS CSS INTERNOS -->
+
+</head>
+<!-- FIN DE LA CABECERA -->
+
+<body>
+    <!-- INICIO DEL CUERPO DE LA PÁGINA, TODO LO QUE SE MUESTRA VISUALMENTE -->
+
+    <!-- CONTENEDOR PRINCIPAL DEL PANEL DE ADMINISTRACIÓN -->
+    <div class="admin-container">
+
+        <!-- CABECERA DEL PANEL -->
+        <div class="admin-header">
+            <div>
+                <!-- BLOQUE IZQUIERDO CON TÍTULO Y SALUDO -->
+                <h1>
+                    <!-- TÍTULO PRINCIPAL -->
+                    <i class="fas fa-crown"></i>
+                    <!-- ICONO DE CORONA DE FONT AWESOME -->
+                    Blooma · Panel de Control
+                    <!-- TEXTO DEL TÍTULO -->
+                </h1>
+                <p>Bienvenido, {{ session.usuario_nombre }} (Administrador)</p>
+                <!-- SALUDO CON EL NOMBRE DEL USUARIO DESDE FLASK -->
+            </div>
+            <a href="/logout" class="btn-logout">
+                <!-- ENLACE PARA CERRAR SESIÓN, RUTA /LOGOUT -->
+                <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+                <!-- ICONO Y TEXTO DEL BOTÓN -->
+            </a>
+        </div>
+
+        <!-- CUADRÍCULA DE TARJETAS DE ESTADÍSTICAS -->
+        <div class="stats-grid" id="statsGrid">
+            <!-- TARJETA DE TOTAL DE USUARIOS -->
+            <div class="stat-card">
+                <div class="stat-number" id="totalUsers">-</div>
+                <!-- NÚMERO QUE SE LLENARÁ CON JS -->
+                <div class="stat-label">Usuarios</div>
+                <!-- ETIQUETA -->
+            </div>
+            <!-- TARJETA DE TOTAL DE PEDIDOS -->
+            <div class="stat-card">
+                <div class="stat-number" id="totalOrders">-</div>
+                <div class="stat-label">Pedidos</div>
+            </div>
+            <!-- TARJETA DE TOTAL DE PRODUCTOS -->
+            <div class="stat-card">
+                <div class="stat-number" id="totalProducts">-</div>
+                <div class="stat-label">Productos</div>
+            </div>
+            <!-- TARJETA DE TOTAL DE LOCALES -->
+            <div class="stat-card">
+                <div class="stat-number" id="totalLocales">-</div>
+                <div class="stat-label">Locales</div>
+            </div>
+            <!-- TARJETA DE SOLICITUDES PENDIENTES DE DUEÑO -->
+            <div class="stat-card">
+                <div class="stat-number" id="pendingRequests">-</div>
+                <div class="stat-label">Solicitudes Dueño</div>
+            </div>
+            <!-- TARJETA DE INGRESOS TOTALES -->
+            <div class="stat-card">
+                <div class="stat-number" id="totalRevenue">-</div>
+                <div class="stat-label">Ingresos (MXN)</div>
+            </div>
+        </div>
+
+        <!-- CONTENEDOR DE PESTAÑAS (BOTONES) -->
+        <div class="admin-tabs">
+            <button class="tab-btn active" data-tab="dashboard">📊 Dashboard</button>
+            <!-- PESTAÑA DASHBOARD ACTIVA POR DEFECTO -->
+            <button class="tab-btn" data-tab="users">👥 Usuarios</button>
+            <button class="tab-btn" data-tab="locales">🏪 Locales</button>
+            <button class="tab-btn" data-tab="products">🍓 Productos</button>
+            <button class="tab-btn" data-tab="orders">📦 Pedidos</button>
+            <button class="tab-btn" data-tab="requests">📝 Solicitudes</button>
+            <button class="tab-btn" data-tab="settings">⚙️ Configuración</button>
+        </div>
+
+        <!-- PANEL DE DASHBOARD (RESUMEN) -->
+        <div id="dashboard" class="tab-pane active-pane">
+            <!-- VISIBLE POR DEFECTO -->
+            <div class="data-table">
+                <h3 style="padding: 0.5rem 0;">
+                    <!-- TÍTULO CON ESTILO INLINE -->
+                    <i class="fas fa-chart-line"></i> Resumen general
+                    <!-- ICONO Y TEXTO -->
+                </h3>
+                <div style="padding: 1rem 0; text-align: center;" id="dashboardContent">
+                    <!-- CONTENIDO QUE SE LLENARÁ CON JS -->
+                    <i class="fas fa-spinner fa-spin"></i> Cargando métricas...
+                    <!-- INDICADOR DE CARGA -->
+                </div>
+            </div>
+        </div>
+
+        <!-- PANEL DE USUARIOS -->
+        <div id="users" class="tab-pane">
+            <!-- OCULTO POR DEFECTO -->
+            <div class="data-table">
+                <table>
+                    <!-- TABLA DE USUARIOS -->
+                    <thead>
+                        <!-- CABECERA DE LA TABLA -->
+                        <tr>
+                            <!-- FILA DE ENCABEZADOS -->
+                            <th>ID</th>
+                            <th>Foto</th>
+                            <th>Nombre</th>
+                            <th>Correo</th>
+                            <th>Rol</th>
+                            <th>Documento</th>
+                            <th>Dirección</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                        <!-- CUERPO DE LA TABLA, SE LLENARÁ CON JS -->
+                        <tr>
+                            <td colspan="9" style="text-align:center; color:var(--text-mist);">Cargando usuarios...</td>
+                            <!-- MENSAJE DE CARGA -->
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- PANEL DE LOCALES -->
+        <div id="locales" class="tab-pane">
+            <div class="data-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Imagen</th>
+                            <th>Código</th>
+                            <th>Nombre</th>
+                            <th>Categoría</th>
+                            <th>Días Stock</th>
+                            <th>Dueño (ID)</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="localesTableBody">
+                        <!-- SE LLENA CON JS -->
+                        <tr>
+                            <td colspan="8" style="text-align:center; color:var(--text-mist);">Cargando locales...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- PANEL DE PRODUCTOS -->
+        <div id="products" class="tab-pane">
+            <div class="data-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Imagen</th>
+                            <th>Nombre</th>
+                            <th>Precio</th>
+                            <th>Stock</th>
+                            <th>Local ID</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productsTableBody">
+                        <!-- SE LLENA CON JS -->
+                        <tr>
+                            <td colspan="7" style="text-align:center; color:var(--text-mist);">Cargando productos...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- PANEL DE PEDIDOS -->
+        <div id="orders" class="tab-pane">
+            <div class="data-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Código</th>
+                            <th>Cliente</th>
+                            <th>Total</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersTableBody">
+                        <!-- SE LLENA CON JS -->
+                        <tr>
+                            <td colspan="6" style="text-align:center; color:var(--text-mist);">Cargando pedidos...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- PANEL DE SOLICITUDES -->
+        <div id="requests" class="tab-pane">
+            <div class="data-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Solicitante</th>
+                            <th>Nombre Local</th>
+                            <th>Ubicación</th>
+                            <th>Descripción</th>
+                            <th>Documento</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="requestsTableBody">
+                        <!-- SE LLENA CON JS -->
+                        <tr>
+                            <td colspan="7" style="text-align:center; color:var(--text-mist);">Cargando solicitudes...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- PANEL DE CONFIGURACIÓN -->
+        <div id="settings" class="tab-pane">
+            <div class="data-table" style="padding: 1.5rem;">
+                <h3><i class="fas fa-cog"></i> Configuración del sistema</h3>
+                <form id="settingsForm">
+                    <!-- FORMULARIO PARA AJUSTES -->
+                    <label style="display:block; margin-top:1rem;">Correo de contacto:</label>
+                    <input type="email" name="contact_email" value="blooma@gmail.com" style="width:100%; padding:0.6rem 1rem; background:rgba(0,0,0,0.5); border:1px solid rgba(255,255,255,0.15); border-radius:30px; color:white;">
+                    <label style="display:block; margin-top:1rem;">Modo mantenimiento:</label>
+                    <select name="maintenance_mode" style="width:100%; padding:0.6rem 1rem; background:rgba(0,0,0,0.5); border:1px solid rgba(255,255,255,0.15); border-radius:30px; color:white;">
+                        <option value="0">Desactivado</option>
+                        <option value="1">Activado</option>
+                    </select>
+                    <button type="submit" class="btn-sm btn-success" style="margin-top:1.5rem; padding:0.6rem 2rem; font-size:0.9rem;">Guardar cambios</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- FIN DEL CONTENEDOR PRINCIPAL -->
+
+    <!-- MODAL (VENTANA EMERGENTE) PARA EDITAR REGISTROS -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeEditModal">&times;</span>
+            <!-- BOTÓN DE CERRAR (X) -->
+            <h3 id="modalTitle">Editar</h3>
+            <!-- TÍTULO DINÁMICO -->
+            <form id="editForm">
+                <!-- FORMULARIO DE EDICIÓN -->
+                <input type="hidden" id="editId">
+                <!-- CAMPO OCULTO PARA EL ID DEL REGISTRO -->
+                <input type="hidden" id="editType">
+                <!-- CAMPO OCULTO PARA EL TIPO (USER, LOCAL, PRODUCT) -->
+                <div id="editFields"></div>
+                <!-- CONTENEDOR DONDE SE GENERAN LOS CAMPOS DINÁMICAMENTE -->
+                <button type="submit" class="btn-sm btn-success" style="margin-top:1.2rem; padding:0.6rem 2rem;">Guardar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- CONTENEDOR PARA LOS MENSAJES TOAST (NOTIFICACIONES) -->
+    <div id="toastContainer"></div>
+
+    <!-- JAVASCRIPT: TODA LA LÓGICA DE LA PÁGINA -->
+    <script>
+        // =============================================================
+        // FUNCIONES DE CARGA DE DATOS (GET, RENDER)
+        // =============================================================
+
+        // FUNCIÓN ASÍNCRONA PARA CARGAR LAS ESTADÍSTICAS DESDE EL SERVIDOR
+        async function loadStats() {
+            // BLOQUE TRY PARA MANEJAR ERRORES
+            try {
+                const res = await fetch('/api/admin/stats');
+                // PETICIÓN GET A LA RUTA DE ESTADÍSTICAS
+                const data = await res.json();
+                // CONVIERTE LA RESPUESTA A OBJETO JAVASCRIPT
+                // ACTUALIZA LOS ELEMENTOS HTML CON LOS DATOS OBTENIDOS
+                document.getElementById('totalUsers').innerText = data.total_users || 0;
+                // SI NO HAY DATOS, USA 0
+                document.getElementById('totalOrders').innerText = data.total_orders || 0;
+                document.getElementById('totalProducts').innerText = data.total_products || 0;
+                document.getElementById('totalLocales').innerText = data.total_locales || 0;
+                document.getElementById('pendingRequests').innerText = data.pending_requests || 0;
+                document.getElementById('totalRevenue').innerText = `$${data.total_revenue?.toFixed(2) || '0.00'}`;
+                // FORMATO DE MONEDA CON DOS DECIMALES
+                // ACTUALIZA EL CONTENIDO DEL PANEL DASHBOARD CON UNA CUADRÍCULA DE MÉTRICAS
+                document.getElementById('dashboardContent').innerHTML = `
+                        <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:20px; padding:0.5rem;">
+                            <div><i class="fas fa-users"></i> Usuarios: ${data.total_users || 0}</div>
+                            <div><i class="fas fa-shopping-cart"></i> Pedidos: ${data.total_orders || 0}</div>
+                            <div><i class="fas fa-apple-alt"></i> Productos: ${data.total_products || 0}</div>
+                            <div><i class="fas fa-store"></i> Locales: ${data.total_locales || 0}</div>
+                            <div><i class="fas fa-clock"></i> Solicitudes: ${data.pending_requests || 0}</div>
+                            <div><i class="fas fa-chart-line"></i> Ingresos: $${data.total_revenue?.toFixed(2) || '0.00'}</div>
+                        </div>
+                    `;
+            } catch (e) {
+                // CAPTURA CUALQUIER ERROR Y LO MUESTRA EN CONSOLA
+                console.error('Error al cargar estadísticas:', e);
+            }
+        }
+
+        // FUNCIÓN PARA CARGAR LA LISTA DE USUARIOS
+        async function loadUsers() {
+            try {
+                const res = await fetch('/api/admin/users');
+                // PETICIÓN GET A /API/ADMIN/USERS
+                const users = await res.json();
+                // CONVIERTE A JSON
+                const tbody = document.getElementById('usersTableBody');
+                // REFERENCIA AL CUERPO DE LA TABLA
+                if (!users.length) {
+                    // SI NO HAY USUARIOS
+                    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; color:var(--text-mist);">No hay usuarios registrados.</td></tr>';
+                    return;
+                }
+                // GENERA LAS FILAS DE LA TABLA MAPEANDO CADA USUARIO
+                tbody.innerHTML = users.map(u => `
+                        <tr>
+                            <td>${u.id}</td>
+                            <!-- ID DEL USUARIO -->
+                            <td>
+                                ${u.imagen_url ? `<img src="${u.imagen_url}" class="imagen-thumb" alt="Foto">` : `<div class="sin-imagen">🍓</div>`}
+                                <!-- MUESTRA IMAGEN O PLACEHOLDER -->
+                                <!-- FORMULARIO PARA SUBIR FOTO DE PERFIL -->
+                                <form action="/api/admin/user/${u.id}/foto" method="POST" enctype="multipart/form-data" class="subir-imagen-form">
+                                    <input type="file" name="foto" accept="image/*">
+                                    <!-- INPUT DE ARCHIVO -->
+                                    <button type="submit" class="btn-sm btn-success">Subir</button>
+                                    <!-- BOTÓN DE SUBIDA -->
+                                </form>
+                            </td>
+                            <td>${escapeHtml(u.nombre)}</td>
+                            <!-- NOMBRE ESCAPADO PARA PREVENIR XSS -->
+                            <td>${escapeHtml(u.correo)}</td>
+                            <!-- CORREO ESCAPADO -->
+                            <td>${u.rol}</td>
+                            <!-- ROL DEL USUARIO -->
+                            <td>${escapeHtml(u.documento_identidad || '—')}</td>
+                            <!-- DOCUMENTO O GUION -->
+                            <td>${escapeHtml(u.direccion || '—')}</td>
+                            <!-- DIRECCIÓN O GUION -->
+                            <td>${u.estado || 'activo'}</td>
+                            <!-- ESTADO, POR DEFECTO 'ACTIVO' -->
+                            <td>
+                                <!-- BOTÓN EDITAR: LLAMA A OPENEDITMODAL CON LOS PARÁMETROS DEL USUARIO -->
+                                <button class="btn-sm btn-edit" onclick="openEditModal('user', ${u.id}, '${u.rol}', '${escapeHtml(u.documento_identidad || '')}', '${escapeHtml(u.direccion || '')}')">Editar</button>
+                                <!-- BOTÓN ELIMINAR: LLAMA A DELETEUSER CON EL ID -->
+                                <button class="btn-sm btn-danger" onclick="deleteUser(${u.id})">Eliminar</button>
+                            </td>
+                        </tr>
+                    `).join('');
+                // UNE TODAS LAS FILAS EN UN SOLO STRING
+            } catch (e) {
+                console.error('Error al cargar usuarios:', e);
+                document.getElementById('usersTableBody').innerHTML = '<tr><td colspan="9" style="text-align:center; color:#e74c3c;">Error al cargar usuarios.</td></tr>';
+            }
+        }
+
+        // FUNCIÓN PARA CARGAR LOCALES
+        async function loadLocales() {
+            try {
+                const res = await fetch('/api/admin/locales');
+                const locales = await res.json();
+                const tbody = document.getElementById('localesTableBody');
+                if (!locales.length) {
+                    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:var(--text-mist);">No hay locales registrados.</td></tr>';
+                    return;
+                }
+                tbody.innerHTML = locales.map(l => `
+                        <tr>
+                            <td>${l.id}</td>
+                            <td>
+                                ${l.imagen_url ? `<img src="${l.imagen_url}" class="imagen-thumb" alt="Local">` : `<div class="sin-imagen">🏪</div>`}
+                                <form action="/admin/local/${l.id}/imagen" method="POST" enctype="multipart/form-data" class="subir-imagen-form">
+                                    <input type="file" name="imagen" accept="image/*">
+                                    <button type="submit" class="btn-sm btn-success">Subir</button>
+                                </form>
+                            </td>
+                            <td>${l.codigo}</td>
+                            <td>${escapeHtml(l.nombre)}</td>
+                            <td>${escapeHtml(l.categoria || '—')}</td>
+                            <td>${escapeHtml(l.dias_stock || '—')}</td>
+                            <td>${l.usuario_id || 'Sin dueño'}</td>
+                            <td>
+                                <button class="btn-sm btn-edit" onclick="openEditModal('local', ${l.id}, '${escapeHtml(l.nombre)}', '${l.codigo}', '${escapeHtml(l.categoria || '')}', '${escapeHtml(l.dias_stock || '')}')">Editar</button>
+                                <button class="btn-sm btn-danger" onclick="deleteLocal(${l.id})">Eliminar</button>
+                            </td>
+                        </tr>
+                    `).join('');
+            } catch (e) {
+                console.error('Error al cargar locales:', e);
+                document.getElementById('localesTableBody').innerHTML = '<tr><td colspan="8" style="text-align:center; color:#e74c3c;">Error al cargar locales.</td></tr>';
+            }
+        }
+
+        // FUNCIÓN PARA CARGAR PRODUCTOS
+        async function loadProducts() {
+            try {
+                const res = await fetch('/api/admin/products');
+                const products = await res.json();
+                const tbody = document.getElementById('productsTableBody');
+                if (!products.length) {
+                    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:var(--text-mist);">No hay productos registrados.</td></tr>';
+                    return;
+                }
+                tbody.innerHTML = products.map(p => `
+                        <tr>
+                            <td>${p.id}</td>
+                            <td>
+                                ${p.imagen_url ? `<img src="${p.imagen_url}" class="imagen-thumb" alt="Producto">` : `<div class="sin-imagen">📷</div>`}
+                                <form action="/admin/producto/${p.id}/imagen" method="POST" enctype="multipart/form-data" class="subir-imagen-form">
+                                    <input type="file" name="imagen" accept="image/*">
+                                    <button type="submit" class="btn-sm btn-success">Subir</button>
+                                </form>
+                            </td>
+                            <td>${escapeHtml(p.nombre)}</td>
+                            <td>$${p.precio.toFixed(2)}</td>
+                            <td>${p.stock}</td>
+                            <td>${p.local_id}</td>
+                            <td>
+                                <button class="btn-sm btn-edit" onclick="openEditModal('product', ${p.id}, '${escapeHtml(p.nombre)}', ${p.precio}, ${p.stock})">Editar</button>
+                                <button class="btn-sm btn-danger" onclick="deleteProduct(${p.id})">Eliminar</button>
+                            </td>
+                        </tr>
+                    `).join('');
+            } catch (e) {
+                console.error('Error al cargar productos:', e);
+                document.getElementById('productsTableBody').innerHTML = '<tr><td colspan="7" style="text-align:center; color:#e74c3c;">Error al cargar productos.</td></tr>';
+            }
+        }
+
+        // FUNCIÓN PARA CARGAR PEDIDOS
+        async function loadOrders() {
+            try {
+                const res = await fetch('/api/admin/orders');
+                const orders = await res.json();
+                const tbody = document.getElementById('ordersTableBody');
+                if (!orders.length) {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--text-mist);">No hay pedidos.</td></tr>';
+                    return;
+                }
+                tbody.innerHTML = orders.map(o => `
+                        <tr>
+                            <td>${o.id}</td>
+                            <td>${o.codigo}</td>
+                            <td>${escapeHtml(o.cliente)}</td>
+                            <td>$${o.total.toFixed(2)}</td>
+                            <td>
+                                <span class="badge badge-${o.estado}">${o.estado}</span>
+                                <!-- ETIQUETA DE ESTADO CON CLASE DINÁMICA -->
+                            </td>
+                            <td>
+                                <select id="status-${o.id}" class="estado-select">
+                                    <!-- SELECTOR PARA CAMBIAR ESTADO -->
+                                    <option value="pendiente" ${o.estado=='pendiente'?'selected':''}>Pendiente</option>
+                                    <option value="listo" ${o.estado=='listo'?'selected':''}>Listo</option>
+                                    <option value="entregado" ${o.estado=='entregado'?'selected':''}>Entregado</option>
+                                    <option value="cancelado" ${o.estado=='cancelado'?'selected':''}>Cancelado</option>
+                                </select>
+                                <button class="btn-sm btn-success" onclick="updateOrderStatus(${o.id})">Actualizar</button>
+                                <!-- BOTÓN PARA ACTUALIZAR ESTADO -->
+                            </td>
+                        </tr>
+                    `).join('');
+            } catch (e) {
+                console.error('Error al cargar pedidos:', e);
+                document.getElementById('ordersTableBody').innerHTML = '<tr><td colspan="6" style="text-align:center; color:#e74c3c;">Error al cargar pedidos.</td></tr>';
+            }
+        }
+
+        // FUNCIÓN PARA CARGAR SOLICITUDES DE DUEÑO
+        async function loadRequests() {
+            try {
+                const res = await fetch('/api/admin/requests');
+                const requests = await res.json();
+                const tbody = document.getElementById('requestsTableBody');
+                if (!requests.length) {
+                    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:var(--text-mist);">No hay solicitudes pendientes.</td></tr>';
+                    return;
+                }
+                tbody.innerHTML = requests.map(r => `
+                        <tr>
+                            <td>${r.id}</td>
+                            <td>${escapeHtml(r.usuario_nombre)} (${escapeHtml(r.usuario_correo)})</td>
+                            <td>${escapeHtml(r.nombre_local)}</td>
+                            <td>${escapeHtml(r.ubicacion)}</td>
+                            <td>${escapeHtml(r.descripcion || '—')}</td>
+                            <td>${r.documento_path ? `<a href="/${r.documento_path}" target="_blank">Ver</a>` : 'No'}</td>
+                            <!-- ENLACE AL DOCUMENTO SI EXISTE -->
+                            <td>
+                                <button class="btn-sm btn-success" onclick="approveRequest(${r.id})">Aprobar</button>
+                                <button class="btn-sm btn-danger" onclick="rejectRequest(${r.id})">Rechazar</button>
+                            </td>
+                        </tr>
+                    `).join('');
+            } catch (e) {
+                console.error('Error al cargar solicitudes:', e);
+                document.getElementById('requestsTableBody').innerHTML = '<tr><td colspan="7" style="text-align:center; color:#e74c3c;">Error al cargar solicitudes.</td></tr>';
+            }
+        }
+
+        // =============================================================
+        // FUNCIONES DE ACCIONES (ELIMINAR, ACTUALIZAR ESTADO, APROBAR/RECHAZAR)
+        // =============================================================
+
+        // FUNCIÓN ASÍNCRONA PARA ELIMINAR UN USUARIO
+        async function deleteUser(id) {
+            if (!confirm('¿Eliminar este usuario permanentemente?')) return;
+            // CONFIRMACIÓN ANTES DE ELIMINAR
+            try {
+                const res = await fetch(`/api/admin/user/${id}`, { method: 'DELETE' });
+                // PETICIÓN DELETE
+                if (res.ok) {
+                    // SI LA RESPUESTA ES EXITOSA
+                    showToast('Usuario eliminado correctamente');
+                    // MUESTRA MENSAJE
+                    loadUsers();
+                    // RECARGA LA TABLA DE USUARIOS
+                    loadStats();
+                    // RECARGA ESTADÍSTICAS
+                } else {
+                    const error = await res.json();
+                    showToast(error.message || 'Error al eliminar', true);
+                    // MUESTRA ERROR
+                }
+            } catch (e) {
+                showToast('Error de conexión', true);
+            }
+        }
+
+        // FUNCIÓN PARA ELIMINAR UN LOCAL
+        async function deleteLocal(id) {
+            if (!confirm('¿Eliminar este local permanentemente?')) return;
+            try {
+                const res = await fetch(`/api/admin/local/${id}`, { method: 'DELETE' });
+                if (res.ok) {
+                    showToast('Local eliminado correctamente');
+                    loadLocales();
+                    loadStats();
+                } else {
+                    showToast('Error al eliminar', true);
+                }
+            } catch (e) {
+                showToast('Error de conexión', true);
+            }
+        }
+
+        // FUNCIÓN PARA ELIMINAR UN PRODUCTO
+        async function deleteProduct(id) {
+            if (!confirm('¿Eliminar este producto permanentemente?')) return;
+            try {
+                const res = await fetch(`/api/admin/product/${id}`, { method: 'DELETE' });
+                if (res.ok) {
+                    showToast('Producto eliminado correctamente');
+                    loadProducts();
+                    loadStats();
+                } else {
+                    showToast('Error al eliminar', true);
+                }
+            } catch (e) {
+                showToast('Error de conexión', true);
+            }
+        }
+
+        // FUNCIÓN PARA ACTUALIZAR EL ESTADO DE UN PEDIDO
+        async function updateOrderStatus(id) {
+            const select = document.getElementById(`status-${id}`);
+            // OBTIENE EL SELECT CORRESPONDIENTE
+            const nuevoEstado = select.value;
+            // NUEVO ESTADO SELECCIONADO
+            try {
+                const res = await fetch(`/api/admin/order/${id}/status`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ estado: nuevoEstado })
+                    // ENVÍA EL ESTADO EN EL CUERPO DE LA PETICIÓN
+                });
+                if (res.ok) {
+                    showToast('Estado actualizado');
+                    loadOrders();
+                    // RECARGA PEDIDOS
+                    loadStats();
+                } else {
+                    showToast('Error al actualizar', true);
+                }
+            } catch (e) {
+                showToast('Error de conexión', true);
+            }
+        }
+
+        // FUNCIÓN PARA APROBAR UNA SOLICITUD
+        async function approveRequest(id) {
+            try {
+                const res = await fetch(`/api/admin/request/${id}/approve`, { method: 'POST' });
+                if (res.ok) {
+                    showToast('Solicitud aprobada');
+                    loadRequests();
+                    loadStats();
+                } else {
+                    showToast('Error al aprobar', true);
+                }
+            } catch (e) {
+                showToast('Error de conexión', true);
+            }
+        }
+
+        // FUNCIÓN PARA RECHAZAR UNA SOLICITUD
+        async function rejectRequest(id) {
+            try {
+                const res = await fetch(`/api/admin/request/${id}/reject`, { method: 'POST' });
+                if (res.ok) {
+                    showToast('Solicitud rechazada');
+                    loadRequests();
+                    loadStats();
+                } else {
+                    showToast('Error al rechazar', true);
+                }
+            } catch (e) {
+                showToast('Error de conexión', true);
+            }
+        }
+
+        // =============================================================
+        // MODAL DE EDICIÓN
+        // =============================================================
+
+        // FUNCIÓN PARA ABRIR EL MODAL DE EDICIÓN CON LOS CAMPOS ADECUADOS SEGÚN EL TIPO
+        function openEditModal(type, id, ...args) {
+            document.getElementById('editId').value = id;
+            // GUARDA EL ID EN EL CAMPO OCULTO
+            document.getElementById('editType').value = type;
+            // GUARDA EL TIPO
+            let fieldsHtml = '';
+            // VARIABLE PARA CONSTRUIR LOS CAMPOS DEL FORMULARIO
+            if (type === 'user') {
+                // SI ES USUARIO
+                document.getElementById('modalTitle').innerText = 'Editar usuario';
+                const rol = args[0];
+                const doc = args[1];
+                const dir = args[2];
+                fieldsHtml = `
+                        <label>Rol:</label>
+                        <select name="rol">
+                            <option value="cliente" ${rol=='cliente'?'selected':''}>Cliente</option>
+                            <option value="dueno" ${rol=='dueno'?'selected':''}>Dueño</option>
+                            <option value="empleado" ${rol=='empleado'?'selected':''}>Empleado</option>
+                            <option value="admin" ${rol=='admin'?'selected':''}>Admin</option>
+                        </select>
+                        <label>Documento de identidad:</label>
+                        <input name="documento_identidad" value="${doc.replace(/"/g, '&quot;')}">
+                        <!-- ESCAPA COMILLAS DOBLES -->
+                        <label>Dirección:</label>
+                        <input name="direccion" value="${dir.replace(/"/g, '&quot;')}">
+                    `;
+            } else if (type === 'local') {
+                // SI ES LOCAL
+                document.getElementById('modalTitle').innerText = 'Editar local';
+                const nombre = args[0];
+                const codigo = args[1];
+                const categoria = args[2] || '';
+                const diasStock = args[3] || '';
+                fieldsHtml = `
+                        <label>Nombre:</label><input name="nombre" value="${nombre.replace(/"/g, '&quot;')}">
+                        <label>Código:</label><input name="codigo" value="${codigo.replace(/"/g, '&quot;')}">
+                        <label>Categoría:</label><input name="categoria" value="${categoria.replace(/"/g, '&quot;')}">
+                        <label>Días de stock (ej. Lunes,Miércoles):</label><input name="dias_stock" value="${diasStock.replace(/"/g, '&quot;')}">
+                    `;
+            } else if (type === 'product') {
+                // SI ES PRODUCTO
+                document.getElementById('modalTitle').innerText = 'Editar producto';
+                const nombre = args[0];
+                const precio = args[1];
+                const stock = args[2];
+                fieldsHtml = `
+                        <label>Nombre:</label><input name="nombre" value="${nombre.replace(/"/g, '&quot;')}">
+                        <label>Precio:</label><input name="precio" value="${precio}">
+                        <label>Stock:</label><input name="stock" value="${stock}">
+                    `;
+            }
+            document.getElementById('editFields').innerHTML = fieldsHtml;
+            // INSERTA LOS CAMPOS
+            document.getElementById('editModal').classList.add('active');
+            // MUESTRA EL MODAL AÑADIENDO LA CLASE ACTIVE
+        }
+
+        // FUNCIÓN PARA CERRAR EL MODAL
+        function closeEditModal() {
+            document.getElementById('editModal').classList.remove('active');
+            // QUITA LA CLASE ACTIVE PARA OCULTAR
+        }
+
+        // EVENTO PARA CERRAR EL MODAL AL HACER CLIC EN LA X
+        document.getElementById('closeEditModal').addEventListener('click', closeEditModal);
+
+        // EVENTO PARA CERRAR EL MODAL AL HACER CLIC FUERA DEL CONTENIDO (EN EL FONDO OSCURO)
+        window.addEventListener('click', (e) => {
+            if (e.target === document.getElementById('editModal')) closeEditModal();
+        });
+
+        // EVENTO SUBMIT DEL FORMULARIO DE EDICIÓN
+        document.getElementById('editForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            // EVITA LA RECARGA DE LA PÁGINA
+            const type = document.getElementById('editType').value;
+            // TIPO DE ENTIDAD
+            const id = document.getElementById('editId').value;
+            // ID
+            const formData = new FormData(e.target);
+            // OBTIENE LOS DATOS DEL FORMULARIO
+            const data = Object.fromEntries(formData.entries());
+            // CONVIERTE A OBJETO
+            try {
+                const res = await fetch(`/api/admin/${type}/${id}`, {
+                    // PETICIÓN PUT A LA RUTA CORRESPONDIENTE
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                    // ENVÍA LOS DATOS EN FORMATO JSON
+                });
+                if (res.ok) {
+                    showToast('Actualizado correctamente');
+                    closeEditModal();
+                    // RECARGA LA TABLA CORRESPONDIENTE SEGÚN EL TIPO
+                    if (type === 'user') loadUsers();
+                    else if (type === 'local') loadLocales();
+                    else if (type === 'product') loadProducts();
+                    loadStats();
+                } else {
+                    const error = await res.json();
+                    showToast(error.message || 'Error al actualizar', true);
+                }
+            } catch (e) {
+                showToast('Error de conexión', true);
+            }
+        });
+
+        // =============================================================
+        // CONFIGURACIÓN
+        // =============================================================
+
+        // EVENTO SUBMIT DEL FORMULARIO DE CONFIGURACIÓN
+        document.getElementById('settingsForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+            try {
+                const res = await fetch('/api/admin/settings', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                if (res.ok) {
+                    showToast('Configuración guardada');
+                } else {
+                    showToast('Error al guardar', true);
+                }
+            } catch (e) {
+                showToast('Error de conexión', true);
+            }
+        });
+
+        // =============================================================
+        // MANEJO DE SUBIDA DE IMÁGENES DE PERFIL (SIN REDIRECCIÓN)
+        // =============================================================
+
+        // SE USA DELEGACIÓN DE EVENTOS PORQUE LOS FORMULARIOS SE GENERAN DINÁMICAMENTE
+        document.addEventListener('submit', async function(e) {
+            // BUSCA EL FORMULARIO MÁS CERCANO CON LA CLASE 'SUBIR-IMAGEN-FORM'
+            const form = e.target.closest('.subir-imagen-form');
+            if (!form) return;
+            // SI NO ES UNO DE ESOS FORMULARIOS, IGNORA
+
+            // PREVIENE EL ENVÍO TRADICIONAL (REDIRECCIÓN)
+            e.preventDefault();
+
+            // OBTIENE LA URL DE ACCIÓN DEL FORMULARIO (YA INCLUYE EL ID DEL USUARIO)
+            const url = form.action;
+            // CREA UN OBJETO FORMDATA CON LOS DATOS DEL FORMULARIO (ARCHIVO INCLUIDO)
+            const formData = new FormData(form);
+
+            try {
+                // ENVÍA LA PETICIÓN CON FETCH (AJAX)
+                const response = await fetch(url, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                // SI LA RESPUESTA NO ES EXITOSA, MUESTRA ERROR
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    showToast(errorData.error || 'Error al subir imagen', true);
+                    return;
+                }
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // ENCUENTRA LA CELDA (TD) QUE CONTIENE ESTE FORMULARIO
+                    const td = form.closest('td');
+                    // BUSCA EL ELEMENTO IMG DENTRO DE ESA CELDA (SI EXISTE)
+                    const img = td.querySelector('img.imagen-thumb');
+                    // BUSCA EL PLACEHOLDER (DIV CON CLASE SIN-IMAGEN)
+                    const placeholder = td.querySelector('.sin-imagen');
+
+                    // CONSTRUYE LA URL DE LA IMAGEN UTILIZANDO LA RUTA DEVUELTA
+                    // LA RUTA DEVUELTA ES ALGO COMO "UPLOADS/PERFILES/ADMIN_USER_2_XXX.JPG"
+                    // DEBEMOS ANTEPONER "/STATIC/" PARA QUE FLASK SIRVA EL ARCHIVO DESDE LA CARPETA ESTÁTICA
+                    const imageUrl = `/static/${data.foto_url}`;
+
+                    if (img) {
+                        // SI YA HABÍA UNA IMAGEN, ACTUALIZA EL SRC Y FORZAMOS RECARGA CON TIMESTAMP
+                        img.src = imageUrl + '?t=' + Date.now();
+                    } else if (placeholder) {
+                        // SI NO HABÍA IMAGEN (PLACEHOLDER), REEMPLAZA EL DIV CON UN NUEVO IMG
+                        const newImg = document.createElement('img');
+                        newImg.src = imageUrl + '?t=' + Date.now();
+                        newImg.className = 'imagen-thumb';
+                        newImg.alt = 'Foto';
+                        placeholder.replaceWith(newImg);
+                    } else {
+                        // SI NO HAY NI IMG NI PLACEHOLDER, CREA UNO NUEVO (CASO POCO PROBABLE)
+                        const newImg = document.createElement('img');
+                        newImg.src = imageUrl + '?t=' + Date.now();
+                        newImg.className = 'imagen-thumb';
+                        newImg.alt = 'Foto';
+                        td.appendChild(newImg);
+                    }
+
+                    // LIMPIA EL INPUT FILE PARA QUE SE PUEDA VOLVER A SELECCIONAR EL MISMO ARCHIVO
+                    form.querySelector('input[type="file"]').value = '';
+                    showToast('Foto actualizada correctamente');
+                } else {
+                    showToast(data.error || 'Error al subir', true);
+                }
+            } catch (error) {
+                showToast('Error de conexión', true);
+                console.error('Error en la subida:', error);
+            }
+        });
+
+        // =============================================================
+        // UTILIDADES
+        // =============================================================
+
+        // FUNCIÓN PARA MOSTRAR MENSAJES TOAST (NOTIFICACIONES)
+        function showToast(msg, isError = false) {
+            const container = document.getElementById('toastContainer');
+            // CONTENEDOR DE TOASTS
+            const toast = document.createElement('div');
+            // CREA UN NUEVO DIV
+            toast.className = 'flash-msg';
+            // ASIGNA LA CLASE CSS
+            toast.style.background = isError ? '#b13e5a' : 'var(--berry-lumina)';
+            // COLOR SEGÚN ERROR O ÉXITO
+            toast.innerText = msg;
+            // TEXTO DEL MENSAJE
+            container.appendChild(toast);
+            // AÑADE EL TOAST AL CONTENEDOR
+            // DESPUÉS DE 3 SEGUNDOS, DESAPARECE CON ANIMACIÓN
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = '0.3s';
+                setTimeout(() => toast.remove(), 300);
+                // ELIMINA EL ELEMENTO DESPUÉS DE LA TRANSICIÓN
+            }, 3000);
+        }
+
+        // FUNCIÓN PARA ESCAPAR CARACTERES HTML Y PREVENIR XSS
+        function escapeHtml(str) {
+            if (!str) return '';
+            // SI ES NULO O VACÍO, DEVUELVE CADENA VACÍA
+            // REEMPLAZA &, <, > POR SUS ENTIDADES HTML
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+
+        // =============================================================
+        // MANEJO DE PESTAÑAS
+        // =============================================================
+
+        // MANEJO DE CLIC EN LAS PESTAÑAS PARA CAMBIAR DE PANEL
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                // DESACTIVA TODOS LOS BOTONES Y PANELES
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active-pane'));
+                // ACTIVA EL BOTÓN CLICADO
+                btn.classList.add('active');
+                // MUESTRA EL PANEL CORRESPONDIENTE AL ATRIBUTO DATA-TAB
+                const tabId = btn.dataset.tab;
+                document.getElementById(tabId).classList.add('active-pane');
+                // CARGA LOS DATOS SEGÚN LA PESTAÑA SELECCIONADA (SI NO ESTÁN CARGADOS)
+                if (tabId === 'users') loadUsers();
+                else if (tabId === 'locales') loadLocales();
+                else if (tabId === 'products') loadProducts();
+                else if (tabId === 'orders') loadOrders();
+                else if (tabId === 'requests') loadRequests();
+            });
+        });
+
+        // =============================================================
+        // CARGA INICIAL
+        // =============================================================
+
+        // CARGA INICIAL DE TODOS LOS DATOS AL ABRIR LA PÁGINA
+        loadStats();
+        loadUsers();
+        loadLocales();
+        loadProducts();
+        loadOrders();
+        loadRequests();
+
+        // ACTUALIZA ESTADÍSTICAS CADA 30 SEGUNDOS PARA MANTENERLAS ACTUALIZADAS
+        setInterval(loadStats, 30000);
+
+        // CREACIÓN DINÁMICA DE ESTILOS PARA LAS ETIQUETAS DE ESTADO (BADGES) DE LOS PEDIDOS
+        const styleBadges = document.createElement('style');
+        styleBadges.textContent = `
+                .badge {
+                    padding: 0.2rem 0.8rem;
+                    border-radius: 20px;
+                    font-size: 0.7rem;
+                    font-weight: 600;
+                    text-transform: capitalize;
+                }
+                .badge-pendiente { background: #f39c12; color: #1a1a1a; }
+                .badge-listo { background: #3498db; color: white; }
+                .badge-entregado { background: #2ecc71; color: #1a1a1a; }
+                .badge-cancelado { background: #e74c3c; color: white; }
+                .estado-select {
+                    background: rgba(0,0,0,0.6);
+                    border: 1px solid rgba(255,255,255,0.15);
+                    border-radius: 30px;
+                    padding: 0.2rem 0.6rem;
+                    color: white;
+                    font-family: var(--font-sans);
+                    font-size: 0.75rem;
+                }
+            `;
+        document.head.appendChild(styleBadges);
+        // AGREGA LOS ESTILOS AL HEAD DEL DOCUMENTO
+    </script>
+    <!-- FIN DEL JAVASCRIPT -->
+</body>
+<!-- FIN DEL CUERPO -->
+</html>
+<!-- FIN DEL DOCUMENTO HTML -->

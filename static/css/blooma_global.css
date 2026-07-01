@@ -1,0 +1,1625 @@
+/* ============================================================
+PASO 1: IMPORTACIÓN DE FUENTES DESDE GOOGLE FONTS
+-------------------------------------------------------------
+@import se usa para traer fuentes externas (tipografías) que
+no vienen instaladas en el ordenador. Estas fuentes se cargan
+desde el servidor de Google.
+
+Cada fuente tiene un nombre y diferentes "pesos" (grosor):
+- Cinzel: una fuente elegante con serifa, ideal para títulos.
+- Cormorant Garamond: una serifa clásica y estilizada.
+- Montserrat: una fuente sans-serif moderna y limpia.
+- Playfair Display: otra serifa con mucho carácter.
+
+Los números (400, 700, 900) indican el grosor: 400=normal,
+700=negrita, 900=extranegrita. Las variantes con "ital" son
+cursivas.
+============================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,500;0,700;1,400&family=Montserrat:wght@200;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+/* ============================================================
+PASO 2: RESETEO DE MÁRGENES Y PADDING (selector universal *)
+-------------------------------------------------------------
+El asterisco (*) selecciona TODOS los elementos HTML de la
+página. Con "margin: 0" quitamos cualquier margen por defecto
+que el navegador pueda poner (como el espacio alrededor del
+<body> o los <p>). "padding: 0" hace lo mismo con el relleno
+interno. "box-sizing: border-box" hace que el ancho y alto de
+un elemento incluyan su borde y relleno, lo que facilita el
+diseño sin que los elementos se desborden.
+============================================================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ============================================================
+PASO 3: VARIABLES CSS PERSONALIZADAS (raíz del documento)
+-------------------------------------------------------------
+":root" es un selector especial que apunta al elemento raíz
+<html>. Aquí se definen variables con nombres descriptivos que
+almacenan valores de colores, sombras, fuentes, etc.
+
+Estas variables se usan en todo el archivo mediante "var(--nombre)".
+Son como "comodines" que permiten cambiar un color en un solo
+lugar y que se actualice automáticamente en todos los sitios
+donde se use.
+
+La paleta "clara" está pensada para ser luminosa y amable:
+- Fondo principal: blanco roto (FCFAF5) → suave y cálido.
+- Fondo de tarjetas: blanco puro (FFFFFF) → para destacar.
+- Textos: negro (1A1A1A) y gris oscuro (4A4A4A).
+- Vino: un rojo intenso (8B1A2B) que da personalidad.
+- Dorado: D4AF37, elegante y brillante.
+- Se incluyen también tonos claros y medios para degradados.
+
+Además, se definen variables para fuentes, sombras y
+transiciones, que se reutilizarán para mantener consistencia.
+============================================================ */
+:root {
+    /* --- PALETA CLARA --- */
+    --bg-light: #FCFAF5;                /* Fondo principal (blanco roto) */
+    --bg-card: #FFFFFF;                 /* Fondo de tarjetas y paneles */
+    --text-primary: #1A1A1A;            /* Texto principal (negro) */
+    --text-secondary: #4A4A4A;          /* Texto secundario (gris oscuro) */
+    --wine-main: #8B1A2B;               /* Vino principal (botones, acentos) */
+    --wine-hover: #A52A3B;              /* Vino para hover y detalles */
+    --wine-light: #F2D7DE;              /* Vino muy claro (fondos sutiles) */
+    --gold-main: #D4AF37;               /* Dorado principal (títulos, bordes) */
+    --gold-light: #F5D06B;              /* Dorado claro (detalles brillantes) */
+    --gold-soft: #E8D5C4;               /* Dorado suave (bordes y sombras) */
+    --glass-bg: rgba(255, 255, 255, 0.85);  /* Fondos con vidrio */
+    --glass-border: rgba(212, 175, 55, 0.25); /* Bordes dorados suaves */
+    --card-shadow: 0 8px 30px rgba(0, 0, 0, 0.10), 0 2px 8px rgba(139, 26, 43, 0.06);
+    --transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    --font-serif: 'Cormorant Garamond', serif;
+    --font-display: 'Cinzel', serif;
+    --font-sans: 'Montserrat', sans-serif;
+    --font-title: 'Playfair Display', serif;
+
+    /* VARIABLES PARA CONTRASTE  */
+    --golden-hour: #d4af37;        /* Dorado para títulos y acentos */
+    --berry-lumina: #ff6b81;       /* Rosa/rojo para botones y detalles */
+    --accent-berry-pink: #ff6b81;  /* Sinónimo de berry-lumina */
+    --text-mist: #b0a8b8;          /* Gris claro para textos secundarios */
+    --lilac-mystic: #c2a8e6;       /* Lila para detalles */
+    --text-light: #f5f0eb;         /* Blanco roto para textos sobre fondos oscuros */
+
+    /* NUEVAS VARIABLES PARA EL REDISEÑO  */
+    --shadow-soft: 0 10px 40px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04); /* Sombra más suave y moderna */
+    --radius-card: 32px;           /* Radio de borde más grande para tarjetas */
+    --radius-pill: 60px;           /* Radio para botones y badges tipo píldora */
+}
+
+/* ============================================================
+PASO 4: ESTILOS BASE DEL CUERPO DE LA PÁGINA (<body>)
+-------------------------------------------------------------
+El selector "body" aplica a todo el contenido visible.
+
+- background-color: usa la variable --bg-light (blanco roto).
+- background-image: dibuja un degradado radial muy sutil que
+    parte desde la esquina superior izquierda (20% 30%) con un
+    color vino muy transparente (4%), y se desvanece hasta ser
+    totalmente transparente en el 70% del radio. Esto da un
+    toque de calidez al fondo sin ser llamativo.
+- font-family: usa la fuente serif principal (Cormorant Garamond).
+- color: el color de texto principal (negro).
+- min-height: 100vh → la altura mínima será el 100% del alto
+    de la ventana (viewport), asegurando que el fondo cubra toda
+    la pantalla.
+- position: relative y z-index: 2 → preparan el cuerpo para
+    que los elementos internos se posicionen correctamente.
+============================================================ */
+body {
+    /* Fondo común para todas las páginas */
+    background-image: url('/static/img/fondos/fondoprinci.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;  
+    background-color: var(--bg-light);  
+    font-family: var(--font-serif);
+    color: var(--text-primary);
+    min-height: 100vh;
+    position: relative;
+}
+
+/* ============================================================
+PASO 5: CONTENEDORES PRINCIPALES (estructura de la página)
+-------------------------------------------------------------
+Estas clases se usan para envolver el contenido de las
+páginas principales. Todos comparten un ancho máximo de
+1400 píxeles, se centran con "margin: 0 auto", tienen un
+relleno interno de 20px y se posicionan de forma relativa.
+
+- .admin-container: para el panel de administración.
+- .app-wrapper: para la aplicación general.
+- .dashboard-container: para el tablero de control.
+- .perfil-wrapper: para la página de perfil de usuario.
+- .feedback-wrapper: para la página de opiniones.
+
+"z-index: 2" asegura que estos contenedores estén por encima
+de otros elementos de fondo (como el degradado del body).
+============================================================ */
+.admin-container, .app-wrapper, .dashboard-container, .perfil-wrapper, .feedback-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+    position: relative;
+    z-index: 2;
+}
+
+/* ============================================================
+PASO 6: ESTILO DE LOS ENVOLTORIOS CON EFECTO VIDRIO
+-------------------------------------------------------------
+Los wrappers de aplicación, perfil, feedback y checkout
+tienen un fondo blanco con un efecto de desenfoque ligero
+(backdrop-filter: blur(4px)), bordes redondeados (48px),
+un borde dorado suave y una sombra elegante.
+
+- backdrop-filter: blur(4px) → desenfoca lo que está detrás,
+    dando un efecto de vidrio esmerilado.
+- border-radius: 48px → esquinas muy redondeadas.
+- border: 1px solid var(--gold-soft) → un borde dorado claro.
+- box-shadow: usa la variable --card-shadow, que tiene dos
+    sombras: una negra suave y otra con un toque vino.
+- transition: aplica una animación suave cuando cambian las
+    propiedades (por ejemplo, al hacer hover).
+============================================================ */
+.app-wrapper, .perfil-wrapper, .feedback-wrapper, .checkout-wrapper {
+    background: var(--bg-card);
+    backdrop-filter: blur(4px);
+    border-radius: 48px;
+    border: 1px solid var(--gold-soft);
+    box-shadow: var(--card-shadow);
+    transition: var(--transition);
+}
+
+/* ============================================================
+PASO 7: ENCABEZADOS (HEADER) DE LA PÁGINA
+-------------------------------------------------------------
+.admin-header y .site-header son los encabezados superiores.
+Usamos flexbox para distribuir los elementos horizontalmente
+y alinearlos al centro verticalmente.
+
+- display: flex → los hijos se colocan en fila.
+- justify-content: space-between → separa los hijos a los
+    extremos (izquierda y derecha).
+- align-items: center → los centra verticalmente.
+- flex-wrap: wrap → si no caben en una línea, pasan abajo.
+- gap: 20px → espacio entre los elementos.
+- margin-bottom: 30px → separación con el contenido inferior.
+- padding: 20px 30px → relleno interno (arriba/abajo 20px,
+    izquierda/derecha 30px).
+- fondo blanco, desenfoque, borde y sombra, igual que los
+    wrappers.
+============================================================ */
+.admin-header, .site-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 30px;
+    padding: 20px 30px;
+    background: var(--bg-card);
+    backdrop-filter: blur(4px);
+    border-radius: 48px;
+    border: 1px solid var(--gold-soft);
+    box-shadow: var(--card-shadow);
+}
+
+/* Títulos dentro de los encabezados:
+- Usan la fuente 'Cinzel' (display).
+- Tamaño de letra 1.8rem (1.8 veces el tamaño base).
+- background: linear-gradient(...) → un degradado de colores
+    que va de negro a dorado y luego a vino.
+- -webkit-background-clip: text → recorta el fondo solo al
+    texto, y background-clip: text hace lo mismo para navegadores
+    compatibles.
+- color: transparent → hace que el texto sea transparente para
+    que se vea el degradado de fondo.
+Esto crea un texto con un degradado de colores muy elegante.
+*/
+.admin-header h1, .site-header .logo-title {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    background: linear-gradient(135deg, var(--text-primary), var(--gold-main), var(--wine-main));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+/* El logo dentro del encabezado es un enlace (<a>) que contiene
+el logo y el título. Se muestra como flex para alinear icono y
+texto, con un espacio de 12px entre ellos.
+text-decoration: none quita el subrayado típico de los enlaces.
+*/
+.site-header .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+}
+
+/* ============================================================
+PASO 8: BOTONES (estilos generales)
+-------------------------------------------------------------
+Estas clases se aplican a diferentes tipos de botones en toda
+la aplicación. Todos comparten propiedades base y luego se
+personalizan según su función.
+
+- background: usa el vino claro (F2D7DE) por defecto.
+- border: 1px sólido del color vino principal.
+- padding: 10px 20px (arriba/abajo 10px, laterales 20px).
+- border-radius: 40px → bordes muy redondeados (casi ovalados).
+- color: texto negro (--text-primary).
+- text-decoration: none → quita subrayado si es un enlace.
+- transition: animación suave al cambiar propiedades.
+- cursor: pointer → el cursor se convierte en mano al pasar.
+- display: inline-block → se comportan como bloques en línea.
+- font-family: usa la fuente sans (Montserrat).
+- font-weight: 600 → semi-negrita.
+- font-size: 0.85rem → tamaño reducido.
+- text-align: center → centra el texto.
+
+Al hacer hover (pasar el ratón), el fondo cambia a vino
+principal y el texto a blanco, para dar retroalimentación.
+============================================================ */
+.btn-logout, .btn, .btn-sm, .btn-edit, .btn-danger, .btn-success, .btn-primary {
+    background: var(--wine-light);
+    border: 1px solid var(--wine-main);
+    padding: 10px 20px;
+    border-radius: 40px;
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: var(--transition);
+    cursor: pointer;
+    display: inline-block;
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-align: center;
+}
+
+/* Efecto hover (ratón encima) para los botones base */
+.btn-logout:hover, .btn:hover {
+    background: var(--wine-main);
+    color: #FFFFFF;
+}
+
+/* Botón pequeño (.btn-sm): se usa en tablas o espacios reducidos.
+Reduce el padding y el tamaño de fuente.
+*/
+.btn-sm {
+    padding: 6px 12px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    margin: 0 4px;  /* margen horizontal mínimo para separarlos */
+}
+
+/* Botón de editar: fondo dorado claro y borde dorado */
+.btn-edit {
+    background: var(--gold-light);
+    color: var(--text-primary);
+    border: 1px solid var(--gold-main);
+}
+
+/* Botón de peligro (eliminar): fondo vino claro, texto vino
+y borde vino. Da una sensación de advertencia.
+*/
+.btn-danger {
+    background: var(--wine-light);
+    color: var(--wine-main);
+    border: 1px solid var(--wine-main);
+}
+
+/* Botón de éxito: fondo vino principal, texto blanco, sin borde */
+.btn-success {
+    background: var(--wine-main);
+    color: #FFFFFF;
+    border: none;
+}
+
+/* Botón primario: fondo dorado, texto blanco, sin borde */
+.btn-primary {
+    background: var(--gold-main);
+    color: #FFFFFF;
+    border: none;
+}
+
+/* ============================================================
+PASO 9: TARJETAS DE ESTADÍSTICAS (cuadros de números)
+-------------------------------------------------------------
+.stats-grid es un contenedor que usa Grid para distribuir las
+tarjetas de estadísticas en columnas que se adaptan al espacio.
+
+- display: grid → activa el modo grid.
+- grid-template-columns: repeat(auto-fit, minmax(180px, 1fr))
+    → crea columnas automáticas de al menos 180px de ancho y que
+    se expanden para ocupar el espacio disponible (1fr).
+- gap: 20px → separación entre celdas.
+- margin-bottom: 40px → separación inferior.
+*/
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+/* Cada tarjeta de estadística (.stat-card):
+- fondo blanco, borde redondeado (28px), padding de 20px.
+- texto centrado.
+- borde dorado suave y sombra.
+- transición suave.
+Al hacer hover, la tarjeta sube 5px (transform: translateY(-5px))
+y el borde se vuelve dorado principal.
+*/
+.stat-card {
+    background: var(--bg-card);
+    border-radius: 28px;
+    padding: 20px;
+    text-align: center;
+    border: 1px solid var(--gold-soft);
+    box-shadow: var(--card-shadow);
+    transition: var(--transition);
+}
+.stat-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--gold-main);
+}
+
+/* El número de la estadística: grande, en negrita, con la fuente
+'Cinzel' y color vino.
+*/
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    font-family: var(--font-display);
+    color: var(--wine-main);
+}
+
+/* La etiqueta del número: más pequeña, mayúsculas, con espaciado
+entre letras (letter-spacing: 2px) y color gris.
+*/
+.stat-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-secondary);
+}
+
+/* ============================================================
+PASO 10: PESTAÑAS (TABS) PARA NAVEGACIÓN
+-------------------------------------------------------------
+.admin-tabs y .tabs son contenedores de pestañas.
+- display: flex → los botones se colocan en fila.
+- flex-wrap: wrap → si no caben, pasan abajo.
+- gap: 10px → separación entre pestañas.
+- margin-bottom: 30px → espacio inferior.
+- background: un gris muy claro con opacidad.
+- padding: 10px → relleno interior.
+- border-radius: 60px → muy redondeado.
+- backdrop-filter: blur(4px) → efecto vidrio.
+- border: 1px dorado suave.
+*/
+.admin-tabs, .tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 30px;
+    background: rgba(0,0,0,0.03);
+    padding: 10px;
+    border-radius: 60px;
+    backdrop-filter: blur(4px);
+    border: 1px solid var(--gold-soft);
+}
+
+/* Cada botón de pestaña (.tab-btn):
+- fondo transparente, sin borde.
+- padding: 12px 28px (espacio interior).
+- borde redondeado de 40px.
+- color gris secundario.
+- fuente 'Montserrat', peso 600 (semi-negrita).
+- cursor: pointer.
+- transición suave.
+Cuando tiene la clase 'active', el fondo se vuelve vino,
+el texto blanco y se añade una sombra para resaltar.
+*/
+.tab-btn {
+    background: transparent;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 40px;
+    color: var(--text-secondary);
+    font-family: var(--font-sans);
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+.tab-btn.active {
+    background: var(--wine-main);
+    color: #FFFFFF;
+    box-shadow: 0 4px 15px rgba(139, 26, 43, 0.3);
+}
+
+/* Contenido de las pestañas (.tab-pane):
+- display: none → oculto por defecto.
+- animation: fadeIn 0.3s ease → animación de aparición.
+Cuando tiene la clase 'active-pane' se muestra como bloque.
+*/
+.tab-pane {
+    display: none;
+    animation: fadeIn 0.3s ease;
+}
+.tab-pane.active-pane {
+    display: block;
+}
+
+/* Definición de la animación 'fadeIn':
+Desde opacidad 0 y desplazamiento de 8px hacia abajo,
+hasta opacidad 1 y posición original.
+*/
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px);}
+    to { opacity: 1; transform: translateY(0);}
+}
+
+/* ============================================================
+PASO 11: TABLAS (para mostrar datos)
+-------------------------------------------------------------
+.data-table, .table-royal, .orders-table-wrapper son
+contenedores de tablas con estilo similar.
+- fondo blanco, bordes redondeados (28px).
+- overflow-x: auto → permite desplazamiento horizontal si la
+    tabla es ancha (para móviles).
+- borde dorado suave y sombra.
+- width: 100% → ocupa todo el ancho disponible.
+*/
+.data-table, .table-royal, .orders-table-wrapper {
+    background: var(--bg-card);
+    border-radius: 28px;
+    overflow-x: auto;
+    border: 1px solid var(--gold-soft);
+    box-shadow: var(--card-shadow);
+    width: 100%;
+}
+
+/* La tabla en sí (<table>):
+- width: 100% → ocupa todo el ancho del contenedor.
+- border-collapse: collapse → los bordes de las celdas se
+    unen en uno solo, evitando espacios.
+*/
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+/* Celdas de encabezado (th) y datos (td):
+- padding: 14px 12px (arriba/abajo 14px, laterales 12px).
+- text-align: left → alineación izquierda.
+- border-bottom: 1px línea muy clara para separar filas.
+*/
+th, td {
+    padding: 14px 12px;
+    text-align: left;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+/* Encabezados de columna (th):
+- fuente 'Montserrat', tamaño pequeño (0.7rem), mayúsculas.
+- color vino, espaciado entre letras.
+*/
+th {
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    color: var(--wine-main);
+    letter-spacing: 0.5px;
+}
+
+/* Al pasar el ratón sobre una fila (tr), el fondo se vuelve
+vino claro (F2D7DE), para resaltar.
+*/
+tr:hover {
+    background: var(--wine-light);
+}
+
+/* ============================================================
+PASO 12: INSIGNIAS DE ESTADO (badges)
+-------------------------------------------------------------
+Las badges indican el estado de un pedido o elemento.
+- display: inline-flex → se comportan como bloque en línea
+    con flexbox interno para alinear icono y texto.
+- align-items: center → centra verticalmente.
+- gap: 8px → espacio entre icono y texto.
+- padding: 6px 16px.
+- border-radius: 40px (oval).
+- font-size: 0.75rem.
+- font-weight: 600 (semi-negrita).
+- font-family: 'Montserrat'.
+- text-transform: capitalize → primera letra mayúscula.
+- backdrop-filter: blur(2px) → efecto vidrio ligero.
+
+Cada estado tiene su propia clase con colores específicos:
+- pendiente: dorado claro, borde dorado.
+- listo: vino claro, borde vino.
+- entregado: verde claro, texto verde oscuro.
+- cancelado: rojo claro, texto rojo oscuro.
+*/
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 16px;
+    border-radius: 40px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    font-family: var(--font-sans);
+    text-transform: capitalize;
+    backdrop-filter: blur(2px);
+}
+.status-pendiente { background: var(--gold-light); color: var(--text-primary); border: 1px solid var(--gold-main); }
+.status-listo { background: var(--wine-light); color: var(--wine-main); border: 1px solid var(--wine-main); }
+.status-entregado { background: #D4EDDA; color: #155724; border: 1px solid #28A745; }
+.status-cancelado { background: #F8D7DA; color: #721C24; border: 1px solid #DC3545; }
+
+/* ============================================================
+PASO 13: FORMULARIOS, INPUTS, TEXTAREAS Y SELECT
+-------------------------------------------------------------
+Todos los campos de entrada (input, select, textarea):
+- width: 100% → ocupan todo el ancho del contenedor.
+- padding: 12px → espacio interior.
+- margin: 8px 0 → separación vertical.
+- background: blanco con transparencia (0.8).
+- border: 1px dorado suave.
+- color: texto principal.
+- border-radius: 28px (bordes redondeados).
+- font-family: 'Montserrat'.
+Al recibir foco (focus):
+- outline: none → quita el contorno azul por defecto.
+- border-color: vino principal.
+- box-shadow: sombra vino para resaltar.
+*/
+input, select, textarea {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid var(--gold-soft);
+    color: var(--text-primary);
+    border-radius: 28px;
+    font-family: var(--font-sans);
+}
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--wine-main);
+    box-shadow: 0 0 10px rgba(139, 26, 43, 0.2);
+}
+
+/* ============================================================
+PASO 14: MODALES (ventanas emergentes)
+-------------------------------------------------------------
+.modal es el contenedor de la ventana modal. Por defecto está
+oculto (display: none). Cuando tiene la clase 'active' se
+muestra como flex para centrar el contenido.
+
+- position: fixed → se fija en la pantalla, sin importar el
+    desplazamiento.
+- top: 0, left: 0, width: 100%, height: 100% → ocupa toda
+    la pantalla.
+- background: rgba(0,0,0,0.5) → fondo semitransparente oscuro.
+- backdrop-filter: blur(8px) → desenfoque de fondo.
+- z-index: 1000 → se coloca por encima de todo.
+- justify-content: center y align-items: center → centran el
+    contenido de la modal.
+*/
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(8px);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+.modal.active {
+    display: flex;
+}
+
+/* El contenido de la modal:
+- fondo blanco, bordes redondeados (32px), padding 30px.
+- max-width: 550px → no se hace más ancha que 550px.
+- width: 90% → se adapta a pantallas pequeñas.
+- borde dorado principal y sombra.
+*/
+.modal-content {
+    background: var(--bg-card);
+    border-radius: 32px;
+    padding: 30px;
+    max-width: 550px;
+    width: 90%;
+    border: 1px solid var(--gold-main);
+    box-shadow: var(--card-shadow);
+}
+
+/* ============================================================
+PASO 15: MENSAJES FLASH / TOAST (notificaciones)
+-------------------------------------------------------------
+.flash-msg y .toast-notify son mensajes que aparecen en la
+esquina inferior derecha.
+
+- position: fixed → fijos en la ventana.
+- bottom: 20px, right: 20px → ubicación.
+- background: vino principal, texto blanco.
+- padding: 12px 24px, border-radius: 40px.
+- z-index: 1100 → por encima de casi todo.
+- animation: slideIn 0.3s ease → animación de entrada.
+- fuente 'Montserrat', peso 500.
+*/
+.flash-msg, .toast-notify {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: var(--wine-main);
+    color: #FFFFFF;
+    padding: 12px 24px;
+    border-radius: 40px;
+    z-index: 1100;
+    animation: slideIn 0.3s ease;
+    font-family: var(--font-sans);
+    font-weight: 500;
+}
+
+/* Animación slideIn: desde la derecha (desplazado 100%) con
+opacidad 0, hasta su posición final con opacidad 1.
+*/
+@keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+/* ============================================================
+PASO 16: ELEMENTOS DE CARRITO Y PERFIL
+-------------------------------------------------------------
+.cart-icon e .icon-action son contenedores para íconos
+interactivos (como el carrito de compras).
+
+- position: relative → para posicionar el contador absoluto.
+- cursor: pointer → mano al pasar.
+- display: inline-flex → flex en línea.
+- align-items: center, gap: 8px.
+*/
+.cart-icon, .icon-action {
+    position: relative;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* El contador del carrito (.cart-count) es un círculo rojo
+que muestra la cantidad de productos.
+
+- position: absolute → se posiciona relativo al padre.
+- top: -12px, right: -14px → se coloca arriba a la derecha.
+- background: vino, texto blanco.
+- border-radius: 50% → forma circular.
+- width y height: 20px.
+- font-size: 10px, display: flex para centrar.
+- border: 1px blanco para destacar.
+*/
+.cart-count {
+    position: absolute;
+    top: -12px;
+    right: -14px;
+    background: var(--wine-main);
+    color: #FFFFFF;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    border: 1px solid #FFFFFF;
+}
+
+/* ============================================================
+PASO 17: CUADRÍCULA DE PRODUCTOS Y DEPARTAMENTOS
+-------------------------------------------------------------
+.product-grid y .dept-grid usan Grid para mostrar tarjetas
+de productos o departamentos en columnas adaptables.
+
+- grid-template-columns: repeat(auto-fill, minmax(220px, 1fr))
+    → se generan columnas de al menos 220px, llenando el espacio.
+- gap: 24px → separación entre tarjetas.
+- margin: 30px 0 → margen vertical.
+*/
+.product-grid, .dept-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 24px;
+    margin: 30px 0;
+}
+
+/* Cada tarjeta de producto o departamento (.product-card, .dept-item):
+- fondo blanco, bordes redondeados (28px), padding 20px.
+- borde dorado suave y sombra.
+- transición suave.
+Al hacer hover, suben 5px y el borde se vuelve dorado.
+*/
+.product-card, .dept-item {
+    background: var(--bg-card);
+    border-radius: 28px;
+    padding: 20px;
+    border: 1px solid var(--gold-soft);
+    box-shadow: var(--card-shadow);
+    transition: var(--transition);
+}
+.product-card:hover, .dept-item:hover {
+    transform: translateY(-5px);
+    border-color: var(--gold-main);
+}
+
+/* ============================================================
+PASO 18: RESPONSIVE (adaptación a móviles y tablets)
+-------------------------------------------------------------
+La regla @media (max-width: 768px) se activa cuando el ancho
+de la pantalla es menor o igual a 768 píxeles (tablets y
+móviles). Aquí se ajustan los estilos para que la página se
+vea bien en dispositivos pequeños.
+
+- Se reducen los paddings y márgenes de los contenedores.
+- Los encabezados pasan a columna (flex-direction: column) y
+    se centra el texto.
+- Las estadísticas pasan a 2 columnas (1fr 1fr).
+- Las celdas de tabla reducen su padding y tamaño de fuente.
+- Las pestañas reducen su padding.
+- El contenido de la modal reduce su padding.
+*/
+@media (max-width: 768px) {
+    .admin-container, .app-wrapper, .perfil-wrapper, .feedback-wrapper {
+        padding: 15px;
+        margin: 10px;
+    }
+    .admin-header, .site-header {
+        flex-direction: column;
+        text-align: center;
+        padding: 15px;
+    }
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+    th, td {
+        padding: 8px;
+        font-size: 0.75rem;
+    }
+    .tab-btn {
+        padding: 8px 16px;
+        font-size: 0.75rem;
+    }
+    .modal-content {
+        padding: 20px;
+    }
+}
+
+/* ============================================================
+PASO 19: UTILIDADES (clases auxiliares)
+-------------------------------------------------------------
+Clases pequeñas para ajustar rápidamente la alineación o
+los márgenes sin tener que escribir CSS adicional.
+*/
+.text-center { text-align: center; }   /* centra el texto */
+.mt-2 { margin-top: 1rem; }           /* margen superior de 1 rem */
+.mb-2 { margin-bottom: 1rem; }        /* margen inferior de 1 rem */
+.hidden { display: none; }            /* oculta el elemento */
+
+/* ============================================================
+PASO 20: EXTENSIONES PARA PÁGINAS ESPECÍFICAS
+============================================================ */
+
+/* ----- PERFIL DE USUARIO ----- */
+/* .perfil-wrapper ya estaba definido antes, aquí se añaden
+estilos específicos para el contenido del perfil.
+*/
+.perfil-wrapper {
+    position: relative;
+    overflow-x: hidden;  /* evita desbordamiento horizontal */
+}
+
+/* .blooma-card es una tarjeta dentro del perfil, similar a los
+wrappers pero con un padding de 35px y posición relativa.
+*/
+.blooma-card {
+    background: var(--bg-card);
+    backdrop-filter: blur(4px);
+    border-radius: 48px;
+    padding: 35px;
+    border: 1px solid var(--gold-soft);
+    box-shadow: var(--card-shadow);
+    position: relative;
+    z-index: 5;
+}
+
+/* Encabezado del perfil: centrado */
+.profile-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+/* Contenedor circular de la foto de perfil.
+- width y height: 120px.
+- margin: 0 auto 20px → centrado y separación inferior.
+- border-radius: 50% → círculo perfecto.
+- overflow: hidden → recorta la imagen dentro del círculo.
+- border: 3px dorado y sombra.
+*/
+.profile-photo-container {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid var(--gold-main);
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+}
+
+/* La imagen de perfil ocupa todo el contenedor, con object-fit
+para cubrir sin deformarse.
+*/
+.foto-perfil {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Si el usuario no tiene foto, se muestra un icono con fondo
+degradado vino.
+*/
+.berry-icon {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--wine-main), var(--wine-hover));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: #FFFFFF;
+}
+
+/* Botón para subir foto: estilo similar a botones pequeños.
+*/
+.subir-foto-btn {
+    background: var(--gold-light);
+    border: 1px solid var(--gold-main);
+    padding: 8px 16px;
+    border-radius: 40px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: var(--transition);
+    display: inline-block;
+    color: var(--text-primary);
+}
+.subir-foto-btn:hover {
+    background: var(--gold-main);
+    color: #FFFFFF;
+}
+
+/* Lista de información del perfil: columna con separación.
+*/
+.info-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin: 25px 0;
+}
+
+/* Cada ítem de información: flex entre label y valor, con
+fondo vino claro, bordes redondeados y borde izquierdo vino.
+*/
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    background: var(--wine-light);
+    border-radius: 28px;
+    border-left: 3px solid var(--wine-main);
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+/* Etiqueta: semi-negrita, fuente sans, color vino.
+*/
+.info-label {
+    font-weight: 600;
+    font-family: var(--font-sans);
+    color: var(--wine-main);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Valor: fuente serif y alineación a la derecha (para que se
+vea bien cuando el texto es largo).
+*/
+.info-value {
+    font-family: var(--font-serif);
+    word-break: break-word;
+    text-align: right;
+    color: var(--text-primary);
+}
+
+/* Divisor decorativo: texto centrado con separación.
+*/
+.berry-divider {
+    text-align: center;
+    margin: 25px 0;
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    color: var(--wine-main);
+}
+
+/* Contenedor de logout centrado.
+*/
+.logout-wrapper {
+    text-align: center;
+    margin: 20px 0;
+}
+
+/* Botones de logout y enlaces de volver: estilo base.
+*/
+.logout-btn, .back-link {
+    background: var(--wine-light);
+    border: 1px solid var(--wine-main);
+    padding: 10px 25px;
+    border-radius: 40px;
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: var(--transition);
+    display: inline-block;
+}
+.logout-btn:hover, .back-link:hover {
+    background: var(--wine-main);
+    color: #FFFFFF;
+}
+
+/* Enlace de volver al inicio, centrado.
+*/
+.back-home {
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* ----- PÁGINA DE FEEDBACK (opiniones) ----- */
+/* .feedback-wrapper ya está definido. Aquí se ajustan detalles.
+Se le da un ancho máximo de 650px y un margen vertical.
+*/
+.feedback-wrapper {
+    max-width: 650px;
+    margin: 50px auto;
+    padding: 40px;
+}
+
+/* Título: fuente 'Playfair Display', tamaño 2rem, degradado.
+*/
+.feedback-card h1 {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    margin-bottom: 15px;
+    background: linear-gradient(135deg, var(--text-primary), var(--gold-main));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+/* Subtítulo: color vino, cursiva, fuente serif.
+*/
+.feedback-card .sub {
+    color: var(--wine-main);
+    margin-bottom: 25px;
+    font-family: var(--font-serif);
+    font-style: italic;
+}
+
+/* Mensaje de éxito: fondo vino claro, borde vino, texto oscuro.
+*/
+.mensaje-exito {
+    background: var(--wine-light);
+    border: 1px solid var(--wine-main);
+    color: var(--text-primary);
+    padding: 12px;
+    border-radius: 28px;
+    margin-bottom: 20px;
+}
+
+/* Mensaje de error: fondo rojo claro, borde rojo, texto rojo oscuro.
+*/
+.mensaje-error {
+    background: #F8D7DA;
+    border: 1px solid #DC3545;
+    color: #721C24;
+    padding: 12px;
+    border-radius: 28px;
+    margin-bottom: 20px;
+}
+
+/* Textarea de feedback: ya tiene estilos base, aquí se refina.
+*/
+.feedback-card textarea {
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid var(--gold-soft);
+    border-radius: 28px;
+    padding: 15px;
+    width: 100%;
+    color: var(--text-primary);
+    font-family: var(--font-serif);
+    resize: vertical;  /* permite redimensionar verticalmente */
+}
+
+/* Botón de enviar feedback: fondo vino, blanco, redondeado.
+Al hacer hover, crece ligeramente y se oscurece.
+*/
+.feedback-card button {
+    background: var(--wine-main);
+    border: none;
+    padding: 12px 30px;
+    border-radius: 40px;
+    color: #FFFFFF;
+    font-weight: bold;
+    margin: 15px 0;
+    cursor: pointer;
+    transition: var(--transition);
+}
+.feedback-card button:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 15px rgba(139, 26, 43, 0.4);
+}
+
+/* Enlace "Volver": color vino, sin subrayado.
+*/
+.volver {
+    display: inline-block;
+    margin-top: 15px;
+    color: var(--wine-main);
+    text-decoration: none;
+}
+
+/* ----- PÁGINA DE LOGIN ----- */
+/* Contenedor del login: centrado, con las mismas propiedades
+de vidrio y borde dorado. Ancho máximo 480px.
+*/
+.login-container {
+    max-width: 480px;
+    margin: 80px auto;
+    background: var(--bg-card);
+    backdrop-filter: blur(4px);
+    border-radius: 48px;
+    padding: 40px;
+    border: 1px solid var(--gold-soft);
+    box-shadow: var(--card-shadow);
+    transition: transform 0.2s ease;
+    position: relative;
+    z-index: 2;
+}
+
+/* Título del login: fuente 'Playfair Display', degradado.
+*/
+.login-container h2 {
+    text-align: center;
+    font-family: var(--font-display);
+    font-size: 2rem;
+    margin-bottom: 30px;
+    background: linear-gradient(135deg, var(--text-primary), var(--gold-main));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+/* Cada grupo de formulario: margen inferior.
+*/
+.form-group {
+    margin-bottom: 20px;
+}
+
+/* Inputs dentro del login: ancho completo, padding grande,
+bordes redondeados, fondo blanco translúcido.
+*/
+.form-group input {
+    width: 100%;
+    padding: 14px 18px;
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid var(--gold-soft);
+    border-radius: 40px;
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    transition: var(--transition);
+}
+.form-group input:focus {
+    border-color: var(--wine-main);
+    box-shadow: 0 0 12px rgba(139, 26, 43, 0.2);
+    outline: none;
+}
+
+/* Botón de login: ancho completo, fondo vino, blanco.
+*/
+.login-container button {
+    width: 100%;
+    background: var(--wine-main);
+    border: none;
+    padding: 14px;
+    border-radius: 40px;
+    color: #FFFFFF;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+.login-container button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(139, 26, 43, 0.4);
+}
+
+/* Enlaces en el pie del login: color vino, sin subrayado.
+*/
+.footer-links {
+    text-align: center;
+    margin-top: 25px;
+}
+.footer-links a {
+    color: var(--wine-main);
+    text-decoration: none;
+    font-size: 0.85rem;
+}
+.footer-links a:hover {
+    color: var(--gold-main);
+}
+
+/* ============================================================
+----- ADMIN: PANEL DE PEDIDOS (REDISEÑO ESTÉTICO) -----
+============================================================ */
+
+/* Contenedor principal del dashboard de administración.
+Se le añade un fondo semitransparente con efecto vidrio
+para integrarse mejor con el fondo de la página.
+*/
+.admin-dashboard {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+    position: relative;
+    z-index: 2;
+    /* Fondo con efecto vidrio y borde sutil para que el contenido
+    se destaque sobre el fondo de la página */
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(10px);
+    border-radius: 60px;
+    border: 1px solid rgba(212, 175, 55, 0.15);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+}
+
+/* Cabecera del dashboard: se mantiene el estilo original pero
+se ajusta el padding y se añade un fondo más transparente.
+*/
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 30px;
+    padding: 20px 30px;
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(6px);
+    border-radius: 48px;
+    border: 1px solid var(--gold-soft);
+    box-shadow: var(--shadow-soft);
+}
+
+/* Título con efecto glow: se añade un resplandor sutil al texto */
+.title-glow h1 {
+    font-family: var(--font-display);
+    font-size: 2.2rem;
+    background: linear-gradient(135deg, #2c1810, var(--gold-main), var(--wine-main));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 0 30px rgba(212, 175, 55, 0.1);
+}
+.title-glow p {
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    color: var(--text-secondary);
+    letter-spacing: 2px;
+    margin-top: 4px;
+}
+
+/* Contenedor de estadísticas: se usa grid para distribuir las
+tarjetas de forma adaptable. Se redefine para usar la variable
+--radius-card y un diseño más moderno.
+*/
+.stats-crystal {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 16px;
+    width: 100%;
+    max-width: 700px; /* Para que no se estiren demasiado */
+}
+
+/* Tarjetas de estadísticas rediseñadas:
+- Fondo con degradado sutil y efecto vidrio.
+- Borde dorado más brillante.
+- Números más grandes y con sombra.
+- Iconos decorativos (añadidos vía pseudoelementos o contenido,
+    pero aquí se mantiene la estructura HTML con iconos Font Awesome
+    que se añadirán desde el HTML).
+*/
+.stat-card {
+    background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,247,240,0.9));
+    backdrop-filter: blur(4px);
+    border-radius: var(--radius-card);
+    padding: 18px 12px;
+    text-align: center;
+    border: 1px solid var(--gold-main);
+    box-shadow: var(--shadow-soft);
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+/* Efecto de brillo en la esquina superior izquierda */
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 30% 30%, rgba(212,175,55,0.05), transparent 70%);
+    pointer-events: none;
+}
+.stat-card:hover {
+    transform: translateY(-6px) scale(1.02);
+    border-color: var(--gold-light);
+    box-shadow: 0 12px 40px rgba(212, 175, 55, 0.2);
+}
+.stat-number {
+    font-size: 2.8rem;
+    font-weight: 900;
+    font-family: var(--font-display);
+    color: var(--wine-main);
+    text-shadow: 0 2px 10px rgba(139,26,43,0.1);
+    line-height: 1.2;
+}
+.stat-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-secondary);
+    font-family: var(--font-sans);
+    font-weight: 600;
+    margin-top: 4px;
+}
+
+/* Panel de filtros: se mejora la separación y se añade un
+fondo sutil.
+*/
+.filters-panel {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    padding: 12px 20px;
+    background: rgba(255,255,255,0.3);
+    backdrop-filter: blur(4px);
+    border-radius: 60px;
+    border: 1px solid var(--gold-soft);
+}
+.search-wrapper {
+    flex: 1;
+    position: relative;
+    max-width: 400px;
+}
+.search-wrapper i {
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--wine-main);
+    opacity: 0.7;
+}
+.search-wrapper input {
+    width: 100%;
+    padding: 12px 20px 12px 45px;
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid var(--gold-soft);
+    border-radius: 60px;
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    transition: var(--transition);
+}
+.search-wrapper input:focus {
+    border-color: var(--gold-main);
+    box-shadow: 0 0 0 4px rgba(212,175,55,0.15);
+    outline: none;
+}
+.refresh-btn {
+    background: var(--gold-light);
+    border: 1px solid var(--gold-main);
+    padding: 10px 24px;
+    border-radius: 60px;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: var(--transition);
+    font-family: var(--font-sans);
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+.refresh-btn:hover {
+    background: var(--gold-main);
+    color: #FFFFFF;
+    box-shadow: 0 4px 15px rgba(212,175,55,0.3);
+}
+
+/* Tabla de pedidos (estilo real): se refina el diseño.
+- Se añaden filas alternadas (zebra) para mejorar legibilidad.
+- La cabecera tiene un fondo más oscuro y texto blanco.
+- El hover es más suave.
+*/
+.table-royal {
+    background: rgba(255,255,255,0.5);
+    backdrop-filter: blur(8px);
+    border-radius: var(--radius-card);
+    overflow-x: auto;
+    border: 1px solid var(--gold-soft);
+    box-shadow: var(--shadow-soft);
+    width: 100%;
+}
+.order-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-serif);
+}
+.order-table thead {
+    background: linear-gradient(135deg, var(--wine-main), var(--wine-hover));
+    color: #FFFFFF;
+}
+.order-table thead th {
+    padding: 16px 12px;
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+    color: #FFFFFF;
+    border-bottom: none;
+}
+.order-table tbody tr:nth-child(even) {
+    background: rgba(242, 215, 222, 0.2);
+}
+.order-table tbody tr:hover {
+    background: rgba(212, 175, 55, 0.08);
+    transition: background 0.2s;
+}
+.order-table td {
+    padding: 14px 12px;
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+    vertical-align: middle;
+}
+
+/* Badges de estado: se mantienen los colores pero se añade
+un efecto de elevación y borde más definido.
+*/
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 16px;
+    border-radius: 60px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    font-family: var(--font-sans);
+    text-transform: capitalize;
+    backdrop-filter: blur(4px);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+    transition: var(--transition);
+}
+.status-pendiente {
+    background: #FDF6E3;
+    color: #8B7A3A;
+    border: 1px solid #D4AF37;
+}
+.status-listo {
+    background: #F2D7DE;
+    color: var(--wine-main);
+    border: 1px solid var(--wine-main);
+}
+.status-entregado {
+    background: #D4EDDA;
+    color: #155724;
+    border: 1px solid #28A745;
+}
+.status-cancelado {
+    background: #F8D7DA;
+    color: #721C24;
+    border: 1px solid #DC3545;
+}
+
+/* Acciones de administración: botones y select alineados.
+Se mejora el espaciado y estilo de los botones.
+*/
+.admin-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+.status-select {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid var(--gold-soft);
+    border-radius: 60px;
+    padding: 8px 14px;
+    color: var(--text-primary);
+    font-size: 0.75rem;
+    font-family: var(--font-sans);
+    cursor: pointer;
+    transition: var(--transition);
+}
+.status-select:focus {
+    border-color: var(--wine-main);
+    outline: none;
+}
+.btn-update-ajax {
+    background: var(--wine-light);
+    border: 1px solid var(--wine-main);
+    padding: 8px 16px;
+    border-radius: 60px;
+    color: var(--wine-main);
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 0.7rem;
+    font-family: var(--font-sans);
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+.btn-update-ajax:hover {
+    background: var(--wine-main);
+    color: #FFFFFF;
+    box-shadow: 0 4px 12px rgba(139,26,43,0.2);
+}
+.btn-update-ajax:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Animación de fila actualizada (resplandor dorado) */
+.row-updated {
+    animation: glowFlash 0.6s ease;
+}
+@keyframes glowFlash {
+    0% { background: rgba(212, 175, 55, 0); }
+    50% { background: rgba(212, 175, 55, 0.25); }
+    100% { background: transparent; }
+}
+
+/* Toast de notificación: se rediseña para que sea más elegante,
+con fondo blanco, sombra y borde izquierdo de color.
+*/
+.toast-notify {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: var(--bg-card);
+    backdrop-filter: blur(12px);
+    border-left: 5px solid var(--gold-main);
+    padding: 16px 28px;
+    border-radius: 60px;
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-weight: 500;
+    transform: translateX(120%);
+    transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.4, 1);
+    z-index: 2000;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.toast-notify.show {
+    transform: translateX(0);
+}
+.toast-notify i {
+    font-size: 1.2rem;
+}
+
+/* Spinner de carga */
+.loading-spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(0,0,0,0.1);
+    border-top-color: var(--text-primary);
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+    margin-right: 8px;
+}
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Botón especial "Todos los locales" (si existe) */
+.btn-todos-locales {
+    background: var(--wine-main);
+    color: #FFFFFF;
+    padding: 8px 20px;
+    border-radius: 60px;
+    text-decoration: none;
+    font-weight: bold;
+    display: inline-block;
+    transition: var(--transition);
+}
+.btn-todos-locales:hover {
+    transform: scale(1.02);
+    background: var(--wine-hover);
+}
+
+/* ============================================================
+PIE DE PÁGINA DEL DASHBOARD
+Se añade un estilo decorativo para el footer.
+============================================================ */
+.admin-dashboard footer {
+    margin-top: 40px;
+    text-align: center;
+    font-family: var(--font-serif);
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    border-top: 1px solid var(--gold-soft);
+    padding-top: 20px;
+    opacity: 0.8;
+    letter-spacing: 0.5px;
+}
+.admin-dashboard footer i {
+    color: var(--wine-main);
+    margin-right: 8px;
+}
+
+/* ============================================================
+ELEMENTOS DECORATIVOS DE FONDO (HOJAS Y BAYAS)
+Se posicionan de forma fija o absoluta para dar ambiente.
+============================================================ */
+.leaf-bg {
+    position: fixed;
+    top: 10%;
+    left: 2%;
+    font-size: 4rem;
+    opacity: 0.15;
+    pointer-events: none;
+    z-index: 0;
+    transform: rotate(-10deg);
+}
+.berry-bg-right {
+    position: fixed;
+    bottom: 10%;
+    right: 2%;
+    font-size: 4rem;
+    opacity: 0.15;
+    pointer-events: none;
+    z-index: 0;
+    transform: rotate(10deg);
+}
+
+/* ============================================================
+FIN DEL ARCHIVO CSS
+============================================================ */

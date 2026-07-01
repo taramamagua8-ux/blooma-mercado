@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<!-- ======================================================================= -->
+<!-- BLOOMA DUEÑO DASHBOARD - PANEL DE CONTROL PARA DUEÑOS DE NEGOCIO        -->
+<!-- ======================================================================= -->
+<!-- ESTE ARCHIVO CONTIENE LA VISTA PRINCIPAL DEL PANEL DE CONTROL PARA      -->
+<!-- DUEÑOS DE NEGOCIO. INCLUYE ESTADÍSTICAS, GESTIÓN DE PRODUCTOS, PEDIDOS, -->
+<!-- EMPLEADOS Y SOLICITUDES. TODAS LAS FUNCIONALIDADES SE CARGAN VÍA API   -->
+<!-- Y SE ACTUALIZAN DINÁMICAMENTE CON JAVASCRIPT.                           -->
+<!-- ======================================================================= -->
+
+<!-- DECLARACIÓN DEL TIPO DE DOCUMENTO COMO HTML5 -->
+<!DOCTYPE html>
+<!-- ETIQUETA PRINCIPAL HTML CON IDIOMA ESPAÑOL -->
+<html lang="es">
+<!-- INICIO DE LA CABECERA DEL DOCUMENTO -->
+<head>
+    <!-- CONFIGURACIÓN DE CODIFICACIÓN DE CARACTERES UTF-8 PARA SOPORTAR ACENTOS Y CARACTERES ESPECIALES -->
+    <meta charset="UTF-8">
+    <!-- CONFIGURACIÓN DE VIEWPORT PARA RESPONSIVE DESIGN, ESCALA INICIAL Y ZOOM PERMITIDO -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <!-- TÍTULO DE LA PÁGINA QUE APARECE EN LA PESTAÑA DEL NAVEGADOR -->
+    <title>Mi Negocio · Blooma Dueño</title>
+    <!-- PRECONEXIÓN A GOOGLE FONTS PARA MEJORAR EL TIEMPO DE CARGA DE FUENTES -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <!-- PRECONEXIÓN AL SUBDOMINIO DE GOOGLE FONTS PARA CARGAR FUENTES DE FORMA CRUZADA -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- IMPORTACIÓN DE FUENTES DESDE GOOGLE FONTS: CORMORANT GARAMOND, MONTSERRAT Y PLAYFAIR DISPLAY -->
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Montserrat:wght@200;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <!-- IMPORTACIÓN DE FONT AWESOME PARA ÍCONOS VECTORIALES (VERSIÓN 6.0.0-BETA3) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- HOJA DE ESTILOS GLOBAL DE BLOOMA, SE CARGA DESDE LA CARPETA STATIC -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/blooma_global.css') }}">
+    <!-- FAVICON DE LA PÁGINA, ÍCONO QUE APARECE EN LA PESTAÑA DEL NAVEGADOR -->
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/iconic.png') }}">
+    <!-- INICIO DE ESTILOS CSS EMBEBIDOS ESPECÍFICOS PARA ESTE DASHBOARD -->
+    <style>
+        /* ESTILO PARA EL CONTENEDOR PRINCIPAL DEL DASHBOARD */
+        .dashboard-container {
+            max-width: 1400px; /* ANCHO MÁXIMO DE 1400 PÍXELES */
+            margin: 1.5rem auto; /* MARGEN SUPERIOR E INFERIOR DE 1.5 REM, CENTRADO HORIZONTAL */
+            padding: 0 1rem; /* RELLENO LATERAL DE 1 REM */
+        }
+        /* ESTILO PARA LA CABECERA DEL DASHBOARD */
+        .header {
+            display: flex; /* CONTENEDOR FLEXIBLE */
+            justify-content: space-between; /* ELEMENTOS SEPARADOS EN EXTREMOS */
+            align-items: center; /* ALINEACIÓN VERTICAL CENTRADA */
+            flex-wrap: wrap; /* PERMITE QUE LOS ELEMENTOS SE ENVUELVAN EN PANTALLAS PEQUEÑAS */
+            gap: 1rem; /* ESPACIO ENTRE ELEMENTOS DE 1 REM */
+            margin-bottom: 2rem; /* MARGEN INFERIOR DE 2 REM */
+            background: rgba(10, 5, 20, 0.6); /* FONDO SEMITRANSPARENTE OSCURO */
+            backdrop-filter: blur(12px); /* EFECTO DE DESENFOQUE AL FONDO */
+            border-radius: 48px; /* BORDES MUY REDONDEADOS */
+            padding: 1.2rem 2rem; /* RELLENO INTERNO */
+            border: 1px solid rgba(255, 107, 129, 0.25); /* BORDE FINO ROSADO */
+            color: var(--text-light); /* COLOR DE TEXTO CLARO DESDE VARIABLE CSS */
+        }
+        /* ESTILO PARA EL TÍTULO PRINCIPAL DENTRO DE LA CABECERA */
+        .header h1 {
+            font-family: var(--font-title); /* FUENTE TÍTULO DESDE VARIABLE */
+            font-size: 1.8rem; /* TAMAÑO DE FUENTE DE 1.8 REM */
+            color: var(--golden-hour); /* COLOR DORADO DESDE VARIABLE */
+            display: flex; /* CONTENEDOR FLEXIBLE */
+            align-items: center; /* ALINEACIÓN VERTICAL CENTRADA */
+            gap: 0.8rem; /* ESPACIO ENTRE ELEMENTOS DE 0.8 REM */
+        }
+        /* ESTILO PARA EL ÍCONO DENTRO DEL TÍTULO */
+        .header h1 i {
+            color: var(--berry-lumina); /* COLOR ROSADO BERRY DESDE VARIABLE */
+        }
+        /* ESTILO PARA EL CONTENEDOR DE BOTONES EN LA CABECERA */
+        .header-buttons {
+            display: flex; /* CONTENEDOR FLEXIBLE */
+            gap: 0.8rem; /* ESPACIO ENTRE BOTONES DE 0.8 REM */
+            flex-wrap: wrap; /* ENVUELVE BOTONES EN PANTALLAS PEQUEÑAS */
+        }
+        /* ESTILO BASE PARA TODOS LOS BOTONES */
+        .btn {
+            background: rgba(255, 107, 129, 0.15); /* FONDO ROSADO SEMITRANSPARENTE */
+            border: 1px solid var(--accent-berry-pink); /* BORDE ROSADO */
+            padding: 0.5rem 1.2rem; /* RELLENO INTERNO */
+            border-radius: 40px; /* BORDES MUY REDONDEADOS */
+            color: white; /* TEXTO BLANCO */
+            text-decoration: none; /* SIN SUBRAYADO */
+            font-weight: 600; /* PESO DE FUENTE SEMINEGRITA */
+            font-size: 0.85rem; /* TAMAÑO DE FUENTE DE 0.85 REM */
+            transition: 0.2s; /* TRANSICIÓN SUAVE DE 0.2 SEGUNDOS */
+            display: inline-flex; /* CONTENEDOR FLEXIBLE EN LÍNEA */
+            align-items: center; /* ALINEACIÓN VERTICAL CENTRADA */
+            gap: 0.5rem; /* ESPACIO ENTRE ELEMENTOS DE 0.5 REM */
+        }
+        /* ESTILO PARA BOTONES AL PASAR EL MOUSE POR ENCIMA */
+        .btn:hover {
+            background: rgba(255, 107, 129, 0.3); /* AUMENTA LA OPACIDAD DEL FONDO */
+            transform: translateY(-2px); /* ELEVA EL BOTÓN 2 PÍXELES */
+        }
+        /* ESTILO PARA BOTÓN PRIMARIO (DESTACADO) */
+        .btn-primary {
+            background: var(--berry-lumina); /* FONDO ROSADO BERRY */
+            color: #0a0514; /* TEXTO OSCURO */
+            border: none; /* SIN BORDE */
+        }
+        /* ESTILO PARA BOTÓN PRIMARIO AL PASAR EL MOUSE */
+        .btn-primary:hover {
+            background: #ff8fa3; /* COLOR ROSADO MÁS CLARO */
+        }
+        /* ESTILO PARA BOTÓN PEQUEÑO */
+        .btn-small {
+            padding: 0.3rem 1rem; /* RELLENO REDUCIDO */
+            font-size: 0.75rem; /* FUENTE PEQUEÑA */
+            border-radius: 30px; /* BORDES REDONDEADOS */
+            border: none; /* SIN BORDE */
+            cursor: pointer; /* CURSOR DE TIPO MANO */
+            font-weight: 600; /* FUENTE SEMINEGRITA */
+            transition: 0.15s; /* TRANSICIÓN DE 0.15 SEGUNDOS */
+            background: rgba(255, 255, 255, 0.08); /* FONDO BLANCO SEMITRANSPARENTE */
+            color: white; /* TEXTO BLANCO */
+        }
+        /* ESTILO PARA BOTÓN PEQUEÑO AL PASAR EL MOUSE */
+        .btn-small:hover {
+            background: rgba(255, 255, 255, 0.18); /* AUMENTA OPACIDAD DEL FONDO */
+        }
+        /* ESTILO PARA BOTÓN DE PELIGRO (ELIMINAR) */
+        .btn-danger {
+            background: #b13e5a; /* FONDO ROJO OSCURO */
+            color: white; /* TEXTO BLANCO */
+        }
+        /* ESTILO PARA BOTÓN DE PELIGRO AL PASAR EL MOUSE */
+        .btn-danger:hover {
+            background: #d15474; /* ROJO MÁS CLARO */
+        }
+        /* ESTILO PARA BOTÓN DE ÉXITO (CONFIRMAR, AGREGAR) */
+        .btn-success {
+            background: var(--berry-lumina); /* ROSADO BERRY */
+            color: #0a0514; /* TEXTO OSCURO */
+        }
+        /* ESTILO PARA BOTÓN DE ÉXITO AL PASAR EL MOUSE */
+        .btn-success:hover {
+            background: #ff8fa3; /* ROSADO MÁS CLARO */
+        }
+        /* ESTILO PARA LA CUADRÍCULA DE ESTADÍSTICAS */
+        .stats-grid {
+            display: grid; /* CONTENEDOR EN CUADRÍCULA */
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* COLUMNAS RESPONSIVAS DE MÍNIMO 180 PX */
+            gap: 1rem; /* ESPACIO ENTRE TARJETAS DE 1 REM */
+            margin-bottom: 2.5rem; /* MARGEN INFERIOR DE 2.5 REM */
+        }
+        /* ESTILO PARA CADA TARJETA DE ESTADÍSTICA */
+        .stat-card {
+            background: rgba(10, 5, 20, 0.7); /* FONDO OSCURO SEMITRANSPARENTE */
+            backdrop-filter: blur(8px); /* DESENFOQUE DE FONDO */
+            border-radius: 28px; /* BORDES REDONDEADOS */
+            padding: 1.2rem 1.5rem; /* RELLENO INTERNO */
+            text-align: center; /* TEXTO CENTRADO */
+            border: 1px solid rgba(255, 107, 129, 0.2); /* BORDE ROSADO FINO */
+            color: var(--text-light); /* TEXTO CLARO */
+        }
+        /* ESTILO PARA EL TÍTULO DE CADA TARJETA DE ESTADÍSTICA */
+        .stat-card h3 {
+            font-size: 0.85rem; /* FUENTE PEQUEÑA */
+            font-weight: 400; /* PESO NORMAL */
+            color: var(--text-mist); /* COLOR GRIS CLARO */
+            margin-bottom: 0.4rem; /* MARGEN INFERIOR DE 0.4 REM */
+        }
+        /* ESTILO PARA EL NÚMERO DESTACADO EN CADA TARJETA */
+        .stat-number {
+            font-size: 2.2rem; /* FUENTE GRANDE */
+            font-weight: 700; /* NEGRITA */
+            color: var(--golden-hour); /* COLOR DORADO */
+            font-family: var(--font-sans); /* FUENTE SANS SERIF */
+        }
+        /* ESTILO PARA NÚMERO DE INGRESOS (CON COLOR ESPECIAL) */
+        .stat-number.revenue {
+            color: var(--berry-lumina); /* COLOR ROSADO BERRY */
+        }
+        /* ESTILO PARA CADA SECCIÓN DEL DASHBOARD */
+        .section {
+            background: rgba(10, 5, 20, 0.6); /* FONDO OSCURO SEMITRANSPARENTE */
+            backdrop-filter: blur(8px); /* DESENFOQUE DE FONDO */
+            border-radius: 32px; /* BORDES REDONDEADOS */
+            padding: 1.8rem 2rem; /* RELLENO INTERNO */
+            margin-bottom: 2.5rem; /* MARGEN INFERIOR DE 2.5 REM */
+            border: 1px solid rgba(255, 107, 129, 0.15); /* BORDE ROSADO FINO */
+            color: var(--text-light); /* TEXTO CLARO */
+        }
+        /* ESTILO PARA EL TÍTULO DE CADA SECCIÓN */
+        .section-title {
+            font-family: var(--font-title); /* FUENTE TÍTULO */
+            font-size: 1.4rem; /* TAMAÑO DE FUENTE */
+            color: var(--golden-hour); /* COLOR DORADO */
+            border-bottom: 2px solid rgba(212, 175, 55, 0.3); /* LÍNEA INFERIOR DORADA SEMITRANSPARENTE */
+            padding-bottom: 0.6rem; /* RELLENO INFERIOR */
+            margin-bottom: 1.2rem; /* MARGEN INFERIOR */
+            display: flex; /* CONTENEDOR FLEXIBLE */
+            align-items: center; /* ALINEACIÓN VERTICAL CENTRADA */
+            gap: 0.8rem; /* ESPACIO ENTRE ELEMENTOS */
+        }
+        /* ESTILO PARA EL ÍCONO DENTRO DEL TÍTULO DE SECCIÓN */
+        .section-title i {
+            color: var(--berry-lumina); /* COLOR ROSADO BERRY */
+        }
+        /* ESTILO PARA EL CONTENEDOR DE INFORMACIÓN DEL LOCAL */
+        .local-info {
+            display: flex; /* CONTENEDOR FLEXIBLE */
+            flex-wrap: wrap; /* ENVUELVE ELEMENTOS EN PANTALLAS PEQUEÑAS */
+            gap: 2rem; /* ESPACIO DE 2 REM */
+            align-items: flex-start; /* ALINEACIÓN AL INICIO VERTICAL */
+        }
+        /* ESTILO PARA LOS DETALLES DEL LOCAL (LADO IZQUIERDO) */
+        .local-details {
+            flex: 1; /* OCUPA EL ESPACIO DISPONIBLE */
+            min-width: 250px; /* ANCHO MÍNIMO DE 250 PÍXELES */
+        }
+        /* ESTILO PARA LOS PÁRRAFOS DE DETALLES DEL LOCAL */
+        .local-details p {
+            margin: 0.4rem 0; /* MARGEN VERTICAL DE 0.4 REM */
+            font-size: 0.95rem; /* TAMAÑO DE FUENTE */
+            color: #e8e0da; /* COLOR BEIGE CLARO */
+        }
+        /* ESTILO PARA LAS ETIQUETAS FUERTES (STRONG) EN DETALLES */
+        .local-details strong {
+            color: var(--golden-hour); /* COLOR DORADO */
+        }
+        /* ESTILO PARA EL CONTENEDOR DE LA IMAGEN DEL LOCAL */
+        .local-imagen-container {
+            flex: 0 0 200px; /* TAMAÑO FIJO DE 200 PÍXELES */
+            text-align: center; /* TEXTO CENTRADO */
+        }
+        /* ESTILO PARA LA IMAGEN DEL LOCAL */
+        .local-imagen-container img {
+            width: 100%; /* ANCHO COMPLETO DEL CONTENEDOR */
+            max-height: 180px; /* ALTURA MÁXIMA DE 180 PÍXELES */
+            object-fit: cover; /* LA IMAGEN CUBRE EL ÁREA SIN DEFORMARSE */
+            border-radius: 24px; /* BORDES REDONDEADOS */
+            border: 2px solid var(--accent-berry-pink); /* BORDE ROSADO */
+        }
+        /* ESTILO PARA EL MARCADOR CUANDO NO HAY IMAGEN */
+        .local-imagen-container .sin-imagen {
+            background: #1a1425; /* FONDO OSCURO */
+            border-radius: 24px; /* BORDES REDONDEADOS */
+            height: 150px; /* ALTURA FIJA DE 150 PÍXELES */
+            display: flex; /* CONTENEDOR FLEXIBLE */
+            align-items: center; /* CENTRADO VERTICAL */
+            justify-content: center; /* CENTRADO HORIZONTAL */
+            color: #666; /* TEXTO GRIS */
+            font-size: 2.5rem; /* TAMAÑO DE FUENTE GRANDE */
+            border: 2px dashed rgba(255,255,255,0.15); /* BORDE DISCONTINUO */
+        }
+        /* ESTILO PARA FORMULARIOS EN LÍNEA */
+        .inline-form {
+            display: flex; /* CONTENEDOR FLEXIBLE */
+            flex-wrap: wrap; /* ENVUELVE ELEMENTOS */
+            gap: 0.8rem; /* ESPACIO DE 0.8 REM */
+            margin-top: 1rem; /* MARGEN SUPERIOR DE 1 REM */
+        }
+        /* ESTILO PARA CAMPOS DE ENTRADA EN FORMULARIOS EN LÍNEA */
+        .inline-form input {
+            flex: 1; /* OCUPA ESPACIO DISPONIBLE */
+            min-width: 150px; /* ANCHO MÍNIMO DE 150 PÍXELES */
+            background: rgba(0,0,0,0.5); /* FONDO OSCURO SEMITRANSPARENTE */
+            border: 1px solid rgba(255,255,255,0.15); /* BORDE BLANCO FINO */
+            border-radius: 40px; /* BORDES REDONDEADOS */
+            padding: 0.6rem 1rem; /* RELLENO INTERNO */
+            color: white; /* TEXTO BLANCO */
+            font-family: var(--font-sans); /* FUENTE SANS SERIF */
+        }
+        /* ESTILO PARA CAMPOS DE ENTRADA EN FOCUS */
+        .inline-form input:focus {
+            outline: none; /* ELIMINA EL CONTORNO POR DEFECTO */
+            border-color: var(--berry-lumina); /* BORDE ROSADO BERRY */
+        }
+        /* ESTILO PARA ÍTEMS DE PRODUCTOS, EMPLEADOS Y PEDIDOS */
+        .producto-item, .empleado-item, .pedido-item {
+            display: flex; /* CONTENEDOR FLEXIBLE */
+            flex-wrap: wrap; /* ENVUELVE ELEMENTOS */
+            justify-content: space-between; /* ELEMENTOS EN EXTREMOS */
+            align-items: center; /* ALINEACIÓN VERTICAL CENTRADA */
+            padding: 0.8rem 0; /* RELLENO VERTICAL DE 0.8 REM */
+            border-bottom: 1px solid rgba(255,255,255,0.06); /* LÍNEA INFERIOR FINA */
+            gap: 0.8rem; /* ESPACIO DE 0.8 REM */
+        }
+        /* ESTILO PARA EL ÚLTIMO ÍTEM (SIN LÍNEA INFERIOR) */
+        .producto-item:last-child, .empleado-item:last-child, .pedido-item:last-child {
+            border-bottom: none; /* ELIMINA LA LÍNEA INFERIOR */
+        }
+        /* ESTILO PARA LA INFORMACIÓN DE PRODUCTO/EMPLEADO/PEDIDO */
+        .producto-info, .empleado-info, .pedido-info {
+            display: flex; /* CONTENEDOR FLEXIBLE */
+            align-items: center; /* ALINEACIÓN VERTICAL CENTRADA */
+            gap: 1rem; /* ESPACIO DE 1 REM */
+            flex-wrap: wrap; /* ENVUELVE ELEMENTOS */
+            flex: 1; /* OCUPA ESPACIO DISPONIBLE */
+        }
+        /* ESTILO PARA IMÁGENES DENTRO DE LA INFORMACIÓN */
+        .producto-info img, .empleado-info img {
+            border-radius: 8px; /* BORDES REDONDEADOS */
+            width: 50px; /* ANCHO FIJO DE 50 PÍXELES */
+            height: 50px; /* ALTURA FIJA DE 50 PÍXELES */
+            object-fit: cover; /* LA IMAGEN CUBRE EL ÁREA */
+            background: #1a1425; /* FONDO OSCURO DE RESPALDO */
+        }
+        /* ESTILO PARA EL CONTENEDOR DE ACCIONES DE PRODUCTO/EMPLEADO/PEDIDO */
+        .producto-acciones, .empleado-acciones, .pedido-acciones {
+            display: flex; /* CONTENEDOR FLEXIBLE */
+            gap: 0.5rem; /* ESPACIO DE 0.5 REM */
+            flex-wrap: wrap; /* ENVUELVE ELEMENTOS */
+            align-items: center; /* ALINEACIÓN VERTICAL CENTRADA */
+        }
+        /* ESTILO PARA INSIGNIAS (BADGES) DE ESTADO */
+        .badge {
+            padding: 0.2rem 0.8rem; /* RELLENO INTERNO */
+            border-radius: 20px; /* BORDES REDONDEADOS */
+            font-size: 0.7rem; /* FUENTE PEQUEÑA */
+            font-weight: 600; /* SEMINEGRITA */
+            text-transform: capitalize; /* PRIMERA LETRA MAYÚSCULA */
+        }
+        /* ESTILO PARA INSIGNIA DE ESTADO PENDIENTE */
+        .badge-pendiente { background: #f39c12; color: #1a1a1a; }
+        /* ESTILO PARA INSIGNIA DE ESTADO LISTO */
+        .badge-listo { background: #3498db; color: white; }
+        /* ESTILO PARA INSIGNIA DE ESTADO ENTREGADO */
+        .badge-entregado { background: #2ecc71; color: #1a1a1a; }
+        /* ESTILO PARA INSIGNIA DE ESTADO CANCELADO */
+        .badge-cancelado { background: #e74c3c; color: white; }
+        /* ESTILO PARA SELECTOR DE ESTADO */
+        .estado-select {
+            background: rgba(0,0,0,0.6); /* FONDO OSCURO */
+            border: 1px solid rgba(255,255,255,0.15); /* BORDE FINO */
+            border-radius: 30px; /* BORDES REDONDEADOS */
+            padding: 0.3rem 0.8rem; /* RELLENO INTERNO */
+            color: white; /* TEXTO BLANCO */
+            font-family: var(--font-sans); /* FUENTE SANS SERIF */
+            font-size: 0.8rem; /* TAMAÑO DE FUENTE */
+        }
+        /* ESTILO PARA FORMULARIOS DE AGREGAR */
+        .form-agregar {
+            display: flex; /* CONTENEDOR FLEXIBLE */
+            flex-wrap: wrap; /* ENVUELVE ELEMENTOS */
+            gap: 0.8rem; /* ESPACIO DE 0.8 REM */
+            margin: 1rem 0 1.5rem; /* MARGEN VERTICAL */
+        }
+        /* ESTILO PARA CAMPOS DE ENTRADA EN FORMULARIOS DE AGREGAR */
+        .form-agregar input {
+            flex: 1; /* OCUPA ESPACIO DISPONIBLE */
+            min-width: 120px; /* ANCHO MÍNIMO DE 120 PÍXELES */
+            background: rgba(0,0,0,0.5); /* FONDO OSCURO */
+            border: 1px solid rgba(255,255,255,0.15); /* BORDE FINO */
+            border-radius: 40px; /* BORDES REDONDEADOS */
+            padding: 0.6rem 1rem; /* RELLENO INTERNO */
+            color: white; /* TEXTO BLANCO */
+            font-family: var(--font-sans); /* FUENTE SANS SERIF */
+        }
+        /* ESTILO PARA CAMPOS DE ENTRADA EN FOCUS EN FORMULARIOS DE AGREGAR */
+        .form-agregar input:focus {
+            outline: none; /* ELIMINA CONTORNO */
+            border-color: var(--berry-lumina); /* BORDE ROSADO BERRY */
+        }
+        /* ESTILO PARA BOTONES DENTRO DE FORMULARIOS DE AGREGAR */
+        .form-agregar button {
+            background: var(--berry-lumina); /* FONDO ROSADO BERRY */
+            border: none; /* SIN BORDE */
+            padding: 0.6rem 1.8rem; /* RELLENO INTERNO */
+            border-radius: 40px; /* BORDES REDONDEADOS */
+            font-weight: 700; /* NEGRITA */
+            cursor: pointer; /* CURSOR MANO */
+            color: #0a0514; /* TEXTO OSCURO */
+            transition: 0.2s; /* TRANSICIÓN DE 0.2 SEGUNDOS */
+        }
+        /* ESTILO PARA BOTONES DE FORMULARIO DE AGREGAR AL PASAR EL MOUSE */
+        .form-agregar button:hover {
+            background: #ff8fa3; /* ROSADO MÁS CLARO */
+        }
+        /* ESTILO PARA FORMULARIOS DE SUBIR IMAGEN */
+        .subir-imagen-form {
+            display: inline-flex; /* CONTENEDOR FLEXIBLE EN LÍNEA */
+            align-items: center; /* ALINEACIÓN VERTICAL CENTRADA */
+            gap: 0.5rem; /* ESPACIO DE 0.5 REM */
+            font-size: 0.75rem; /* FUENTE PEQUEÑA */
+        }
+        /* ESTILO PARA EL CAMPO DE ARCHIVO EN SUBIR IMAGEN */
+        .subir-imagen-form input[type="file"] {
+            font-size: 0.7rem; /* FUENTE PEQUEÑA */
+            color: #aaa; /* TEXTO GRIS */
+            max-width: 120px; /* ANCHO MÁXIMO DE 120 PÍXELES */
+        }
+        /* ESTILO PARA BOTONES DENTRO DE SUBIR IMAGEN */
+        .subir-imagen-form button {
+            padding: 0.2rem 0.8rem; /* RELLENO REDUCIDO */
+            font-size: 0.7rem; /* FUENTE PEQUEÑA */
+        }
+
+        /* ========== ESTILOS RESPONSIVE ========== */
+        /* MEDIA QUERY PARA PANTALLAS DE HASTA 768 PÍXELES (TABLET Y MÓVIL) */
+        @media (max-width: 768px) {
+            /* CABECERA EN COLUMNA Y TEXTO CENTRADO */
+            .header {
+                flex-direction: column; /* DISPOSICIÓN VERTICAL */
+                align-items: stretch; /* ELEMENTOS OCUPAN TODO EL ANCHO */
+                text-align: center; /* TEXTO CENTRADO */
+            }
+            /* BOTONES DE CABECERA CENTRADOS */
+            .header-buttons {
+                justify-content: center; /* CENTRADO HORIZONTAL */
+            }
+            /* INFORMACIÓN DEL LOCAL EN COLUMNA Y CENTRADA */
+            .local-info {
+                flex-direction: column; /* DISPOSICIÓN VERTICAL */
+                align-items: center; /* CENTRADO */
+            }
+            /* CONTENEDOR DE IMAGEN DEL LOCAL OCUPA TODO EL ANCHO */
+            .local-imagen-container {
+                flex: 1; /* OCUPA ESPACIO DISPONIBLE */
+                width: 100%; /* ANCHO COMPLETO */
+                max-width: 280px; /* ANCHO MÁXIMO DE 280 PÍXELES */
+            }
+            /* ÍTEMS DE PRODUCTO, EMPLEADO Y PEDIDO EN COLUMNA */
+            .producto-item, .empleado-item, .pedido-item {
+                flex-direction: column; /* DISPOSICIÓN VERTICAL */
+                align-items: stretch; /* OCUPAN TODO EL ANCHO */
+            }
+            /* ACCIONES DE ÍTEMS CENTRADAS */
+            .producto-acciones, .empleado-acciones, .pedido-acciones {
+                justify-content: center; /* CENTRADO HORIZONTAL */
+            }
+        }
+        /* MEDIA QUERY PARA PANTALLAS DE HASTA 480 PÍXELES (MÓVILES PEQUEÑOS) */
+        @media (max-width: 480px) {
+            /* RELLENO REDUCIDO EN SECCIONES */
+            .section {
+                padding: 1.2rem; /* RELLENO DE 1.2 REM */
+            }
+            /* CUADRÍCULA DE ESTADÍSTICAS EN DOS COLUMNAS */
+            .stats-grid {
+                grid-template-columns: 1fr 1fr; /* DOS COLUMNAS IGUALES */
+            }
+        }
+    </style>
+<!-- CIERRE DE LA CABECERA -->
+</head>
+<!-- INICIO DEL CUERPO DEL DOCUMENTO -->
+<body>
+    <!-- CONTENEDOR PRINCIPAL DEL DASHBOARD -->
+    <div class="dashboard-container">
+        <!-- ============================================================ -->
+        <!-- SECCIÓN: CABECERA DEL DASHBOARD                              -->
+        <!-- CONTIENE EL TÍTULO CON EL NOMBRE DEL LOCAL Y BOTONES         -->
+        <!-- DE NAVEGACIÓN: MULTIMEDIA, INICIO Y CERRAR SESIÓN           -->
+        <!-- ============================================================ -->
+        <div class="header">
+            <!-- TÍTULO CON ÍCONO DE TIENDA Y NOMBRE DEL LOCAL DINÁMICO -->
+            <h1>
+                <!-- ÍCONO DE TIENDA DE FONT AWESOME -->
+                <i class="fas fa-store-alt"></i>
+                <!-- TEXTO "MI NEGOCIO" SEGUIDO DEL NOMBRE DEL LOCAL O "SIN NOMBRE" -->
+                Mi Negocio · <span id="localNombre">{{ local.nombre if local else 'Sin nombre' }}</span>
+            </h1>
+            <!-- CONTENEDOR DE BOTONES DE LA CABECERA -->
+            <div class="header-buttons">
+                <!-- ENLACE A LA PÁGINA DE MULTIMEDIA DEL DUEÑO -->
+                <a href="/dueno/multimedia" class="btn btn-primary"><i class="fas fa-photo-video"></i> Multimedia</a>
+                <!-- ENLACE A LA PÁGINA DE INICIO -->
+                <a href="/inicio" class="btn"><i class="fas fa-home"></i> Inicio</a>
+                <!-- ENLACE PARA CERRAR SESIÓN -->
+                <a href="/logout" class="btn"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- SECCIÓN: ESTADÍSTICAS                                         -->
+        <!-- MUESTRA CUATRO TARJETAS CON: PRODUCTOS TOTALES, PEDIDOS      -->
+        <!-- PENDIENTES, INGRESOS Y STOCK BAJO. LOS DATOS SE CARGAN VÍA  -->
+        <!-- API CON JAVASCRIPT.                                          -->
+        <!-- ============================================================ -->
+        <div class="stats-grid" id="statsContainer">
+            <!-- TARJETA 1: PRODUCTOS TOTALES -->
+            <div class="stat-card">
+                <h3>📦 Productos totales</h3>
+                <!-- NÚMERO DE PRODUCTOS, SE ACTUALIZA VÍA JS -->
+                <div class="stat-number" id="totalProducts">-</div>
+            </div>
+            <!-- TARJETA 2: PEDIDOS PENDIENTES -->
+            <div class="stat-card">
+                <h3>📋 Pedidos pendientes</h3>
+                <!-- NÚMERO DE PEDIDOS PENDIENTES, SE ACTUALIZA VÍA JS -->
+                <div class="stat-number" id="pendingOrders">-</div>
+            </div>
+            <!-- TARJETA 3: INGRESOS (PEDIDOS ENTREGADOS) -->
+            <div class="stat-card">
+                <h3>💰 Ingresos (entregados)</h3>
+                <!-- TOTAL DE INGRESOS CON FORMATO MONEDA, SE ACTUALIZA VÍA JS -->
+                <div class="stat-number revenue" id="totalRevenue">$0</div>
+            </div>
+            <!-- TARJETA 4: STOCK BAJO (PRODUCTOS CON STOCK MENOR O IGUAL A 5) -->
+            <div class="stat-card">
+                <h3>⚠️ Stock bajo (≤5)</h3>
+                <!-- NÚMERO DE PRODUCTOS CON STOCK BAJO, SE ACTUALIZA VÍA JS -->
+                <div class="stat-number" id="lowStock">-</div>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- SECCIÓN: MI LOCAL                                             -->
+        <!-- MUESTRA LA INFORMACIÓN DEL LOCAL: CÓDIGO, NOMBRE, DESCRIPCIÓN-->
+        <!-- UBICACIÓN, CATEGORÍA, DÍAS DE STOCK. PERMITE ACTUALIZAR      -->
+        <!-- CATEGORÍA Y DÍAS DE STOCK, Y SUBIR UNA IMAGEN DEL LOCAL.     -->
+        <!-- ============================================================ -->
+        <div class="section">
+            <!-- TÍTULO DE LA SECCIÓN CON ÍCONO DE TIENDA -->
+            <div class="section-title">
+                <i class="fas fa-store"></i> Mi Local
+            </div>
+            <!-- CONTENEDOR DE INFORMACIÓN DEL LOCAL -->
+            <div class="local-info">
+                <!-- COLUMNA DE DETALLES DEL LOCAL (LADO IZQUIERDO) -->
+                <div class="local-details">
+                    <!-- CÓDIGO DEL LOCAL (ÚNICO) -->
+                    <p><strong>Código:</strong> {{ local.codigo if local else 'N/A' }}</p>
+                    <!-- NOMBRE DEL LOCAL -->
+                    <p><strong>Nombre:</strong> {{ local.nombre if local else '' }}</p>
+                    <!-- DESCRIPCIÓN DEL LOCAL -->
+                    <p><strong>Descripción:</strong> {{ local.descripcion if local else 'Sin descripción' }}</p>
+                    <!-- UBICACIÓN DEL LOCAL -->
+                    <p><strong>Ubicación:</strong> {{ local.ubicacion if local else 'No especificada' }}</p>
+                    <!-- CATEGORÍA DEL LOCAL (SE ACTUALIZA DINÁMICAMENTE) -->
+                    <p><strong>Categoría:</strong> <span id="categoriaDisplay">{{ local.categoria if local and local.categoria else '—' }}</span></p>
+                    <!-- DÍAS DE STOCK (SE ACTUALIZAN DINÁMICAMENTE) -->
+                    <p><strong>Días de stock:</strong> <span id="diasStockDisplay">{{ local.dias_stock if local and local.dias_stock else '—' }}</span></p>
+                    <!-- FORMULARIO EN LÍNEA PARA ACTUALIZAR CATEGORÍA Y DÍAS DE STOCK -->
+                    <div class="inline-form">
+                        <!-- CAMPO DE ENTRADA PARA NUEVA CATEGORÍA -->
+                        <input type="text" id="editCategoria" placeholder="Nueva categoría" value="{{ local.categoria if local else '' }}">
+                        <!-- CAMPO DE ENTRADA PARA NUEVOS DÍAS DE STOCK -->
+                        <input type="text" id="editDiasStock" placeholder="Ej. Lunes,Miércoles" value="{{ local.dias_stock if local else '' }}">
+                        <!-- BOTÓN PARA ACTUALIZAR LOS DATOS DEL LOCAL -->
+                        <button id="btnActualizarLocal" class="btn-small btn-success">Actualizar datos</button>
+                    </div>
+                    <!-- ENLACE A LA PÁGINA PÚBLICA DEL LOCAL SI EXISTE EL CÓDIGO -->
+                    {% if local.codigo %}
+                        <a href="/local/{{ local.codigo }}" class="btn btn-primary" style="display:inline-block; margin-top:0.8rem;">
+                            <i class="fas fa-eye"></i> Ver página pública
+                        </a>
+                    {% endif %}
+                </div>
+                <!-- COLUMNA DE LA IMAGEN DEL LOCAL (LADO DERECHO) -->
+                <div class="local-imagen-container">
+                    <!-- SI EXISTE UNA IMAGEN DEL LOCAL, SE MUESTRA -->
+                    {% if local.imagen_local_url %}
+                        <img src="{{ local.imagen_local_url }}" alt="Imagen del local" id="localImagen">
+                    <!-- SI NO, SE MUESTRA UN ICONO DE TIENDA ESTILIZADO -->
+                    {% else %}
+                        <div class="sin-imagen">🏪</div>
+                    {% endif %}
+                    <!-- FORMULARIO PARA SUBIR UNA NUEVA IMAGEN DEL LOCAL -->
+                    <form action="/dueno/local/imagen" method="POST" enctype="multipart/form-data" class="subir-imagen-form" style="margin-top:0.8rem; justify-content:center;">
+                        <!-- CAMPO DE SELECCIÓN DE ARCHIVO, SOLO IMÁGENES -->
+                        <input type="file" name="imagen" accept="image/*" required>
+                        <!-- BOTÓN PARA ENVIAR EL FORMULARIO DE SUBIDA -->
+                        <button type="submit" class="btn-small btn-success"><i class="fas fa-upload"></i> Subir</button>
+                    </form>
+                    <!-- TEXTO INFORMATIVO SOBRE FORMATOS DE IMAGEN Y COMPRESIÓN -->
+                    <small style="display:block; margin-top:0.3rem; opacity:0.6; font-size:0.7rem;">JPG, PNG, GIF (se comprime automáticamente)</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- SECCIÓN: MIS PRODUCTOS                                        -->
+        <!-- MUESTRA LA LISTA DE PRODUCTOS DEL LOCAL CON OPCIONES PARA    -->
+        <!-- EDITAR, ELIMINAR Y SUBIR IMÁGENES. INCLUYE UN FORMULARIO     -->
+        <!-- PARA AGREGAR NUEVOS PRODUCTOS.                               -->
+        <!-- ============================================================ -->
+        <div class="section">
+            <!-- TÍTULO DE LA SECCIÓN CON ÍCONO DE CAJA ABIERTA -->
+            <div class="section-title">
+                <i class="fas fa-box-open"></i> Mis Productos
+            </div>
+            <!-- CONTENEDOR PARA EL FORMULARIO DE AGREGAR PRODUCTO -->
+            <div>
+                <!-- TÍTULO DEL FORMULARIO -->
+                <h4 style="margin-bottom:0.5rem;">➕ Agregar nuevo producto</h4>
+                <!-- FORMULARIO PARA AGREGAR PRODUCTO, MÉTODO POST A /dueno/producto/agregar -->
+                <form id="formAgregarProducto" class="form-agregar" method="POST" action="/dueno/producto/agregar">
+                    <!-- CAMPO PARA EL NOMBRE DEL PRODUCTO -->
+                    <input type="text" name="nombre" placeholder="Nombre" required>
+                    <!-- CAMPO PARA EL PRECIO DEL PRODUCTO (CON DECIMALES) -->
+                    <input type="number" step="0.01" name="precio" placeholder="Precio" required>
+                    <!-- CAMPO PARA EL STOCK DEL PRODUCTO -->
+                    <input type="number" name="stock" placeholder="Stock" required>
+                    <!-- BOTÓN PARA ENVIAR EL FORMULARIO, CON ÍCONO DE MÁS -->
+                    <button type="submit" id="btnAgregarProd"><i class="fas fa-plus"></i> Agregar</button>
+                </form>
+            </div>
+            <!-- CONTENEDOR DONDE SE RENDERIZA LA LISTA DE PRODUCTOS -->
+            <div id="productosList">
+                <!-- TEXTO DE CARGA MIENTRAS SE OBTIENEN LOS DATOS -->
+                <p style="text-align:center; color:var(--text-mist);">Cargando productos...</p>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- SECCIÓN: PEDIDOS DE MI LOCAL                                 -->
+        <!-- MUESTRA LA LISTA DE PEDIDOS ASOCIADOS AL LOCAL CON OPCIONES  -->
+        <!-- PARA ACTUALIZAR EL ESTADO DE CADA PEDIDO.                    -->
+        <!-- ============================================================ -->
+        <div class="section">
+            <!-- TÍTULO DE LA SECCIÓN CON ÍCONO DE LISTA -->
+            <div class="section-title">
+                <i class="fas fa-clipboard-list"></i> Pedidos de mi local
+            </div>
+            <!-- CONTENEDOR DONDE SE RENDERIZA LA LISTA DE PEDIDOS -->
+            <div id="pedidosList">
+                <!-- TEXTO DE CARGA MIENTRAS SE OBTIENEN LOS DATOS -->
+                <p style="text-align:center; color:var(--text-mist);">Cargando pedidos...</p>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- SECCIÓN: EMPLEADOS DEL LOCAL                                 -->
+        <!-- MUESTRA LA LISTA DE EMPLEADOS ASOCIADOS AL LOCAL CON OPCIÓN  -->
+        <!-- PARA ELIMINAR. INCLUYE UN FORMULARIO PARA AGREGAR NUEVOS     -->
+        <!-- EMPLEADOS POR CORREO ELECTRÓNICO.                           -->
+        <!-- ============================================================ -->
+        <div class="section">
+            <!-- TÍTULO DE LA SECCIÓN CON ÍCONO DE USUARIOS -->
+            <div class="section-title">
+                <i class="fas fa-users"></i> Empleados del local
+            </div>
+            <!-- CONTENEDOR PARA EL FORMULARIO DE AGREGAR EMPLEADO -->
+            <div>
+                <!-- TÍTULO DEL FORMULARIO -->
+                <h4 style="margin-bottom:0.5rem;">➕ Agregar empleado</h4>
+                <!-- CONTENEDOR DEL FORMULARIO (SIN FORM, SE USA JS) -->
+                <div class="form-agregar">
+                    <!-- CAMPO PARA EL CORREO DEL EMPLEADO -->
+                    <input type="email" id="empleadoCorreo" placeholder="Correo del empleado (debe existir)" required>
+                    <!-- CAMPO PARA EL PUESTO DEL EMPLEADO -->
+                    <input type="text" id="empleadoPuesto" placeholder="Puesto (ej. vendedor)" required>
+                    <!-- BOTÓN PARA AGREGAR EMPLEADO, CON ÍCONO DE USUARIO MÁS -->
+                    <button id="btnAgregarEmpleado" class="btn-small btn-success"><i class="fas fa-user-plus"></i> Agregar</button>
+                </div>
+                <!-- TEXTO INFORMATIVO SOBRE EL REGISTRO DE USUARIOS -->
+                <p style="font-size:0.8rem; margin-top:0.3rem; opacity:0.7;">💡 El usuario debe estar registrado. Si no existe, se creará con contraseña temporal.</p>
+            </div>
+            <!-- CONTENEDOR DONDE SE RENDERIZA LA LISTA DE EMPLEADOS -->
+            <div id="empleadosList">
+                <!-- TEXTO DE CARGA MIENTRAS SE OBTIENEN LOS DATOS -->
+                <p style="text-align:center; color:var(--text-mist);">Cargando empleados...</p>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- SECCIÓN: SOLICITUDES DE EMPLEADO                             -->
+        <!-- MUESTRA LAS SOLICITUDES PENDIENTES DE EMPLEADOS CON OPCIONES -->
+        <!-- PARA APROBAR O RECHAZAR CADA SOLICITUD.                     -->
+        <!-- ============================================================ -->
+        <div class="section">
+            <!-- TÍTULO DE LA SECCIÓN CON ÍCONO DE USUARIO MÁS -->
+            <div class="section-title">
+                <i class="fas fa-user-plus"></i> Solicitudes de empleado
+            </div>
+            <!-- CONTENEDOR DONDE SE RENDERIZA LA LISTA DE SOLICITUDES -->
+            <div id="solicitudesEmpleadoList">
+                <!-- TEXTO DE CARGA MIENTRAS SE OBTIENEN LOS DATOS -->
+                <p style="text-align:center; color:var(--text-mist);">Cargando solicitudes...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- BLOQUE DE JAVASCRIPT                                             -->
+    <!-- CONTIENE TODAS LAS FUNCIONES PARA CARGAR DATOS VÍA API,         -->
+    <!-- MANEJAR EVENTOS DE USUARIO Y ACTUALIZAR LA INTERFAZ DINÁMICAMENTE -->
+    <!-- ================================================================ -->
+    <script>
+        // ================================================================
+        // VARIABLE GLOBAL: ID DEL LOCAL OBTENIDO DESDE EL SERVIDOR
+        // SE USA EN MÚLTIPLES FUNCIONES PARA FILTRAR DATOS
+        // ================================================================
+        const localId = {% if local %}{{ local.id|tojson }}{% else %}null{% endif %};
+
+        // ================================================================
+        // FUNCIÓN: ESCAPAR HTML
+        // RECIBE UN STRING Y REEMPLAZA CARACTERES PELIGROSOS (&, <, >)
+        // PARA PREVENIR ATAQUES XSS (CROSS-SITE SCRIPTING)
+        // ================================================================
+        function escapeHtml(str) {
+            // SI EL STRING ES NULO O VACÍO, RETORNA UNA CADENA VACÍA
+            if (!str) return '';
+            // REEMPLAZA & POR &amp;, < POR &lt; Y > POR &gt;
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;'; // AMPERSAND ESCAPADO
+                if (m === '<') return '&lt;';   // MENOR QUE ESCAPADO
+                if (m === '>') return '&gt;';   // MAYOR QUE ESCAPADO
+                return m; // RETORNA EL CARACTER ORIGINAL SI NO COINCIDE
+            });
+        }
+
+        // ================================================================
+        // FUNCIÓN: CARGAR ESTADÍSTICAS
+        // OBTIENE DATOS DE /api/owner/stats Y ACTUALIZA LAS TARJETAS
+        // DE ESTADÍSTICAS EN EL DASHBOARD.
+        // ================================================================
+        async function loadStats() {
+            try {
+                // REALIZA UNA SOLICITUD FETCH A LA API DE ESTADÍSTICAS
+                const res = await fetch('/api/owner/stats');
+                // CONVIERTE LA RESPUESTA A FORMATO JSON
+                const data = await res.json();
+                // ACTUALIZA EL ELEMENTO DE PRODUCTOS TOTALES
+                document.getElementById('totalProducts').innerText = data.total_products ?? 0;
+                // ACTUALIZA EL ELEMENTO DE PEDIDOS PENDIENTES
+                document.getElementById('pendingOrders').innerText = data.pending_orders ?? 0;
+                // ACTUALIZA EL ELEMENTO DE INGRESOS CON FORMATO MONEDA (2 DECIMALES)
+                document.getElementById('totalRevenue').innerHTML = `$${data.total_revenue?.toFixed(2) ?? '0.00'}`;
+                // ACTUALIZA EL ELEMENTO DE STOCK BAJO
+                document.getElementById('lowStock').innerText = data.low_stock ?? 0;
+            } catch(e) {
+                // SI OCURRE UN ERROR, SE MUESTRA EN LA CONSOLA
+                console.warn('Error al cargar estadísticas:', e);
+            }
+        }
+
+        // ================================================================
+        // FUNCIÓN: CARGAR PRODUCTOS
+        // OBTIENE LA LISTA DE PRODUCTOS DE /api/owner/products Y LA
+        // RENDERIZA EN EL CONTENEDOR #productosList.
+        // ================================================================
+        async function loadProducts() {
+            try {
+                // REALIZA UNA SOLICITUD FETCH A LA API DE PRODUCTOS
+                const res = await fetch('/api/owner/products');
+                // CONVIERTE LA RESPUESTA A FORMATO JSON
+                const products = await res.json();
+                // OBTIENE EL CONTENEDOR DE PRODUCTOS
+                const container = document.getElementById('productosList');
+                // SI NO HAY PRODUCTOS, MUESTRA UN MENSAJE INFORMATIVO
+                if (!products.length) {
+                    container.innerHTML = '<p style="text-align:center; color:var(--text-mist);">No tienes productos aún. ¡Agrega tu primer producto!</p>';
+                    return; // TERMINA LA EJECUCIÓN DE LA FUNCIÓN
+                }
+                // GENERA EL HTML DE LA LISTA DE PRODUCTOS USANDO MAP
+                container.innerHTML = products.map(p => `
+                    <!-- CONTENEDOR DE CADA PRODUCTO CON DATA-ID -->
+                    <div class="producto-item" data-id="${p.id}">
+                        <!-- INFORMACIÓN DEL PRODUCTO -->
+                        <div class="producto-info">
+                            <!-- SI TIENE IMAGEN, LA MUESTRA; SI NO, MUESTRA UN ICONO DE CÁMARA -->
+                            ${p.imagen_url ? `<img src="${p.imagen_url}" alt="${p.nombre}" loading="lazy">` : `<img src="" alt="sin imagen" style="background:#1a1425; display:flex; align-items:center; justify-content:center; font-size:1.5rem;">📷`}
+                            <!-- NOMBRE, PRECIO Y STOCK DEL PRODUCTO -->
+                            <div>
+                                <strong>${escapeHtml(p.nombre)}</strong> — $${p.precio.toFixed(2)} | Stock: ${p.stock}
+                            </div>
+                        </div>
+                        <!-- ACCIONES DEL PRODUCTO -->
+                        <div class="producto-acciones">
+                            <!-- FORMULARIO PARA SUBIR IMAGEN DEL PRODUCTO -->
+                            <form action="/dueno/producto/${p.id}/imagen" method="POST" enctype="multipart/form-data" class="subir-imagen-form">
+                                <input type="file" name="imagen" accept="image/*" required>
+                                <button type="submit" class="btn-small btn-success"><i class="fas fa-upload"></i></button>
+                            </form>
+                            <!-- BOTÓN PARA EDITAR PRODUCTO (ABRE PROMPT) -->
+                            <button class="btn-small editar-producto" data-id="${p.id}" data-nombre="${escapeHtml(p.nombre)}" data-precio="${p.precio}" data-stock="${p.stock}">✏️ Editar</button>
+                            <!-- BOTÓN PARA ELIMINAR PRODUCTO -->
+                            <button class="btn-small btn-danger eliminar-producto" data-id="${p.id}">🗑️ Eliminar</button>
+                        </div>
+                    </div>
+                `).join(''); // UNE TODOS LOS ELEMENTOS HTML GENERADOS
+                // ASIGNA LOS EVENTOS A LOS BOTONES DE EDICIÓN Y ELIMINACIÓN
+                attachProductEvents();
+            } catch(e) {
+                // SI OCURRE UN ERROR, MUESTRA UN MENSAJE DE ERROR
+                console.error('Error al cargar productos:', e);
+                document.getElementById('productosList').innerHTML = '<p style="text-align:center; color:#e74c3c;">Error al cargar productos.</p>';
+            }
+        }
+
+        // ================================================================
+        // FUNCIÓN: ASIGNAR EVENTOS A PRODUCTOS
+        // AÑADE ESCUCHADORES DE EVENTOS A LOS BOTONES DE EDITAR Y
+        // ELIMINAR PRODUCTO.
+        // ================================================================
+        function attachProductEvents() {
+            // SELECCIONA TODOS LOS BOTONES DE EDICIÓN Y LES AÑADE UN EVENTO CLICK
+            document.querySelectorAll('.editar-producto').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    // OBTIENE EL ID DEL PRODUCTO DESDE EL ATRIBUTO DATA-ID
+                    const id = btn.dataset.id;
+                    // OBTIENE EL NOMBRE ACTUAL DEL PRODUCTO
+                    const oldNombre = btn.dataset.nombre;
+                    // OBTIENE EL PRECIO ACTUAL DEL PRODUCTO
+                    const oldPrecio = parseFloat(btn.dataset.precio);
+                    // OBTIENE EL STOCK ACTUAL DEL PRODUCTO
+                    const oldStock = parseInt(btn.dataset.stock);
+                    // SOLICITA EL NUEVO NOMBRE AL USUARIO
+                    const nuevoNombre = prompt('✏️ Editar nombre:', oldNombre);
+                    // SI EL USUARIO CANCELA, TERMINA LA EJECUCIÓN
+                    if (nuevoNombre === null) return;
+                    // SOLICITA EL NUEVO PRECIO AL USUARIO
+                    const nuevoPrecio = prompt('💰 Nuevo precio:', oldPrecio);
+                    // SI EL USUARIO CANCELA, TERMINA LA EJECUCIÓN
+                    if (nuevoPrecio === null) return;
+                    // SOLICITA EL NUEVO STOCK AL USUARIO
+                    const nuevoStock = prompt('📦 Nuevo stock:', oldStock);
+                    // SI EL USUARIO CANCELA, TERMINA LA EJECUCIÓN
+                    if (nuevoStock === null) return;
+                    // CONVIERTE EL NUEVO PRECIO A NÚMERO
+                    const precioVal = parseFloat(nuevoPrecio);
+                    // CONVIERTE EL NUEVO STOCK A NÚMERO
+                    const stockVal = parseInt(nuevoStock);
+                    // VALIDA QUE AMBOS SEAN NÚMEROS VÁLIDOS Y NO NEGATIVOS
+                    if (isNaN(precioVal) || isNaN(stockVal) || precioVal < 0 || stockVal < 0) {
+                        alert('Precio y stock deben ser números válidos');
+                        return; // TERMINA LA EJECUCIÓN
+                    }
+                    // REALIZA LA SOLICITUD PUT A LA API PARA ACTUALIZAR EL PRODUCTO
+                    const res = await fetch(`/api/owner/product/${id}`, {
+                        method: 'PUT', // MÉTODO HTTP PUT PARA ACTUALIZAR
+                        headers: { 'Content-Type': 'application/json' }, // INDICA QUE EL CUERPO ES JSON
+                        body: JSON.stringify({ nombre: nuevoNombre.trim(), precio: precioVal, stock: stockVal }) // DATOS A ENVIAR
+                    });
+                    // SI LA RESPUESTA ES EXITOSA (CÓDIGO 200-299)
+                    if (res.ok) {
+                        alert('Producto actualizado'); // MUESTRA MENSAJE DE ÉXITO
+                        loadProducts(); // RECARGA LA LISTA DE PRODUCTOS
+                        loadStats(); // RECARGA LAS ESTADÍSTICAS
+                    } else {
+                        alert('Error al actualizar'); // MUESTRA MENSAJE DE ERROR
+                    }
+                });
+            });
+            // SELECCIONA TODOS LOS BOTONES DE ELIMINACIÓN Y LES AÑADE UN EVENTO CLICK
+            document.querySelectorAll('.eliminar-producto').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    // CONFIRMA CON EL USUARIO ANTES DE ELIMINAR
+                    if (!confirm('¿Eliminar este producto permanentemente?')) return;
+                    // OBTIENE EL ID DEL PRODUCTO DESDE EL ATRIBUTO DATA-ID
+                    const id = btn.dataset.id;
+                    // REALIZA LA SOLICITUD DELETE A LA API
+                    const res = await fetch(`/api/owner/product/${id}`, { method: 'DELETE' });
+                    // SI LA RESPUESTA ES EXITOSA
+                    if (res.ok) {
+                        alert('Producto eliminado'); // MUESTRA MENSAJE DE ÉXITO
+                        loadProducts(); // RECARGA LA LISTA DE PRODUCTOS
+                        loadStats(); // RECARGA LAS ESTADÍSTICAS
+                    } else {
+                        alert('Error al eliminar'); // MUESTRA MENSAJE DE ERROR
+                    }
+                });
+            });
+        }
+
+        // ================================================================
+        // FUNCIÓN: CARGAR PEDIDOS
+        // OBTIENE LA LISTA DE PEDIDOS DE /api/owner/orders Y LA
+        // RENDERIZA EN EL CONTENEDOR #pedidosList.
+        // ================================================================
+        async function loadOrders() {
+            try {
+                // REALIZA UNA SOLICITUD FETCH A LA API DE PEDIDOS
+                const res = await fetch('/api/owner/orders');
+                // CONVIERTE LA RESPUESTA A FORMATO JSON
+                const orders = await res.json();
+                // OBTIENE EL CONTENEDOR DE PEDIDOS
+                const container = document.getElementById('pedidosList');
+                // SI NO HAY PEDIDOS, MUESTRA UN MENSAJE INFORMATIVO
+                if (!orders.length) {
+                    container.innerHTML = '<p style="text-align:center; color:var(--text-mist);">No hay pedidos para tu local.</p>';
+                    return; // TERMINA LA EJECUCIÓN DE LA FUNCIÓN
+                }
+                // GENERA EL HTML DE LA LISTA DE PEDIDOS USANDO MAP
+                container.innerHTML = orders.map(o => `
+                    <div class="pedido-item" data-id="${o.id}">
+                        <div class="pedido-info">
+                            <strong>Pedido #${o.id}</strong> (${o.codigo})<br>
+                            Cliente: ${escapeHtml(o.cliente)} | Total: $${o.total.toFixed(2)} | Estado:
+                            <span class="badge badge-${o.estado}">${o.estado}</span>
+                        </div>
+                        <div class="pedido-acciones">
+                            <!-- SELECTOR PARA CAMBIAR EL ESTADO DEL PEDIDO -->
+                            <select class="estado-select actualizar-estado-select" data-id="${o.id}">
+                                <option value="pendiente" ${o.estado=='pendiente'?'selected':''}>Pendiente</option>
+                                <option value="listo" ${o.estado=='listo'?'selected':''}>Listo</option>
+                                <option value="entregado" ${o.estado=='entregado'?'selected':''}>Entregado</option>
+                                <option value="cancelado" ${o.estado=='cancelado'?'selected':''}>Cancelado</option>
+                            </select>
+                            <!-- BOTÓN PARA ACTUALIZAR EL ESTADO DEL PEDIDO -->
+                            <button class="btn-small actualizar-estado" data-id="${o.id}">Actualizar</button>
+                        </div>
+                    </div>
+                `).join(''); // UNE TODOS LOS ELEMENTOS HTML GENERADOS
+                // ASIGNA LOS EVENTOS A LOS BOTONES DE ACTUALIZACIÓN DE ESTADO
+                attachOrderEvents();
+            } catch(e) {
+                // SI OCURRE UN ERROR, MUESTRA UN MENSAJE DE ERROR
+                console.error('Error al cargar pedidos:', e);
+                document.getElementById('pedidosList').innerHTML = '<p style="text-align:center; color:#e74c3c;">Error al cargar pedidos.</p>';
+            }
+        }
+
+        // ================================================================
+        // FUNCIÓN: ASIGNAR EVENTOS A PEDIDOS
+        // AÑADE ESCUCHADORES DE EVENTOS A LOS BOTONES DE ACTUALIZACIÓN
+        // DE ESTADO DE PEDIDOS.
+        // ================================================================
+        function attachOrderEvents() {
+            // SELECCIONA TODOS LOS BOTONES DE ACTUALIZACIÓN Y LES AÑADE UN EVENTO CLICK
+            document.querySelectorAll('.actualizar-estado').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    // OBTIENE EL ID DEL PEDIDO DESDE EL ATRIBUTO DATA-ID
+                    const pedidoId = btn.dataset.id;
+                    // OBTIENE EL SELECTOR DE ESTADO CORRESPONDIENTE
+                    const select = document.querySelector(`.actualizar-estado-select[data-id="${pedidoId}"]`);
+                    // OBTIENE EL NUEVO ESTADO SELECCIONADO
+                    const nuevoEstado = select.value;
+                    // REALIZA LA SOLICITUD POST A LA API PARA ACTUALIZAR EL ESTADO
+                    const res = await fetch(`/api/owner/order/${pedidoId}/status`, {
+                        method: 'POST', // MÉTODO HTTP POST
+                        headers: { 'Content-Type': 'application/json' }, // INDICA QUE EL CUERPO ES JSON
+                        body: JSON.stringify({ estado: nuevoEstado }) // DATOS A ENVIAR
+                    });
+                    // SI LA RESPUESTA ES EXITOSA
+                    if (res.ok) {
+                        alert('Estado actualizado'); // MUESTRA MENSAJE DE ÉXITO
+                        loadOrders(); // RECARGA LA LISTA DE PEDIDOS
+                        loadStats(); // RECARGA LAS ESTADÍSTICAS
+                    } else {
+                        alert('Error al actualizar estado'); // MUESTRA MENSAJE DE ERROR
+                    }
+                });
+            });
+        }
+
+        // ================================================================
+        // FUNCIÓN: CARGAR EMPLEADOS
+        // OBTIENE LA LISTA DE EMPLEADOS DE /api/owner/empleados Y LA
+        // RENDERIZA EN EL CONTENEDOR #empleadosList.
+        // ================================================================
+        async function loadEmpleados() {
+            try {
+                // REALIZA UNA SOLICITUD FETCH A LA API DE EMPLEADOS CON EL ID DEL LOCAL
+                const res = await fetch(`/api/owner/empleados?local_id=${localId}`);
+                // CONVIERTE LA RESPUESTA A FORMATO JSON
+                const empleados = await res.json();
+                // OBTIENE EL CONTENEDOR DE EMPLEADOS
+                const container = document.getElementById('empleadosList');
+                // SI NO HAY EMPLEADOS, MUESTRA UN MENSAJE INFORMATIVO
+                if (!empleados.length) {
+                    container.innerHTML = '<p style="text-align:center; color:var(--text-mist);">No hay empleados registrados para este local.</p>';
+                    return; // TERMINA LA EJECUCIÓN DE LA FUNCIÓN
+                }
+                // GENERA EL HTML DE LA LISTA DE EMPLEADOS USANDO MAP
+                container.innerHTML = empleados.map(e => `
+                    <div class="empleado-item" data-id="${e.id}">
+                        <div class="empleado-info">
+                            <strong>${escapeHtml(e.nombre)}</strong> (${e.correo}) — Puesto: ${e.puesto || '—'}
+                        </div>
+                        <div class="empleado-acciones">
+                            <button class="btn-small btn-danger eliminar-empleado" data-id="${e.id}">🗑️ Eliminar</button>
+                        </div>
+                    </div>
+                `).join(''); // UNE TODOS LOS ELEMENTOS HTML GENERADOS
+                // ASIGNA LOS EVENTOS A LOS BOTONES DE ELIMINACIÓN DE EMPLEADOS
+                attachEmpleadoEvents();
+            } catch(e) {
+                // SI OCURRE UN ERROR, MUESTRA UN MENSAJE DE ERROR
+                console.error('Error al cargar empleados:', e);
+                document.getElementById('empleadosList').innerHTML = '<p style="text-align:center; color:#e74c3c;">Error al cargar empleados.</p>';
+            }
+        }
+
+        // ================================================================
+        // FUNCIÓN: ASIGNAR EVENTOS A EMPLEADOS
+        // AÑADE ESCUCHADORES DE EVENTOS A LOS BOTONES DE ELIMINACIÓN
+        // DE EMPLEADOS.
+        // ================================================================
+        function attachEmpleadoEvents() {
+            // SELECCIONA TODOS LOS BOTONES DE ELIMINACIÓN Y LES AÑADE UN EVENTO CLICK
+            document.querySelectorAll('.eliminar-empleado').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    // CONFIRMA CON EL USUARIO ANTES DE DESVINCULAR
+                    if (!confirm('¿Desvincular este empleado del local?')) return;
+                    // OBTIENE EL ID DEL EMPLEADO DESDE EL ATRIBUTO DATA-ID
+                    const empleadoId = btn.dataset.id;
+                    // REALIZA LA SOLICITUD DELETE A LA API
+                    const res = await fetch(`/api/owner/empleados/${empleadoId}`, { method: 'DELETE' });
+                    // SI LA RESPUESTA ES EXITOSA
+                    if (res.ok) {
+                        alert('Empleado eliminado'); // MUESTRA MENSAJE DE ÉXITO
+                        loadEmpleados(); // RECARGA LA LISTA DE EMPLEADOS
+                    } else {
+                        alert('Error al eliminar empleado'); // MUESTRA MENSAJE DE ERROR
+                    }
+                });
+            });
+        }
+
+        // ================================================================
+        // FUNCIÓN: CARGAR SOLICITUDES DE EMPLEADO
+        // OBTIENE LA LISTA DE SOLICITUDES DE /api/owner/employee_requests
+        // Y LA RENDERIZA EN EL CONTENEDOR #solicitudesEmpleadoList.
+        // ================================================================
+        async function loadEmployeeRequests() {
+            try {
+                // REALIZA UNA SOLICITUD FETCH A LA API DE SOLICITUDES
+                const res = await fetch('/api/owner/employee_requests');
+                // CONVIERTE LA RESPUESTA A FORMATO JSON
+                const solicitudes = await res.json();
+                // OBTIENE EL CONTENEDOR DE SOLICITUDES
+                const container = document.getElementById('solicitudesEmpleadoList');
+                // SI NO HAY SOLICITUDES, MUESTRA UN MENSAJE INFORMATIVO
+                if (!solicitudes.length) {
+                    container.innerHTML = '<p style="text-align:center; color:var(--text-mist);">No hay solicitudes pendientes.</p>';
+                    return; // TERMINA LA EJECUCIÓN DE LA FUNCIÓN
+                }
+                // GENERA EL HTML DE LA LISTA DE SOLICITUDES USANDO MAP
+                container.innerHTML = solicitudes.map(s => `
+                    <div class="empleado-item" data-id="${s.id}">
+                        <div class="empleado-info">
+                            <strong>${escapeHtml(s.nombre)}</strong> (${s.correo})<br>
+                            Puesto solicitado: ${s.puesto || '—'}<br>
+                            Mensaje: ${escapeHtml(s.mensaje) || '—'}<br>
+                            ${s.documento_path ? `<a href="/static/${s.documento_path}" target="_blank" class="doc-link" style="color:var(--berry-lumina);">📄 Ver documento</a>` : 'Sin documento'}
+                            <small style="display:block; color:#aaa;">${s.fecha}</small>
+                        </div>
+                        <div class="empleado-acciones">
+                            <button class="btn-small btn-success aprobar-solicitud" data-id="${s.id}">✅ Aprobar</button>
+                            <button class="btn-small btn-danger rechazar-solicitud" data-id="${s.id}">❌ Rechazar</button>
+                        </div>
+                    </div>
+                `).join(''); // UNE TODOS LOS ELEMENTOS HTML GENERADOS
+                // ASIGNA LOS EVENTOS A LOS BOTONES DE APROBAR Y RECHAZAR
+                attachSolicitudEvents();
+            } catch(e) {
+                // SI OCURRE UN ERROR, MUESTRA UN MENSAJE DE ERROR
+                console.error('Error al cargar solicitudes:', e);
+                document.getElementById('solicitudesEmpleadoList').innerHTML = '<p style="text-align:center; color:#e74c3c;">Error al cargar solicitudes.</p>';
+            }
+        }
+
+        // ================================================================
+        // FUNCIÓN: ASIGNAR EVENTOS A SOLICITUDES
+        // AÑADE ESCUCHADORES DE EVENTOS A LOS BOTONES DE APROBAR Y
+        // RECHAZAR SOLICITUDES DE EMPLEADO.
+        // ================================================================
+        function attachSolicitudEvents() {
+            // SELECCIONA TODOS LOS BOTONES DE APROBAR Y LES AÑADE UN EVENTO CLICK
+            document.querySelectorAll('.aprobar-solicitud').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    // CONFIRMA CON EL USUARIO ANTES DE APROBAR
+                    if (!confirm('¿Aprobar esta solicitud? Se creará el empleado automáticamente.')) return;
+                    // OBTIENE EL ID DE LA SOLICITUD DESDE EL ATRIBUTO DATA-ID
+                    const id = btn.dataset.id;
+                    // REALIZA LA SOLICITUD POST A LA API PARA APROBAR
+                    const res = await fetch(`/api/owner/employee_request/${id}/approve`, { method: 'POST' });
+                    // SI LA RESPUESTA ES EXITOSA
+                    if (res.ok) {
+                        alert('Solicitud aprobada, empleado agregado.'); // MENSAJE DE ÉXITO
+                        loadEmployeeRequests(); // RECARGA LAS SOLICITUDES
+                        loadEmpleados(); // RECARGA LA LISTA DE EMPLEADOS
+                    } else {
+                        alert('Error al aprobar.'); // MUESTRA MENSAJE DE ERROR
+                    }
+                });
+            });
+            // SELECCIONA TODOS LOS BOTONES DE RECHAZAR Y LES AÑADE UN EVENTO CLICK
+            document.querySelectorAll('.rechazar-solicitud').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    // CONFIRMA CON EL USUARIO ANTES DE RECHAZAR
+                    if (!confirm('¿Rechazar esta solicitud?')) return;
+                    // OBTIENE EL ID DE LA SOLICITUD DESDE EL ATRIBUTO DATA-ID
+                    const id = btn.dataset.id;
+                    // REALIZA LA SOLICITUD POST A LA API PARA RECHAZAR
+                    const res = await fetch(`/api/owner/employee_request/${id}/reject`, { method: 'POST' });
+                    // SI LA RESPUESTA ES EXITOSA
+                    if (res.ok) {
+                        alert('Solicitud rechazada.'); // MENSAJE DE ÉXITO
+                        loadEmployeeRequests(); // RECARGA LAS SOLICITUDES
+                    } else {
+                        alert('Error al rechazar.'); // MUESTRA MENSAJE DE ERROR
+                    }
+                });
+            });
+        }
+
+        // ================================================================
+        // EVENTO: ACTUALIZAR LOCAL
+        // ESCUCHA EL CLICK EN EL BOTÓN #btnActualizarLocal Y ENVÍA LOS
+        // DATOS DE CATEGORÍA Y DÍAS DE STOCK A LA API.
+        // ================================================================
+        document.getElementById('btnActualizarLocal')?.addEventListener('click', async () => {
+            // OBTIENE EL VALOR DEL CAMPO DE CATEGORÍA Y ELIMINA ESPACIOS EXTRA
+            const categoria = document.getElementById('editCategoria').value.trim();
+            // OBTIENE EL VALOR DEL CAMPO DE DÍAS DE STOCK Y ELIMINA ESPACIOS EXTRA
+            const diasStock = document.getElementById('editDiasStock').value.trim();
+            // VERIFICA QUE EL ID DEL LOCAL EXISTA
+            if (!localId) return alert('No se encontró el ID del local');
+            // REALIZA LA SOLICITUD POST A LA API PARA ACTUALIZAR EL LOCAL
+            const res = await fetch('/api/owner/local/update', {
+                method: 'POST', // MÉTODO HTTP POST
+                headers: { 'Content-Type': 'application/json' }, // INDICA QUE EL CUERPO ES JSON
+                body: JSON.stringify({ local_id: localId, categoria, dias_stock: diasStock }) // DATOS A ENVIAR
+            });
+            // SI LA RESPUESTA ES EXITOSA
+            if (res.ok) {
+                alert('Local actualizado correctamente'); // MUESTRA MENSAJE DE ÉXITO
+                // ACTUALIZA LOS ELEMENTOS DE PANTALLA CON LOS NUEVOS VALORES
+                document.getElementById('categoriaDisplay').innerText = categoria || '—';
+                document.getElementById('diasStockDisplay').innerText = diasStock || '—';
+            } else {
+                alert('Error al actualizar local'); // MUESTRA MENSAJE DE ERROR
+            }
+        });
+
+        // ================================================================
+        // EVENTO: AGREGAR EMPLEADO
+        // ESCUCHA EL CLICK EN EL BOTÓN #btnAgregarEmpleado Y ENVÍA LOS
+        // DATOS DEL EMPLEADO A LA API.
+        // ================================================================
+        document.getElementById('btnAgregarEmpleado')?.addEventListener('click', async () => {
+            // OBTIENE EL CORREO DEL EMPLEADO Y ELIMINA ESPACIOS EXTRA
+            const correo = document.getElementById('empleadoCorreo').value.trim();
+            // OBTIENE EL PUESTO DEL EMPLEADO Y ELIMINA ESPACIOS EXTRA
+            const puesto = document.getElementById('empleadoPuesto').value.trim();
+            // VALIDA QUE AMBOS CAMPOS ESTÉN COMPLETOS
+            if (!correo || !puesto) {
+                alert('Correo y puesto son requeridos');
+                return; // TERMINA LA EJECUCIÓN
+            }
+            // REALIZA LA SOLICITUD POST A LA API PARA AGREGAR EMPLEADO
+            const res = await fetch('/api/owner/empleados/agregar', {
+                method: 'POST', // MÉTODO HTTP POST
+                headers: { 'Content-Type': 'application/json' }, // INDICA QUE EL CUERPO ES JSON
+                body: JSON.stringify({ local_id: localId, correo, puesto }) // DATOS A ENVIAR
+            });
+            // CONVIERTE LA RESPUESTA A FORMATO JSON
+            const data = await res.json();
+            // SI LA RESPUESTA ES EXITOSA
+            if (res.ok) {
+                alert(data.message || 'Empleado agregado'); // MUESTRA MENSAJE DE ÉXITO
+                loadEmpleados(); // RECARGA LA LISTA DE EMPLEADOS
+                // LIMPIA LOS CAMPOS DEL FORMULARIO
+                document.getElementById('empleadoCorreo').value = '';
+                document.getElementById('empleadoPuesto').value = '';
+            } else {
+                alert(data.error || 'Error al agregar empleado'); // MUESTRA MENSAJE DE ERROR
+            }
+        });
+
+        // ================================================================
+        // EVENTO: AGREGAR PRODUCTO (CON SPINNER)
+        // ESCUCHA EL EVENTO SUBMIT DEL FORMULARIO #formAgregarProducto
+        // Y ENVÍA LOS DATOS DEL PRODUCTO A LA API CON INDICADOR DE CARGA.
+        // ================================================================
+        document.getElementById('formAgregarProducto')?.addEventListener('submit', async (e) => {
+            e.preventDefault(); // PREVIENE EL ENVÍO TRADICIONAL DEL FORMULARIO
+            // OBTIENE EL FORMULARIO DESDE EL EVENTO
+            const form = e.target;
+            // OBTIENE EL BOTÓN DE ENVÍO POR SU ID
+            const btn = document.getElementById('btnAgregarProd');
+            btn.disabled = true; // DESHABILITA EL BOTÓN PARA EVITAR DOBLE CLICK
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Agregando...'; // CAMBIA EL TEXTO A CARGA
+            try {
+                // CREA UN OBJETO FORMDATA CON LOS DATOS DEL FORMULARIO
+                const formData = new FormData(form);
+                // REALIZA LA SOLICITUD POST A LA API USANDO FORMDATA
+                const res = await fetch(form.action, {
+                    method: 'POST', // MÉTODO HTTP POST
+                    body: formData // DATOS EN FORMATO MULTIPART
+                });
+                // SI LA RESPUESTA ES EXITOSA
+                if (res.ok) {
+                    alert('Producto agregado correctamente'); // MUESTRA MENSAJE DE ÉXITO
+                    loadProducts(); // RECARGA LA LISTA DE PRODUCTOS
+                    loadStats(); // RECARGA LAS ESTADÍSTICAS
+                    form.reset(); // RESETEA LOS CAMPOS DEL FORMULARIO
+                } else {
+                    // SI HAY ERROR, OBTIENE EL TEXTO DE ERROR
+                    const text = await res.text();
+                    alert('Error: ' + text); // MUESTRA EL ERROR
+                }
+            } catch(e) {
+                // SI OCURRE UN ERROR DE CONEXIÓN
+                alert('Error de conexión');
+            } finally {
+                // RESTAURA EL ESTADO DEL BOTÓN SIEMPRE (INCLUSO EN ERROR)
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-plus"></i> Agregar';
+            }
+        });
+
+        // ================================================================
+        // CARGA INICIAL DE DATOS
+        // SE EJECUTA AL CARGAR LA PÁGINA PARA POBLAR EL DASHBOARD
+        // ================================================================
+        loadStats(); // CARGA LAS ESTADÍSTICAS
+        loadProducts(); // CARGA LA LISTA DE PRODUCTOS
+        loadOrders(); // CARGA LA LISTA DE PEDIDOS
+        loadEmpleados(); // CARGA LA LISTA DE EMPLEADOS
+        loadEmployeeRequests(); // CARGA LAS SOLICITUDES DE EMPLEADO
+
+        // ================================================================
+        // ACTUALIZACIÓN PERIÓDICA DE ESTADÍSTICAS
+        // RECARGA LAS ESTADÍSTICAS CADA 30 SEGUNDOS PARA MANTENER
+        // LA INFORMACIÓN ACTUALIZADA.
+        // ================================================================
+        setInterval(loadStats, 30000); // INTERVALO DE 30,000 MILISEGUNDOS (30 SEGUNDOS)
+    </script>
+<!-- CIERRE DEL CUERPO DEL DOCUMENTO -->
+</body>
+<!-- CIERRE DE LA ETIQUETA HTML -->
+</html>

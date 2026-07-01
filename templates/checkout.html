@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">                              <!-- Juego de caracteres (permite ñ, tildes, etc.) -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <!-- Hace que la página se vea bien en móviles y tablets -->
+
+    <title>Blooma Xoko · Checkout 🍇</title>            <!-- Título que aparece en la pestaña del navegador -->
+
+    <!-- ===== FUENTES GOOGLE (tipografías bonitas) ===== -->
+    <!-- Se cargan desde internet para que los textos se vean elegantes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Montserrat:wght@300;400;500;600&family=Playfair+Display:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+    <!-- ===== ICONOS (Font Awesome) ===== -->
+    <!-- Librería de iconos para usar símbolos como carrito, estrella, etc. -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- ===== ESTILOS GLOBALES (compartidos con el resto de la web) ===== -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/blooma_global.css') }}">
+
+    <!-- ===== FAVICON (icono pequeño en la pestaña) ===== -->
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/iconic.png') }}">
+
+    <!-- ===== ESTILOS PROPIOS DE ESTA PÁGINA ===== -->
+    <style>
+        /* ------------------------------------------------------------
+        TODOS LOS ESTILOS QUE VERÁS A CONTINUACIÓN SON PARA QUE
+        LA PÁGINA SE VEA BONITA, CON COLORES SUAVES Y FONDOS
+        TRANSPARENTES CON EFECTO "VIDRIO" (glassmorphism).
+           ------------------------------------------------------------ */
+
+        /* Contenedor principal del checkout */
+        .checkout-wrapper {
+            max-width: 1200px;            /* Ancho máximo para que no se estire demasiado */
+            margin: 1.5rem auto;          /* Centrado horizontal con margen arriba/abajo */
+            padding: 0 1rem;              /* Espacio en los bordes laterales */
+        }
+
+        /* Cuadrícula de dos columnas: izquierda (carrito) y derecha (formulario) */
+        .checkout-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;   /* Dos columnas del mismo tamaño */
+            gap: 2rem;                        /* Espacio entre columnas */
+            margin-top: 1.5rem;
+        }
+
+        /* ============================================================
+        COLUMNA IZQUIERDA: CARRITO (lista de productos)
+           ============================================================ */
+        .cart-section {
+            background: rgba(10, 5, 20, 0.7);      /* Fondo oscuro translúcido */
+            backdrop-filter: blur(12px);           /* Efecto de desenfoque de fondo */
+            border-radius: 32px;                   /* Bordes redondeados */
+            padding: 1.5rem;                       /* Espacio interior */
+            border: 1px solid rgba(255, 107, 129, 0.2); /* Borde rosado tenue */
+            color: var(--text-light);              /* Texto claro (variable global) */
+        }
+
+        /* Título del carrito */
+        .cart-section .cart-title {
+            font-family: var(--font-title);        /* Fuente con estilo de título */
+            font-size: 1.4rem;
+            color: var(--golden-hour);             /* Color dorado */
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;                           /* Separación entre icono y texto */
+        }
+        .cart-section .cart-title i {
+            color: var(--berry-lumina);            /* Icono con color frambuesa */
+        }
+
+        /* Contenedor de la tabla (con scroll horizontal en móviles) */
+        .cart-table-wrapper {
+            overflow-x: auto;          /* Permite desplazarse lateralmente si la tabla es ancha */
+        }
+
+        /* Tabla del carrito */
+        .cart-table {
+            width: 100%;
+            border-collapse: collapse;       /* Sin espacio entre celdas */
+            font-family: var(--font-sans);   /* Fuente sans-serif */
+            font-size: 0.85rem;
+            min-width: 400px;                /* Para que no se rompa en móviles */
+        }
+
+        /* Cabecera de la tabla */
+        .cart-table th {
+            text-align: left;
+            padding: 0.6rem 0.4rem;
+            color: var(--golden-hour);
+            border-bottom: 2px solid rgba(212, 175, 55, 0.3);
+            font-weight: 600;
+        }
+
+        /* Celdas de datos */
+        .cart-table td {
+            padding: 0.6rem 0.4rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05); /* Línea muy tenue */
+            vertical-align: middle;
+        }
+        .cart-table tr:last-child td {
+            border-bottom: none;   /* La última fila no tiene línea abajo */
+        }
+
+        /* Contenedor de la información del producto (imagen + nombre) */
+        .producto-info {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        /* Imagen del producto en el carrito */
+        .producto-imagen {
+            width: 45px;
+            height: 45px;
+            object-fit: cover;        /* La imagen se recorta para llenar el cuadrado */
+            border-radius: 8px;
+            background: #1a1425;      /* Color de fondo por si la imagen no carga */
+            flex-shrink: 0;           /* Evita que la imagen se encoja */
+        }
+
+        /* Si no hay imagen, se muestra un icono */
+        .sin-imagen {
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #1a1425;
+            border-radius: 8px;
+            color: #666;
+            font-size: 1.4rem;
+            flex-shrink: 0;
+        }
+
+        /* Nombre del producto */
+        .producto-nombre {
+            font-weight: 500;
+            color: #f0ece6;
+            font-size: 0.85rem;
+        }
+
+        /* Controles de cantidad (botones + y -) */
+        .cantidad-control {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .cantidad-control input {
+            width: 50px;
+            padding: 0.2rem 0.3rem;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 30px;
+            color: white;
+            text-align: center;
+            font-size: 0.8rem;
+        }
+        .cantidad-control input:focus {
+            outline: none;
+            border-color: var(--berry-lumina);
+        }
+
+        /* Botones de acción (+, -, eliminar) */
+        .btn-accion {
+            background: transparent;
+            border: none;
+            font-size: 1rem;
+            cursor: pointer;            /* El cursor cambia a mano */
+            transition: 0.15s;
+            color: #aaa;
+            padding: 0.1rem 0.4rem;
+            border-radius: 30px;
+        }
+        .btn-accion:hover {
+            color: var(--berry-lumina);
+            background: rgba(255, 107, 129, 0.1);
+        }
+        .btn-accion.eliminar:hover {
+            color: #e74c3c;             /* Rojo al pasar el mouse */
+            background: rgba(231, 76, 60, 0.1);
+        }
+
+        /* Fila del total */
+        .total-row {
+            font-weight: 700;
+            color: var(--golden-hour);
+        }
+        .total-row td {
+            padding-top: 1rem;
+            border-top: 2px solid var(--accent-berry-pink);
+        }
+
+        /* Mensaje cuando el carrito está vacío */
+        .empty-cart-msg {
+            text-align: center;
+            padding: 2rem 1rem;
+            color: var(--text-mist);
+        }
+        .empty-cart-msg i {
+            font-size: 2.5rem;
+            display: block;
+            margin-bottom: 0.8rem;
+            opacity: 0.5;
+        }
+        .empty-cart-msg a {
+            color: var(--accent-berry-pink);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .empty-cart-msg a:hover {
+            text-decoration: underline;
+        }
+
+        /* ============================================================
+           COLUMNA DERECHA: FORMULARIO DE RECOGIDA
+           ============================================================ */
+        .form-section {
+            background: rgba(10, 5, 20, 0.7);
+            backdrop-filter: blur(12px);
+            border-radius: 32px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 107, 129, 0.2);
+            color: var(--text-light);
+        }
+        .form-section .form-title {
+            font-family: var(--font-title);
+            font-size: 1.4rem;
+            color: var(--golden-hour);
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        .form-section .form-title i {
+            color: var(--berry-lumina);
+        }
+
+        /* Cada campo del formulario */
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 0.3rem;
+            color: #ddd;
+            font-size: 0.9rem;
+        }
+        .form-group select,
+        .form-group input {
+            width: 100%;
+            padding: 0.6rem 1rem;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 40px;
+            color: white;
+            font-family: var(--font-sans);
+            font-size: 0.9rem;
+        }
+        .form-group select:focus,
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--berry-lumina);
+        }
+
+        /* Grupo de cada local (cuando hay múltiples locales) */
+        .local-group {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 24px;
+            padding: 1rem;
+            margin-bottom: 1.2rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .local-group h3 {
+            font-family: var(--font-title);
+            color: var(--golden-hour);
+            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
+        }
+        .local-group .ubicacion {
+            font-size: 0.8rem;
+            color: var(--text-mist);
+            margin-bottom: 0.8rem;
+        }
+        .local-group .product-list {
+            margin: 0.6rem 0;
+        }
+        .local-group .product-list ul {
+            list-style: none;
+            padding: 0;
+            margin: 0.3rem 0;
+        }
+        .local-group .product-list ul li {
+            padding: 0.2rem 0;
+            font-size: 0.85rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .local-group .product-list ul li img {
+            width: 30px;
+            height: 30px;
+            object-fit: cover;
+            border-radius: 6px;
+            background: #1a1425;
+        }
+        .local-group .subtotal-local {
+            text-align: right;
+            font-weight: 600;
+            color: var(--golden-hour);
+            padding-top: 0.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: 0.5rem;
+        }
+
+        /* Botón principal de confirmación */
+        .btn-confirm {
+            width: 100%;
+            background: var(--berry-lumina);
+            border: none;
+            padding: 0.8rem;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            color: #0a0514;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            margin-top: 0.5rem;
+        }
+        .btn-confirm:hover {
+            background: #ff8fa3;
+            transform: scale(1.01);
+            box-shadow: 0 8px 25px rgba(255, 107, 129, 0.3);
+        }
+        .btn-confirm:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Mensaje de error */
+        .error-msg {
+            background: rgba(231, 76, 60, 0.15);
+            border: 1px solid #e74c3c;
+            border-radius: 20px;
+            padding: 0.8rem 1.2rem;
+            color: #f1948a;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        /* Pie de página */
+        .footer-checkout {
+            text-align: center;
+            padding: 1.5rem 0 0.5rem;
+            font-size: 0.8rem;
+            opacity: 0.7;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: 1.5rem;
+        }
+
+        /* ===== TOAST (notificación emergente) ===== */
+        .toast-notify {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 28px;
+            border-radius: 60px;
+            color: white;
+            font-weight: 600;
+            z-index: 4000;               /* Por encima de todo */
+            box-shadow: 0 6px 25px rgba(0,0,0,0.4);
+            font-family: var(--font-sans);
+            background: var(--berry-lumina);
+            animation: slideUp 0.3s ease;
+            max-width: 90%;
+            text-align: center;
+            opacity: 0;                  /* Oculto por defecto */
+            pointer-events: none;        /* No bloquea clics */
+            transition: opacity 0.3s;
+        }
+        .toast-notify.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .toast-notify.error {
+            background: #e74c3c;          /* Rojo para errores */
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+
+        /* ============================================================
+           RESPONSIVE (adaptación a pantallas pequeñas)
+           ============================================================ */
+        @media (max-width: 900px) {
+            .checkout-grid {
+                grid-template-columns: 1fr;   /* Una sola columna en tablets */
+                gap: 1.5rem;
+            }
+        }
+        @media (max-width: 600px) {
+            .cart-table { font-size: 0.75rem; min-width: 320px; }
+            .producto-imagen, .sin-imagen { width: 35px; height: 35px; }
+            .producto-nombre { font-size: 0.75rem; }
+            .cantidad-control input { width: 40px; font-size: 0.7rem; }
+            .form-section { padding: 1rem; }
+            .cart-section { padding: 1rem; }
+            .btn-confirm { font-size: 0.85rem; padding: 0.7rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- ============================================================
+    CONTENIDO PRINCIPAL DE LA PÁGINA
+    ================================================================ -->
+    <div class="app-wrapper">
+
+        <!-- ===== CABECERA (HEADER) ===== -->
+        <header class="site-header">
+            <!-- Logo / enlace al inicio -->
+            <a href="/inicio" class="logo">
+                <i class="fas fa-seedling"></i>   <!-- Icono de planta -->
+                BLOOMA · Checkout
+            </a>
+
+            <!-- Acciones en la cabecera (carrito y perfil) -->
+            <div class="header-actions">
+                <a href="/carrito" class="icon-action">
+                    <span class="icon-symbol">🛒</span>
+                    <span class="icon-label">Carrito</span>
+                    <span class="cart-count" id="cart-count-header">0</span>   <!-- Contador actualizado por JS -->
+                </a>
+                <a href="/perfil" class="icon-action">
+                    <span class="icon-symbol">👤</span>
+                    <span class="icon-label">Perfil</span>
+                </a>
+            </div>
+        </header>
+
+        <!-- ===== CONTENEDOR PRINCIPAL DEL CHECKOUT ===== -->
+        <div class="checkout-wrapper">
+
+            <!-- Cuadrícula de dos columnas -->
+            <div class="checkout-grid">
+
+                <!-- ===== COLUMNA IZQUIERDA: CARRITO ===== -->
+                <div class="cart-section">
+                    <div class="cart-title">
+                        <i class="fas fa-basket-shopping"></i> 🍒 Carrito 🫐
+                    </div>
+
+                    <!-- Aquí se renderiza dinámicamente la tabla del carrito con JavaScript -->
+                    <div id="carrito-contenido" class="cart-table-wrapper">
+                        <!-- Mientras carga, se muestra un spinner -->
+                        <div style="text-align:center; padding:2rem;">
+                            <i class="fas fa-spinner fa-spin fa-2x" style="color:var(--golden-hour);"></i>
+                            <p>Cargando tus productos...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== COLUMNA DERECHA: FORMULARIO DE RECOGIDA ===== -->
+                <div class="form-section">
+                    <div class="form-title">
+                        <i class="fas fa-map-marker-alt"></i> 📍 Recogida
+                    </div>
+
+                    <!-- Mostrar errores si los hay (enviados desde el servidor) -->
+                    {% if error %}
+                    <div class="error-msg">
+                        <i class="fas fa-exclamation-triangle"></i> {{ error }}
+                    </div>
+                    {% endif %}
+
+                    <!-- ============================================================
+                    CASO 1: UN SOLO LOCAL (selector normal)
+                    ================================================================
+                    El servidor (Flask) pasa la variable 'single_local' si solo hay
+                    un local disponible. Entonces mostramos un formulario simple.
+                    ================================================================ -->
+                    {% if single_local %}
+                    <form method="POST" id="checkout-form-simple">
+                        <!-- Selección del local -->
+                        <div class="form-group">
+                            <label><i class="fas fa-store"></i> 🏡 Local:</label>
+                            <select name="local_id" required>
+                                {% for local in locales %}
+                                    <option value="{{ local.id }}">🍇 {{ local.nombre }} ({{ local.codigo }})</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <!-- Fecha de recogida -->
+                        <div class="form-group">
+                            <label><i class="far fa-calendar-alt"></i> 📅 Fecha de recogida:</label>
+                            <input type="date" name="fecha_recogida">
+                        </div>
+                        <!-- Hora de recogida -->
+                        <div class="form-group">
+                            <label><i class="far fa-clock"></i> ⏰ Hora de recogida:</label>
+                            <input type="time" name="hora_recogida">
+                        </div>
+                        <!-- Botón confirmar -->
+                        <button type="submit" class="btn-confirm" id="btn-confirm-simple">
+                            <i class="fas fa-hand-holding-heart"></i> Confirmar pedido · Pago en efectivo al recoger 🍓
+                        </button>
+                    </form>
+
+                    <!-- ============================================================
+                    CASO 2: MÚLTIPLES LOCALES (checklist agrupado)
+                    ================================================================
+                    Si hay más de un local, el servidor agrupa los productos por local
+                    y muestra un bloque para cada uno.
+                    ================================================================ -->
+                    {% else %}
+                    <div id="multi-local-form">
+                        <!-- Recorremos los grupos (cada grupo es un local) -->
+                        {% for grupo in grupos %}
+                        <div class="local-group" data-local-id="{{ grupo.local_id }}">
+                            <h3><i class="fas fa-store"></i> {{ grupo.local_nombre }}</h3>
+                            <div class="ubicacion"><i class="fas fa-location-dot"></i> {{ grupo.ubicacion }}</div>
+                            <div class="product-list">
+                                <strong>Productos:</strong>
+                                <ul>
+                                    {% for producto in grupo.productos %}
+                                    <li>
+                                        <!-- Si el producto tiene imagen, se muestra -->
+                                        {% if producto.imagen_url %}
+                                            <img src="{{ producto.imagen_url }}" alt="{{ producto.nombre }}" loading="lazy">
+                                        {% else %}
+                                            <span style="font-size:1.2rem;">📷</span>
+                                        {% endif %}
+                                        {{ producto.nombre }} x{{ producto.cantidad }} — ${{ "%.2f"|format(producto.subtotal) }}
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            <!-- Fecha y hora para este local -->
+                            <div class="form-group">
+                                <label><i class="far fa-calendar-alt"></i> 📅 Fecha recogida:</label>
+                                <input type="date" class="fecha-recogida" data-local="{{ grupo.local_id }}">
+                            </div>
+                            <div class="form-group">
+                                <label><i class="far fa-clock"></i> ⏰ Hora recogida:</label>
+                                <input type="time" class="hora-recogida" data-local="{{ grupo.local_id }}">
+                            </div>
+                            <div class="subtotal-local">
+                                Subtotal este local: <strong>${{ "%.2f"|format(grupo.subtotal_local) }}</strong>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        <!-- Botón para confirmar todos los pedidos -->
+                        <button type="button" class="btn-confirm" id="btn-confirm-multi">
+                            <i class="fas fa-hand-holding-heart"></i> Confirmar todos los pedidos 🍇
+                        </button>
+                    </div>
+                    {% endif %}
+
+                    <!-- Mensaje recordatorio de pago -->
+                    <div style="margin-top: 1.2rem; font-size: 0.8rem; text-align:center; opacity:0.8">
+                        💎 Solo pago en efectivo — ¡Te esperamos con una sonrisa y amabilidad!
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== PIE DE PÁGINA ===== -->
+            <div class="footer-checkout">
+                <span>🍒 Blooma Xoko · Mercado Melchor Ocampo 🍇</span>
+                <span style="display:block; margin-top:0.2rem;"><i class="fas fa-magic"></i> Hecho con esencia del bosque</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    TOAST (notificación emergente que aparece abajo)
+    ================================================================ -->
+    <div id="toastMsg" class="toast-notify">✨ Carrito actualizado</div>
+
+    <!-- ============================================================
+    JAVASCRIPT (código que hace que la página sea interactiva)
+    ================================================================ -->
+    <script>
+        // ============================================================
+        // FUNCIONES PARA OBTENER Y MOSTRAR EL CARRITO
+        // ============================================================
+
+        /**
+         * fetchCart()
+         * Llama a la API del servidor para obtener los productos del carrito.
+         * La API devuelve un objeto con 'items' y 'total'.
+         */
+        async function fetchCart() {
+            const res = await fetch('/api/carrito');
+            if (!res.ok) throw new Error('error carrito');
+            return await res.json();
+        }
+
+        /**
+         * actualizarContador()
+         * Actualiza el número que aparece junto al icono del carrito en la cabecera.
+         * Suma todas las cantidades de los productos.
+         */
+        async function actualizarContador() {
+            try {
+                const data = await fetchCart();
+                let totalItems = 0;
+                if (data.items) {
+                    totalItems = data.items.reduce((acc, i) => acc + i.cantidad, 0);
+                }
+                document.getElementById('cart-count-header').innerText = totalItems;
+            } catch(e) {
+                console.warn(e);
+            }
+        }
+
+        /**
+         * updateCartItem(id, cantidad)
+         * Envía una petición al servidor para cambiar la cantidad de un producto.
+         * Si cantidad es 0, se elimina del carrito.
+         */
+        async function updateCartItem(id, cantidad) {
+            const response = await fetch('/api/carrito/actualizar', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id, cantidad })
+            });
+            if (!response.ok) throw new Error('error actualizar');
+            return await response.json();
+        }
+
+        /**
+         * showToast(mensaje, emoji)
+         * Muestra una notificación emergente en la parte inferior de la pantalla.
+         */
+        function showToast(message, emoji = "🍒") {
+            const toast = document.getElementById('toastMsg');
+            toast.innerHTML = `${emoji} ${message}`;
+            toast.className = 'toast-notify show';
+            clearTimeout(toast._timer);
+            toast._timer = setTimeout(() => toast.classList.remove('show'), 2200);
+        }
+
+        /**
+         * escapeHtml(str)
+         * Previene ataques de inyección de código al mostrar texto.
+         * Convierte caracteres especiales en entidades HTML.
+         */
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+
+        // ============================================================
+        // RENDERIZAR EL CARRITO EN LA PÁGINA
+        // ============================================================
+        async function cargarCarrito() {
+            const container = document.getElementById('carrito-contenido');
+            try {
+                // Obtener datos del carrito desde el servidor
+                const data = await fetchCart();
+
+                // Si no hay productos, mostrar mensaje de vacío
+                if (!data.items || data.items.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-cart-msg">
+                            <i class="fas fa-seedling"></i>
+                            <p>🍂 Tu cesta está vacía...</p>
+                            <a href="/inicio">✨ Seguir comprando ✨</a>
+                            🫐🍇🍓
+                        </div>
+                    `;
+                    await actualizarContador();
+                    return;
+                }
+
+                // Construir la tabla del carrito
+                let html = `<table class="cart-table">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Precio</th>
+                            <th>Cantidad</th>
+                            <th>Subtotal</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+
+                // Recorrer cada producto
+                for (let item of data.items) {
+                    const subtotal = item.precio * item.cantidad;
+                    // Si el producto tiene imagen, se usa; si no, un icono
+                    const imgHtml = item.imagen_url ?
+                        `<img src="${item.imagen_url}" class="producto-imagen" alt="${item.nombre}" loading="lazy">` :
+                        `<div class="sin-imagen">📷</div>`;
+
+                    html += `
+                        <tr data-itemid="${item.id}">
+                            <td>
+                                <div class="producto-info">
+                                    ${imgHtml}
+                                    <span class="producto-nombre">${escapeHtml(item.nombre)}</span>
+                                </div>
+                            </td>
+                            <td>$${item.precio.toFixed(2)}</td>
+                            <td>
+                                <div class="cantidad-control">
+                                    <button class="btn-accion decrement" data-id="${item.id}">−</button>
+                                    <input type="number" class="cantidad-input" data-id="${item.id}" value="${item.cantidad}" min="1" max="${item.stock}">
+                                    <button class="btn-accion increment" data-id="${item.id}">+</button>
+                                </div>
+                            </td>
+                            <td class="subtotal-cell">$${subtotal.toFixed(2)}</td>
+                            <td>
+                                <button class="btn-accion eliminar" data-id="${item.id}" title="Eliminar">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                }
+
+                // Fila del total
+                html += `
+                    <tr class="total-row">
+                        <td colspan="3"><strong>TOTAL</strong></td>
+                        <td colspan="2"><strong>$${data.total.toFixed(2)}</strong> 🍷</td>
+                    </tr>
+                `;
+                html += `</tbody></table>`;
+                container.innerHTML = html;
+
+                // Actualizar contador de la cabecera
+                await actualizarContador();
+
+                // ============================================================
+                // EVENTOS DE LOS CONTROLES DEL CARRITO
+                // ============================================================
+
+                // --- Cambio en el input de cantidad ---
+                document.querySelectorAll('.cantidad-input').forEach(input => {
+                    input.addEventListener('change', async (e) => {
+                        const id = parseInt(input.dataset.id);
+                        let newQty = parseInt(input.value);
+                        if (isNaN(newQty) || newQty < 1) newQty = 1;
+                        const maxStock = parseInt(input.max) || 999;
+                        if (newQty > maxStock) {
+                            showToast(`Máximo ${maxStock} unidades`, '⚠️');
+                            input.value = maxStock;
+                            newQty = maxStock;
+                        }
+                        await performUpdate(id, newQty);
+                    });
+                });
+
+                // --- Botón "+" (incrementar) ---
+                document.querySelectorAll('.increment').forEach(btn => {
+                    btn.addEventListener('click', async (e) => {
+                        e.preventDefault();
+                        const id = parseInt(btn.dataset.id);
+                        const input = btn.closest('.cantidad-control').querySelector('.cantidad-input');
+                        let val = parseInt(input.value);
+                        if (isNaN(val)) val = 1;
+                        const maxStock = parseInt(input.max) || 999;
+                        if (val >= maxStock) {
+                            showToast(`Máximo ${maxStock} unidades`, '⚠️');
+                            return;
+                        }
+                        input.value = val + 1;
+                        await performUpdate(id, val + 1);
+                    });
+                });
+
+                // --- Botón "-" (decrementar) ---
+                document.querySelectorAll('.decrement').forEach(btn => {
+                    btn.addEventListener('click', async (e) => {
+                        e.preventDefault();
+                        const id = parseInt(btn.dataset.id);
+                        const input = btn.closest('.cantidad-control').querySelector('.cantidad-input');
+                        let val = parseInt(input.value);
+                        if (isNaN(val)) val = 1;
+                        if (val <= 1) {
+                            // Si llega a 1, preguntar si quiere eliminar
+                            if (confirm('¿Eliminar este producto del carrito? 🍂')) {
+                                await performUpdate(id, 0);
+                            }
+                            return;
+                        }
+                        input.value = val - 1;
+                        await performUpdate(id, val - 1);
+                    });
+                });
+
+                // --- Botón de eliminar (papelera) ---
+                document.querySelectorAll('.eliminar').forEach(btn => {
+                    btn.addEventListener('click', async (e) => {
+                        const id = parseInt(btn.dataset.id);
+                        if (confirm('🍂 ¿Deseas eliminar este fruto de tu cesta?')) {
+                            await performUpdate(id, 0);
+                        }
+                    });
+                });
+
+            } catch (err) {
+                // Si hay error al cargar, mostrar mensaje de error
+                console.error(err);
+                container.innerHTML = `
+                    <div class="empty-cart-msg">
+                        <i class="fas fa-exclamation-triangle" style="color:#e74c3c;"></i>
+                        <p>⚠️ Error cargando el carrito</p>
+                        <a href="/inicio">Volver al inicio</a>
+                    </div>
+                `;
+            }
+        }
+
+        // ============================================================
+        // ACTUALIZAR CANTIDAD Y RECARGAR
+        // ============================================================
+        async function performUpdate(id, cantidad) {
+            try {
+                if (cantidad === 0) {
+                    await updateCartItem(id, 0);
+                    showToast("Producto eliminado", "🍃🗑️");
+                } else {
+                    await updateCartItem(id, cantidad);
+                    showToast("Cantidad actualizada", "🫐");
+                }
+                // Recargar la tabla del carrito y actualizar contador
+                await cargarCarrito();
+                // Recargar la página para que los grupos de locales se actualicen
+                // (por si el carrito cambió y afecta a la distribución por locales)
+                location.reload();
+            } catch (error) {
+                showToast("Error al actualizar, intenta de nuevo", "❌");
+                console.error(error);
+            }
+        }
+
+        // ============================================================
+        // ENVÍO DE PEDIDOS
+        // ============================================================
+
+        // --- Caso simple (un solo local) ---
+        const formSimple = document.getElementById('checkout-form-simple');
+        if (formSimple) {
+            formSimple.addEventListener('submit', async (e) => {
+                e.preventDefault(); // Evita que el formulario se envíe de forma tradicional
+                const formData = new FormData(formSimple);
+                try {
+                    const res = await fetch('/checkout', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    if (res.redirected) {
+                        // Si el servidor redirige, seguimos la redirección
+                        window.location.href = res.url;
+                    } else {
+                        const text = await res.text();
+                        if (text.includes("Error")) {
+                            showToast("Error al procesar pedido", "❌");
+                        } else {
+                            window.location.href = '/carrito';
+                        }
+                    }
+                } catch(err) {
+                    showToast("Error de conexión", "❌");
+                }
+            });
+        }
+
+        // --- Caso múltiple (varios locales) ---
+        const btnMulti = document.getElementById('btn-confirm-multi');
+        if (btnMulti) {
+            btnMulti.addEventListener('click', async (e) => {
+                e.preventDefault();
+                // Recolectar los datos de cada grupo (local)
+                const grupos = document.querySelectorAll('.local-group');
+                const pedidos = [];
+                for (let grupo of grupos) {
+                    const localId = grupo.dataset.localId;
+                    const fecha = grupo.querySelector('.fecha-recogida').value;
+                    const hora = grupo.querySelector('.hora-recogida').value;
+                    pedidos.push({
+                        local_id: parseInt(localId),
+                        fecha_recogida: fecha || null,
+                        hora_recogida: hora || null
+                    });
+                }
+                if (pedidos.length === 0) return;
+
+                try {
+                    // Enviar todos los pedidos en una sola petición
+                    const response = await fetch('/checkout', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ pedidos: pedidos })
+                    });
+                    const data = await response.json();
+                    if (response.ok && data.success) {
+                        // Redirigir a la página de confirmación múltiple
+                        const pedidosJson = encodeURIComponent(JSON.stringify(data.pedidos));
+                        window.location.href = `/pedidos/confirmacion-multiple?pedidos=${pedidosJson}`;
+                    } else {
+                        showToast(data.error || "Error al crear pedidos", "❌");
+                    }
+                } catch(err) {
+                    showToast("Error en el servidor", "❌");
+                }
+            });
+        }
+
+        // ============================================================
+        // INICIALIZACIÓN AL CARGAR LA PÁGINA
+        // ============================================================
+        window.addEventListener('load', () => {
+            cargarCarrito();          // Cargar el carrito al abrir la página
+            // Actualizar el contador cada 15 segundos (por si el carrito cambia en otra pestaña)
+            setInterval(actualizarContador, 15000);
+        });
+    </script>
+</body>
+</html>

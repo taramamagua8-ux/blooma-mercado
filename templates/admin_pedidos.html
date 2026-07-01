@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<!-- ============================================================
+    DECLARACIÓN DEL TIPO DE DOCUMENTO
+    Indica al navegador que este archivo está escrito en HTML5,
+    la versión más reciente del lenguaje de marcado.
+    Esto asegura que el navegador interprete el código correctamente
+    y active los modos de renderizado estándar.
+    ============================================================ -->
+<html lang="es">
+<!-- ============================================================
+    INICIO DEL ELEMENTO HTML
+    El atributo lang="es" declara que el contenido principal está
+    en español. Es crucial para motores de búsqueda (SEO) y para
+    lectores de pantalla, que así seleccionan la pronunciación
+    y reglas de acentuación adecuadas.
+    ============================================================ -->
+
+<head>
+    <!-- ============================================================
+        CABECERA DEL DOCUMENTO
+        Contiene metadatos, enlaces a recursos externos (fuentes,
+        hojas de estilo, scripts) y configuraciones que no son
+        visibles directamente en la página, pero son esenciales
+        para el funcionamiento y la presentación.
+        ============================================================ -->
+
+    <meta charset="UTF-8">
+    <!-- ============================================================
+        CODIFICACIÓN DE CARACTERES
+        UTF-8 es una codificación universal que permite representar
+        cualquier carácter de todos los idiomas, incluyendo ñ, tildes,
+        emojis y símbolos especiales. Sin esta etiqueta, los
+        caracteres no latinos podrían mostrarse incorrectamente.
+        ============================================================ -->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <!-- ============================================================
+        CONFIGURACIÓN DE LA VENTANA GRÁFICA (VIEWPORT)
+        - width=device-width: ajusta el ancho de la página al ancho
+        del dispositivo (móvil, tableta, PC).
+        - initial-scale=1.0: establece el nivel de zoom inicial a 1
+        (sin zoom adicional).
+        - user-scalable=yes: permite que el usuario pueda hacer zoom
+        con gestos de pellizco, mejorando la accesibilidad en
+        dispositivos táctiles.
+        ============================================================ -->
+
+    <title>Blooma · Guardián del Bosque | Gestión de Pedidos</title>
+    <!-- ============================================================
+        TÍTULO DE LA PESTAÑA
+        Aparece en la pestaña del navegador y en los resultados de
+        búsqueda. Describe el contenido de la página de forma concisa
+        y con la identidad de la marca "Blooma".
+        ============================================================ -->
+
+    <!-- ============================================================
+        PRECARGA DE FUENTES DE GOOGLE FONTS
+        Los enlaces "preconnect" establecen conexiones tempranas con
+        los servidores de Google Fonts para reducir la latencia al
+        cargar las tipografías. Esto acelera el renderizado inicial.
+        ============================================================ -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- ============================================================
+        CARGA DE FUENTES DESDE GOOGLE FONTS
+        Se importan varias familias tipográficas con diferentes pesos
+        y estilos para dar personalidad y jerarquía visual:
+        - Cinzel: serifa elegante, ideal para títulos y encabezados.
+        - Cormorant Garamond: serifa clásica, muy legible para textos
+        largos y con un toque literario.
+        - Montserrat: sans-serif moderna y limpia, perfecta para
+        interfaz de usuario, botones y etiquetas.
+        - Playfair Display: serifa con alto contraste, aporta
+        distinción a subtítulos y citas.
+        Los pesos (400, 700, 900) y las variantes itálicas permiten
+        una amplia gama de estilos.
+        ============================================================ -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,500;0,700;1,400&family=Montserrat:wght@200;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+    <!-- ============================================================
+        BIBLIOTECA DE ICONOS FONT AWESOME
+        Se carga la versión 6 (gratuita) que proporciona una amplia
+        colección de iconos vectoriales escalables. Los iconos se
+        usan para decorar botones, estadísticas, estados, etc.
+        ============================================================ -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- ============================================================
+        HOJA DE ESTILOS GLOBAL DEL PROYECTO
+        Se enlaza el archivo CSS que contiene todas las reglas de
+        estilo comunes a toda la aplicación. Se usa la sintaxis de
+        Flask (url_for) para apuntar a la carpeta 'static' donde se
+        encuentra el archivo. Este archivo define colores, fuentes,
+        sombras, efectos, etc.
+        ============================================================ -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/blooma_global.css') }}">
+
+    <!-- ============================================================
+        FAVICON (ICONO DE PESTAÑA)
+        Se especifica la ruta al icono que aparecerá en la pestaña
+        del navegador, en la barra de marcadores y en el historial.
+        El archivo 'iconic.png' debe estar en la carpeta 'static/img'.
+        ============================================================ -->
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/iconic.png') }}">
+</head>
+
+<body>
+<!-- ============================================================
+    CUERPO DEL DOCUMENTO
+    Todo el contenido visible de la página se coloca aquí.
+    ============================================================ -->
+
+<!-- ============================================================
+    FONDO DECORATIVO CON EMOJIS DE HOJAS Y FRESAS (LADO IZQUIERDO)
+    Este div tiene la clase 'leaf-bg' y contiene emojis que se
+    posicionan con CSS de forma fija o absoluta para crear un
+    fondo temático del bosque. Los emojis se renderizan como
+    texto y pueden tener tamaño y opacidad controlados.
+    ============================================================ -->
+<div class="leaf-bg">🍃🍓🌿</div>
+
+<!-- ============================================================
+    FONDO DECORATIVO CON EMOJIS DE BAYAS Y BRILLOS (LADO DERECHO)
+    Similar al anterior, pero con emojis distintos y posicionado
+    a la derecha para equilibrar la composición.
+    ============================================================ -->
+<div class="berry-bg-right">🫐🍒✨</div>
+
+<!-- ============================================================
+    CONTENEDOR PRINCIPAL DEL PANEL DE ADMINISTRACIÓN
+    Agrupa todo el contenido de gestión de pedidos. Usa la clase
+    'admin-dashboard' que define el ancho máximo, centrado y
+    posicionamiento relativo para que los elementos hijos puedan
+    usar posicionamiento absoluto si es necesario.
+    ============================================================ -->
+<div class="admin-dashboard">
+
+    <!-- ============================================================
+        CABECERA DEL DASHBOARD
+        Contiene el título principal y las tarjetas de estadísticas.
+        Se estructura con la clase 'admin-header' que aplica un
+        fondo con efecto vidrio, bordes redondeados y sombra.
+        ============================================================ -->
+    <div class="admin-header">
+
+        <!-- ============================================================
+            TÍTULO CON EFECTO DE RESPLANDOR
+            'title-glow' agrupa el título y subtítulo, y puede tener
+            sombras de texto o animaciones para dar un toque mágico.
+            ============================================================ -->
+        <div class="title-glow">
+            <!-- ============================================================
+                TÍTULO PRINCIPAL
+                Incluye un icono de corona (Font Awesome) con color dorado
+                y tamaño grande, seguido del nombre de la marca y la
+                sección 'Cosecha Real' para transmitir exclusividad.
+                ============================================================ -->
+            <h1><i class="fas fa-crown" style="color: #d4af37; font-size: 1.8rem;"></i> BLOOMA · Cosecha Real</h1>
+            <!-- ============================================================
+                SUBTÍTULO DECORATIVO
+                Con estrellas y el nombre del bosque, refuerza la temática
+                de naturaleza y lujo.
+                ============================================================ -->
+            <p>✦ Gestión de pedidos · Bosque de Melchor Ocampo ✦</p>
+        </div>
+
+        <!-- ============================================================
+            TARJETAS DE ESTADÍSTICAS
+            Contenedor con id 'statsContainer' para ser referenciado
+            desde JavaScript y actualizar los números dinámicamente.
+            Cada tarjeta muestra una cantidad y una etiqueta.
+            ============================================================ -->
+        <div class="stats-crystal" id="statsContainer">
+
+            <!-- ============================================================
+                TARJETA: TOTAL DE PEDIDOS
+                Muestra el número total de pedidos. El número tiene el id
+                'totalOrders' para ser actualizado por JS.
+                ============================================================ -->
+            <div class="stat-card">
+                <div class="stat-number" id="totalOrders">0</div>
+                <div class="stat-label">Total pedidos</div>
+            </div>
+
+            <!-- ============================================================
+                TARJETA: PENDIENTES
+                Muestra la cantidad de pedidos en estado 'pendiente'.
+                ============================================================ -->
+            <div class="stat-card">
+                <div class="stat-number" id="pendingCount">0</div>
+                <div class="stat-label">Pendientes</div>
+            </div>
+
+            <!-- ============================================================
+                TARJETA: LISTOS
+                Muestra la cantidad de pedidos en estado 'listo'.
+                ============================================================ -->
+            <div class="stat-card">
+                <div class="stat-number" id="readyCount">0</div>
+                <div class="stat-label">Listos</div>
+            </div>
+
+            <!-- ============================================================
+                TARJETA: ENTREGADOS
+                Muestra la cantidad de pedidos en estado 'entregado'.
+                ============================================================ -->
+            <div class="stat-card">
+                <div class="stat-number" id="deliveredCount">0</div>
+                <div class="stat-label">Entregados</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+        PANEL DE FILTROS Y BÚSQUEDA
+        Contiene la barra de búsqueda y el botón de sincronización.
+        Se usa la clase 'filters-panel' que organiza los elementos
+        en fila con flexbox.
+        ============================================================ -->
+    <div class="filters-panel">
+
+        <!-- ============================================================
+            CONTENEDOR DE BÚSQUEDA
+            'search-wrapper' agrupa el icono de lupa y el campo de
+            entrada para que el icono esté posicionado absolutamente
+            dentro del campo.
+            ============================================================ -->
+        <div class="search-wrapper">
+            <!-- Icono de lupa de Font Awesome -->
+            <i class="fas fa-search"></i>
+            <!-- ============================================================
+                CAMPO DE TEXTO PARA FILTRAR
+                id 'searchOrders' para enlazar con el evento input en JS.
+                El placeholder incluye una fresa como toque decorativo.
+                ============================================================ -->
+            <input type="text" id="searchOrders" placeholder="Buscar por referencia, cliente o email... 🍓">
+        </div>
+
+        <!-- ============================================================
+            BOTÓN DE SINCRONIZACIÓN / REFRESCO
+            Al hacer clic, recarga la página para obtener los datos
+            más recientes del servidor.
+            ============================================================ -->
+        <button class="refresh-btn" id="refreshStatsBtn"><i class="fas fa-sync-alt"></i> Sincronizar</button>
+    </div>
+
+    <!-- ============================================================
+        CONTENEDOR DE LA TABLA DE PEDIDOS (ESTILO REAL)
+        'table-royal' aplica un fondo blanco, bordes redondeados,
+        sombra y un borde dorado suave. Envuelve la tabla para
+        darle un aspecto de "carta real".
+        ============================================================ -->
+    <div class="table-royal">
+
+        <!-- ============================================================
+            TABLA DE PEDIDOS
+            id 'ordersTable' para posibles referencias en JS, aunque
+            no se usa directamente en el script actual, pero se reserva.
+            ============================================================ -->
+        <table class="order-table" id="ordersTable">
+
+            <!-- ============================================================
+                CABECERA DE LA TABLA
+                Define los nombres de las columnas con un estilo
+                elegante y mayúsculas.
+                ============================================================ -->
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Referencia ✦</th>
+                    <th>Cliente / Contacto</th>
+                    <th>Inversión (MXN)</th>
+                    <th>Fecha</th>
+                    <th>Estado actual</th>
+                    <th>Gestión del bosque</th>
+                    <!-- Esta columna contiene los botones para cambiar el estado -->
+                </tr>
+            </thead>
+
+            <!-- ============================================================
+                CUERPO DE LA TABLA
+                Se llena dinámicamente con la sintaxis de plantillas
+                Jinja de Flask. Recorre la variable 'pedidos' y genera
+                una fila por cada pedido.
+                ============================================================ -->
+            <tbody id="ordersTableBody">
+                {% for p in pedidos %}
+                <!-- ============================================================
+                    FILA DE PEDIDO
+                    Cada fila tiene clase 'order-row', y atributos personalizados
+                    'data-order-id' (ID del pedido) y 'data-original-status'
+                    (estado actual) para ser utilizados por JavaScript.
+                    ============================================================ -->
+                <tr class="order-row" data-order-id="{{ p[0] }}" data-original-status="{{ p[6] }}">
+
+                    <!-- ============================================================
+                        CELDA: ID
+                        Muestra el número de ID precedido de '#'.
+                        El atributo data-label se usa en diseño responsivo para
+                        mostrar la etiqueta de la columna en pantallas pequeñas.
+                        ============================================================ -->
+                    <td data-label="ID">#{{ p[0] }}</td>
+
+                    <!-- ============================================================
+                        CELDA: REFERENCIA
+                        Se muestra en negrita y con color dorado (variable CSS
+                        --golden-hour) para destacar.
+                        ============================================================ -->
+                    <td data-label="Ref" style="font-weight: bold; color: var(--golden-hour);">{{ p[1] }}</td>
+
+                    <!-- ============================================================
+                        CELDA: CLIENTE / CONTACTO
+                        Contiene el nombre del cliente en tamaño normal y el
+                        correo electrónico en un elemento <small> con opacidad
+                        reducida, para dar jerarquía visual.
+                        ============================================================ -->
+                    <td data-label="Cliente">
+                        <span style="font-size: 1rem;">{{ p[2] }}</span>
+                        <small style="display: block; opacity:0.7;">{{ p[3] }}</small>
+                    </td>
+
+                    <!-- ============================================================
+                        CELDA: TOTAL (INVERSIÓN)
+                        Muestra el monto con signo de pesos, clase 'price-tag'
+                        para estilo específico y color cálido (naranja suave).
+                        ============================================================ -->
+                    <td data-label="Total" class="price-tag" style="color: #ffb88c;">${{ p[4] }}</td>
+
+                    <!-- ============================================================
+                        CELDA: FECHA
+                        Muestra la fecha del pedido tal como viene del servidor.
+                        ============================================================ -->
+                    <td data-label="Fecha">{{ p[5] }}</td>
+
+                    <!-- ============================================================
+                        CELDA: ESTADO ACTUAL
+                        Contiene un 'badge' (etiqueta) con clase dinámica
+                        'status-{estado}' que define el color de fondo y borde.
+                        También tiene un icono según el estado (reloj, check, gema,
+                        prohibido) y el texto del estado.
+                        ============================================================ -->
+                    <td data-label="Estado">
+                        <span class="status-badge status-{{ p[6] }}" data-status-value="{{ p[6] }}">
+                            <i class="fas {% if p[6] == 'pendiente' %}fa-clock{% elif p[6] == 'listo' %}fa-check-circle{% elif p[6] == 'entregado' %}fa-gem{% else %}fa-ban{% endif %}"></i>
+                            {{ p[6] }}
+                        </span>
+                    </td>
+
+                    <!-- ============================================================
+                        CELDA: ACCIONES (GESTIÓN DEL BOSQUE)
+                        Contiene un menú desplegable (select) para elegir el
+                        nuevo estado y un botón "Actualizar" que envía la
+                        petición AJAX.
+                        ============================================================ -->
+                    <td data-label="Acciones">
+                        <div class="admin-actions">
+                            <!-- ============================================================
+                                SELECT DE ESTADO
+                                Cada opción tiene un valor y un emoji. La opción que
+                                coincide con el estado actual del pedido aparece
+                                seleccionada (atributo selected).
+                                ============================================================ -->
+                            <select class="status-select" data-id="{{ p[0] }}">
+                                <option value="pendiente" {% if p[6]=='pendiente' %}selected{% endif %}>⏳ Pendiente</option>
+                                <option value="listo" {% if p[6]=='listo' %}selected{% endif %}>✅ Listo</option>
+                                <option value="entregado" {% if p[6]=='entregado' %}selected{% endif %}>🏆 Entregado</option>
+                                <option value="cancelado" {% if p[6]=='cancelado' %}selected{% endif %}>❌ Cancelado</option>
+                            </select>
+
+                            <!-- ============================================================
+                                BOTÓN ACTUALIZAR (AJAX)
+                                Tiene clase 'btn-update-ajax' y atributo data-id con
+                                el ID del pedido. Al hacer clic, se dispara la
+                                función JavaScript que actualiza el estado.
+                                ============================================================ -->
+                            <button class="btn-update-ajax" data-id="{{ p[0] }}"><i class="fas fa-feather-alt"></i> Actualizar</button>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+                <!-- Fin del bucle Jinja -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ============================================================
+        PIE DE PÁGINA DEL PANEL
+        Contiene un mensaje decorativo con un icono de plántula,
+        reforzando la temática de naturaleza y transparencia.
+        ============================================================ -->
+    <footer>
+        <i class="fas fa-seedling"></i> Panel del Guardián · Transparencia y frescura · Pedidos gestionados con esencia del bosque
+    </footer>
+</div>
+
+<!-- ============================================================
+    CONTENEDOR PARA MENSAJES TOAST (NOTIFICACIONES EMERGENTES)
+    Se usa para mostrar mensajes de éxito o error al actualizar
+    un pedido. Inicialmente oculto y se muestra con la clase 'show'.
+    ============================================================ -->
+<div id="toastMsg" class="toast-notify"></div>
+
+<!-- ============================================================
+    SCRIPTS DE JAVASCRIPT
+    Todo el código JS que da funcionalidad a la página:
+    - Actualización de estados mediante fetch.
+    - Cálculo y actualización de estadísticas.
+    - Filtrado en tiempo real de la tabla.
+    - Manejo de eventos de botones y selectores.
+    - Animaciones y efectos visuales.
+    ============================================================ -->
+<script>
+    // ============================================================
+    // FUNCIÓN ANÓNIMA AUTOEJECUTABLE (IIFE)
+    // Se ejecuta inmediatamente al cargar la página y encapsula
+    // todas las variables y funciones para no contaminar el
+    // ámbito global. Esto evita conflictos con otros scripts.
+    // ============================================================
+    (function() {
+
+        // ============================================================
+        // REFERENCIAS A ELEMENTOS DEL DOM
+        // Se almacenan en variables para acceder rápidamente a ellos
+        // y evitar repetir consultas al DOM, mejorando el rendimiento.
+        // ============================================================
+
+        // Cuerpo de la tabla donde se insertan las filas de pedidos.
+        const tbody = document.getElementById('ordersTableBody');
+
+        // Campo de búsqueda para filtrar pedidos.
+        const searchInput = document.getElementById('searchOrders');
+
+        // Elementos que muestran los números de las estadísticas.
+        const statsTotal = document.getElementById('totalOrders');
+        const statsPending = document.getElementById('pendingCount');
+        const statsReady = document.getElementById('readyCount');
+        const statsDelivered = document.getElementById('deliveredCount');
+
+        // Botón de sincronización/refresco.
+        const refreshBtn = document.getElementById('refreshStatsBtn');
+
+        // Variable para controlar el temporizador del toast,
+        // para que desaparezca automáticamente después de unos segundos.
+        let toastTimeout = null;
+
+        // ============================================================
+        // FUNCIÓN PARA MOSTRAR MENSAJES TOAST
+        // Recibe el texto del mensaje y un booleano que indica si es
+        // un error (true) o éxito (false). Aplica estilos diferentes.
+        // ============================================================
+        function showMessage(text, isError = false) {
+            const toast = document.getElementById('toastMsg');
+            // Actualiza el contenido HTML del toast con un icono
+            // (hoja para éxito, triángulo de exclamación para error)
+            // y el texto del mensaje.
+            toast.innerHTML = `<i class="fas ${isError ? 'fa-exclamation-triangle' : 'fa-leaf'}"></i> ${text}`;
+            // Cambia el color del borde izquierdo: rojo para error,
+            // dorado para éxito, usando la variable --gold-main.
+            toast.style.borderLeftColor = isError ? '#ff6b81' : '#d4af37';
+            // Añade la clase 'show' que activa la transición para
+            // hacer visible el toast (se desliza desde la derecha).
+            toast.classList.add('show');
+
+            // Si ya hay un temporizador programado, lo limpia para
+            // evitar que se superpongan varios mensajes.
+            if (toastTimeout) clearTimeout(toastTimeout);
+
+            // Programa la desaparición del toast después de 3.5 segundos.
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3500);
+        }
+
+        // ============================================================
+        // FUNCIÓN PARA ACTUALIZAR LAS ESTADÍSTICAS A PARTIR DE LAS FILAS VISIBLES
+        // Recorre todas las filas del cuerpo de la tabla, cuenta cuántas
+        // hay de cada estado y actualiza los elementos HTML correspondientes.
+        // Esto se usa después de filtrar o actualizar un estado.
+        // ============================================================
+        function updateStatsFromRows() {
+            // Selecciona todas las filas con clase 'order-row' dentro del tbody.
+            const rows = document.querySelectorAll('#ordersTableBody tr.order-row');
+            let total = rows.length;
+            let pending = 0, ready = 0, delivered = 0, cancelled = 0;
+
+            // Itera sobre cada fila.
+            rows.forEach(row => {
+                // Busca el elemento con clase 'status-badge' dentro de la fila.
+                const statusSpan = row.querySelector('.status-badge');
+                if (statusSpan) {
+                    // Obtiene el valor del estado desde el atributo data-status-value
+                    // o desde el texto interno si no existe (por si acaso).
+                    let status = statusSpan.getAttribute('data-status-value') || statusSpan.innerText.trim().toLowerCase();
+                    // Incrementa el contador correspondiente.
+                    if (status === 'pendiente') pending++;
+                    else if (status === 'listo') ready++;
+                    else if (status === 'entregado') delivered++;
+                    else if (status === 'cancelado') cancelled++;
+                }
+            });
+
+            // Actualiza los elementos del DOM con los números calculados.
+            if (statsTotal) statsTotal.innerText = total;
+            if (statsPending) statsPending.innerText = pending;
+            if (statsReady) statsReady.innerText = ready;
+            if (statsDelivered) statsDelivered.innerText = delivered;
+        }
+
+        // ============================================================
+        // FUNCIÓN ASÍNCRONA PARA ACTUALIZAR EL ESTADO DE UN PEDIDO
+        // Envía una petición POST al servidor con el nuevo estado.
+        // Maneja la respuesta y actualiza la interfaz en caso de éxito.
+        // ============================================================
+        async function updateOrderStatus(orderId, newStatus, buttonElement, selectElement, rowElement) {
+            // Obtiene el estado original de la fila (guardado en data-original-status).
+            const originalStatus = rowElement.getAttribute('data-original-status');
+
+            // Si el nuevo estado es igual al original, no hay cambios y se muestra
+            // un mensaje informativo.
+            if (originalStatus === newStatus) {
+                showMessage(`El pedido ya está en estado "${newStatus}". Sin cambios.`, false);
+                return;
+            }
+
+            // Guarda el contenido original del botón para restaurarlo después.
+            const originalBtnText = buttonElement.innerHTML;
+            // Cambia el botón para mostrar un spinner de carga y texto "Enviando...".
+            buttonElement.innerHTML = '<span class="loading-spinner"></span> Enviando...';
+            // Deshabilita el botón para prevenir múltiples envíos mientras se procesa.
+            buttonElement.disabled = true;
+
+            try {
+                // Realiza la petición fetch al endpoint del servidor.
+                const response = await fetch(`/api/admin/order/${orderId}/status`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ estado: newStatus })
+                });
+
+                // Si la respuesta no es exitosa (código HTTP diferente de 200-299),
+                // intenta obtener un mensaje de error del JSON.
+                if (!response.ok) {
+                    let errorMsg = `Error ${response.status}: ${response.statusText}`;
+                    try {
+                        const errorData = await response.json();
+                        errorMsg = errorData.message || errorMsg;
+                    } catch(e) {}
+                    throw new Error(errorMsg);
+                }
+
+                // Parsea la respuesta JSON del servidor.
+                const result = await response.json();
+
+                // Si el servidor indica éxito (result.success === true).
+                if (result.success) {
+                    // 1. Actualiza el badge de estado (la etiqueta visual).
+                    const badgeSpan = rowElement.querySelector('.status-badge');
+                    let iconClass = '';
+                    if (newStatus === 'pendiente') iconClass = 'fa-clock';
+                    else if (newStatus === 'listo') iconClass = 'fa-check-circle';
+                    else if (newStatus === 'entregado') iconClass = 'fa-gem';
+                    else iconClass = 'fa-ban';
+                    // Reemplaza el contenido del badge con el nuevo icono y texto.
+                    badgeSpan.innerHTML = `<i class="fas ${iconClass}"></i> ${newStatus}`;
+                    // Cambia la clase CSS para que el color de fondo/borde se actualice.
+                    badgeSpan.className = `status-badge status-${newStatus}`;
+                    // Actualiza el atributo data-status-value para futuras referencias.
+                    badgeSpan.setAttribute('data-status-value', newStatus);
+
+                    // 2. Actualiza el select para que refleje el nuevo estado.
+                    if (selectElement) {
+                        selectElement.value = newStatus;
+                    }
+
+                    // 3. Guarda el nuevo estado en el atributo data-original-status de la fila.
+                    rowElement.setAttribute('data-original-status', newStatus);
+
+                    // 4. Añade una clase para resaltar la fila con una animación.
+                    rowElement.classList.add('row-updated');
+                    // Elimina la clase después de 800 ms para que el efecto desaparezca.
+                    setTimeout(() => rowElement.classList.remove('row-updated'), 800);
+
+                    // 5. Recalcula las estadísticas basadas en las filas visibles.
+                    updateStatsFromRows();
+
+                    // Muestra un mensaje de éxito.
+                    showMessage(`✅ Pedido #${orderId} actualizado a "${newStatus}".`, false);
+                } else {
+                    // Si result.success es false, lanza un error con el mensaje del servidor.
+                    throw new Error(result.message || 'Error en el servidor');
+                }
+            } catch (error) {
+                // Captura cualquier error (de red, del servidor, etc.) y lo muestra.
+                console.error(error);
+                showMessage(`❌ No se pudo actualizar: ${error.message}. Recarga la página o intenta más tarde.`, true);
+                // Revertir el select al estado original si falló.
+                if (selectElement) selectElement.value = originalStatus;
+            } finally {
+                // Restaura el botón a su estado original.
+                buttonElement.innerHTML = originalBtnText;
+                buttonElement.disabled = false;
+            }
+        }
+
+        // ============================================================
+        // FUNCIÓN PARA ASIGNAR EVENTOS A LOS BOTONES DE ACTUALIZACIÓN
+        // Busca todos los botones con clase 'btn-update-ajax' y les
+        // asigna un manejador de eventos click que llama a updateOrderStatus.
+        // ============================================================
+        function bindActionEvents() {
+            const updateButtons = document.querySelectorAll('.btn-update-ajax');
+            updateButtons.forEach(btn => {
+                // Elimina cualquier evento previo para evitar duplicados
+                // (por ejemplo, cuando el DOM se actualiza dinámicamente).
+                btn.removeEventListener('click', btn._listener);
+
+                // Define el manejador asíncrono.
+                const clickHandler = async (e) => {
+                    e.preventDefault(); // Evita que el botón recargue la página.
+                    const orderId = btn.getAttribute('data-id'); // ID del pedido.
+                    const rowElement = btn.closest('.order-row'); // Fila correspondiente.
+                    const selectElement = rowElement ? rowElement.querySelector('.status-select') : null;
+                    if (!selectElement) return;
+                    const newStatus = selectElement.value; // Nuevo estado seleccionado.
+                    await updateOrderStatus(orderId, newStatus, btn, selectElement, rowElement);
+                };
+
+                // Asigna el manejador al evento click.
+                btn.addEventListener('click', clickHandler);
+                // Guarda una referencia al manejador para poder eliminarlo después.
+                btn._listener = clickHandler;
+            });
+        }
+
+        // ============================================================
+        // FUNCIÓN PARA FILTRAR PEDIDOS EN TIEMPO REAL
+        // Se ejecuta cada vez que el usuario escribe en el campo de búsqueda.
+        // Oculta las filas que no coinciden con el texto de búsqueda.
+        // ============================================================
+        function filterOrders() {
+            const filterText = searchInput.value.toLowerCase().trim();
+            const rows = document.querySelectorAll('#ordersTableBody .order-row');
+            rows.forEach(row => {
+                // Obtiene el texto de las columnas relevantes: referencia, nombre y email.
+                const ref = row.cells[1]?.innerText.toLowerCase() || '';
+                const clienteNombre = row.cells[2]?.innerText.toLowerCase() || '';
+                const clienteEmail = row.cells[2]?.querySelector('small')?.innerText.toLowerCase() || '';
+                // Comprueba si el texto de búsqueda está contenido en alguno de esos campos.
+                const matches = ref.includes(filterText) || clienteNombre.includes(filterText) || clienteEmail.includes(filterText);
+                // Muestra u oculta la fila según coincida.
+                row.style.display = matches ? '' : 'none';
+            });
+            // Recalcula las estadísticas solo con las filas visibles.
+            updateStatsFromRows();
+        }
+
+        // Asigna el evento 'input' al campo de búsqueda para que se ejecute filterOrders.
+        searchInput.addEventListener('input', filterOrders);
+
+        // ============================================================
+        // EVENTO DEL BOTÓN DE SINCRONIZACIÓN (REFRESCO)
+        // Recarga la página para obtener los datos más recientes del servidor.
+        // ============================================================
+        refreshBtn.addEventListener('click', async () => {
+            showMessage('♻️ Sincronizando con el bosque...', false);
+            // Recarga la página (window.location.reload()).
+            window.location.reload();
+        });
+
+        // ============================================================
+        // FUNCIÓN DE INICIALIZACIÓN
+        // Se ejecuta al cargar la página para vincular eventos y calcular
+        // las estadísticas iniciales.
+        // ============================================================
+        function initialize() {
+            bindActionEvents();      // Asigna eventos a los botones de actualización.
+            updateStatsFromRows();   // Calcula las estadísticas iniciales.
+        }
+
+        // ============================================================
+        // OBSERVADOR DE MUTACIONES PARA CAMBIOS DINÁMICOS EN LA TABLA
+        // Detecta cuando se añaden o eliminan filas en el tbody y reasigna
+        // los eventos a los nuevos botones, además de actualizar estadísticas.
+        // ============================================================
+        const observer = new MutationObserver(() => {
+            bindActionEvents();
+            updateStatsFromRows();
+        });
+        // Observa el tbody y sus descendientes, detectando cambios en la lista de hijos.
+        observer.observe(tbody, { childList: true, subtree: true });
+
+        // Ejecuta la inicialización.
+        initialize();
+
+        // ============================================================
+        // ESTILO ADICIONAL PARA LOS PRECIOS (EFECTO DE BRILLO)
+        // Se añade una regla CSS que da un sombreado dorado a los precios.
+        // ============================================================
+        const stylePrice = document.createElement('style');
+        stylePrice.textContent = `.price-tag { font-weight: bold; text-shadow: 0 0 5px rgba(212, 175, 55, 0.4); }`;
+        document.head.appendChild(stylePrice);
+
+    })(); // Fin de la IIFE.
+
+    // ============================================================
+    // ANIMACIÓN DE APARICIÓN DE FILAS (FADE SLIDE UP)
+    // Este bloque de código se ejecuta fuera de la IIFE para dar
+    // un efecto de entrada a las filas de la tabla, con un retraso
+    // progresivo para cada una.
+    // ============================================================
+
+    // Selecciona todas las filas y les asigna una animación CSS
+    // con retraso creciente según el índice.
+    document.querySelectorAll('.order-row').forEach((row, idx) => {
+        row.style.animation = `fadeSlideUp 0.3s ease forwards ${idx * 0.02}s`;
+        row.style.opacity = '0'; // Inicialmente transparentes.
+    });
+
+    // Define la animación @keyframes en un elemento <style> añadido al head.
+    const aniStyle = document.createElement('style');
+    aniStyle.textContent = `
+        @keyframes fadeSlideUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .order-row { opacity: 1; }
+    `;
+    document.head.appendChild(aniStyle);
+</script>
+
+</body>
+</html>

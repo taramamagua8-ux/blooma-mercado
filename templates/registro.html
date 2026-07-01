@@ -1,0 +1,987 @@
+<!-- ======================================================================
+    BLOOMA - REGISTRO DE USUARIOS
+    ======================================================================
+    ESTE ARCHIVO CONTIENE LA INTERFAZ DE REGISTRO PARA NUEVOS USUARIOS.
+    PERMITE ELEGIR ENTRE TRES ROLES: CLIENTE, DUEÑO O EMPLEADO.
+    MUESTRA CAMPOS DINÁMICOS SEGÚN LA OPCIÓN SELECCIONADA.
+    EL DISEÑO UTILIZA COLORES CLAROS (BLANCO, VINO, DORADO, MORADO)
+    Y UNA IMAGEN DE FONDO DE LA CARPETA ESTÁTICA.
+    ====================================================================== -->
+
+<!-- DECLARACIÓN DEL TIPO DE DOCUMENTO: INDICA QUE ESTE ARCHIVO SIGUE EL ESTÁNDAR HTML5 -->
+<!DOCTYPE html>
+<!-- 
+    LA PRIMERA LÍNEA ES EL "DOCTYPE". 
+    LE INDICA AL NAVEGADOR QUE ESTE DOCUMENTO ESTÁ ESCRITO EN HTML5.
+    SIN ESTA LÍNEA, EL NAVEGADOR PODRÍA ENTRAR EN "MODO QUIRKS" (COMPATIBILIDAD)
+    Y MOSTRAR LA PÁGINA INCORRECTAMENTE, CON ERRORES DE MAQUETACIÓN.
+-->
+
+<!-- ETIQUETA HTML: CONTIENE TODO EL CONTENIDO DE LA PÁGINA, DESDE EL INICIO HASTA EL FINAL -->
+<html lang="es">
+<!-- 
+    HTML ES EL ELEMENTO RAÍZ QUE ENVUELVE TODO EL CONTENIDO DE LA PÁGINA.
+    EL ATRIBUTO LANG="ES" DECLARA QUE EL IDIOMA PRINCIPAL ES EL ESPAÑOL.
+    ESTO AYUDA A:
+    - LOS MOTORES DE BÚSQUEDA (GOOGLE) A INDEXAR CORRECTAMENTE EL IDIOMA.
+    - LOS LECTORES DE PANTALLA (PARA PERSONAS CON DISCAPACIDAD VISUAL) A 
+      PRONUNCIAR EL TEXTO CON LA ENTONACIÓN CORRECTA.
+    - LOS NAVEGADORES A OFRECER TRADUCCIÓN AUTOMÁTICA SI ES NECESARIO.
+-->
+
+<!-- CABECERA (HEAD): CONTIENE METADATOS, TÍTULO, ENLACES A RECURSOS EXTERNOS Y ESTILOS -->
+<head>
+    <!-- 
+        HEAD ES LA CABECERA DEL DOCUMENTO. 
+        CONTIENE METADATOS, ENLACES A RECURSOS EXTERNOS (CSS, FUENTES, ICONOS)
+        Y ESTILOS INTERNOS. NADA DE LO QUE ESTÁ AQUÍ SE MUESTRA DIRECTAMENTE
+        EN LA VENTANA DEL NAVEGADOR, PERO ES CRUCIAL PARA EL FUNCIONAMIENTO.
+    -->
+
+    <!-- META CHARSET: DEFINE LA CODIFICACIÓN DE CARACTERES COMO UTF-8 -->
+    <meta charset="UTF-8">
+    <!-- 
+        META CHARSET="UTF-8" DEFINE LA CODIFICACIÓN DE CARACTERES.
+        UTF-8 ES UN ESTÁNDAR UNIVERSAL QUE SOPORTA TODOS LOS CARACTERES:
+        TILDES (Á, É, Í, Ó, Ú), EÑES (Ñ), LETRAS CON DIACRÍTICOS, EMOJIS.
+        SI FALTARA, LOS ACENTOS Y CARACTERES ESPECIALES SE VERÍAN COMO 
+        CARACTERES EXTRAÑOS O "MOJIBAKE".
+    -->
+
+    <!-- META VIEWPORT: CONFIGURA EL ÁREA VISIBLE PARA DISPOSITIVOS MÓVILES -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 
+        ESTA METAETIQUETA ES ESENCIAL PARA EL DISEÑO RESPONSIVO (MOBILE-FIRST).
+        - "WIDTH=DEVICE-WIDTH": AJUSTA EL ANCHO DE LA PÁGINA AL ANCHO REAL 
+          DE LA PANTALLA DEL DISPOSITIVO (NO AL ANCHO DE ESCRITORIO).
+        - "INITIAL-SCALE=1.0": ESTABLECE EL NIVEL DE ZOOM INICIAL EN 100 %.
+        SIN ESTO, EN MÓVILES LA PÁGINA SE VERÍA COMO UNA VERSIÓN REDUCIDA 
+        DE ESCRITORIO, CON LETRAS MUY PEQUEÑAS Y DIFÍCIL DE INTERACTUAR.
+    -->
+
+    <!-- TÍTULO DE LA PÁGINA: SE MUESTRA EN LA PESTAÑA DEL NAVEGADOR -->
+    <title>Blooma · Crear cuenta 🍓</title>
+    <!-- 
+        TITLE DEFINE EL TEXTO QUE APARECE EN LA PESTAÑA DEL NAVEGADOR.
+        TAMBIÉN ES EL TÍTULO QUE MUESTRAN LOS MOTORES DE BÚSQUEDA EN 
+        LOS RESULTADOS. ES IMPORTANTE PARA EL SEO (POSICIONAMIENTO).
+        AQUÍ USAMOS "BLOOMA · CREAR CUENTA" CON UN EMOJI DE FRESA 
+        PARA DARLE UN TOQUE AMIGABLE Y DISTINTIVO.
+    -->
+
+    <!-- ================================================================
+        ENLACES A FUENTES TIPOGRÁFICAS (GOOGLE FONTS)
+    ================================================================ -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lora:ital@0;1&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- 
+        LINK CARGA RECURSOS EXTERNOS. EN ESTE CASO, TRES FAMILIAS DE FUENTES
+        DESDE EL SERVICIO GRATUITO GOOGLE FONTS:
+        - "PLAYFAIR DISPLAY": FUENTE SERIF ELEGANTE, IDEAL PARA TÍTULOS.
+        - "LORA": OTRA SERIF, MÁS CLÁSICA Y LEGIBLE.
+        - "MONTSERRAT": SANS-SERIF MODERNA, LIMPIA Y MUY LEGIBLE EN PANTALLA.
+        ESTAS FUENTES SE DESCARGAN AUTOMÁTICAMENTE AL VISITAR LA PÁGINA,
+        POR LO QUE NO ES NECESARIO QUE EL USUARIO LAS TENGA INSTALADAS.
+        EL ATRIBUTO "DISPLAY=SWAP" ASEGURA QUE EL TEXTO SE MUESTRE CON UNA
+        FUENTE DE RESPALDO MIENTRAS SE CARGAN LAS FUENTES PERSONALIZADAS.
+    -->
+
+    <!-- ================================================================
+        BIBLIOTECA DE ICONOS (FONT AWESOME)
+    ================================================================ -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- 
+        CARGA FONT AWESOME VERSIÓN 6 BETA, UNA BIBLIOTECA DE ICONOS VECTORIALES.
+        PERMITE USAR ICONOS COMO I CLASS="FAS FA-SEEDLING" PARA PLANTAR,
+        I CLASS="FAS FA-LEAF" PARA HOJA, ETC.
+        LOS ICONOS SON ESCALABLES, SE VEN NÍTIDOS EN CUALQUIER RESOLUCIÓN
+        Y AYUDAN A HACER LA INTERFAZ MÁS VISUAL E INTUITIVA.
+    -->
+
+    <!-- ================================================================
+        FAVICON (ICONO DE LA PESTAÑA) - CORREGIDO
+    ================================================================ -->
+    <!-- 
+        LA FUNCIÓN CORRECTA EN JINJA2 ES "url_for" (MINÚSCULAS).
+        EL PRIMER ARGUMENTO DEBE SER 'static' (CON COMILLAS SIMPLES).
+        EL SEGUNDO ARGUMENTO ES "filename" CON EL NOMBRE DEL ARCHIVO.
+        ESTA LÍNEA GENERA LA RUTA REAL HACIA EL FAVICON.
+    -->
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/iconic.png') }}">
+
+    <!-- ================================================================
+        HOJA DE ESTILOS GLOBAL DE BLOOMA - CORREGIDA
+    ================================================================ -->
+    <!-- 
+        CARGA EL ARCHIVO CSS GLOBAL DEL SITIO "BLOOMA_GLOBAL.CSS".
+        CONTIENE LAS VARIABLES DE COLOR, ESTILOS DE BOTONES, TARJETAS,
+        EFECTOS DE VIDRIO, TIPOGRAFÍAS BASE, ETC.
+        AL HEREDAR ESTOS ESTILOS, LA PÁGINA DE REGISTRO MANTIENE LA
+        IDENTIDAD VISUAL DE TODA LA APLICACIÓN (COLORES, FUENTES, SOMBRAS).
+    -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/blooma_global.css') }}">
+
+    <!-- ================================================================
+        ESTILOS ESPECÍFICOS PARA ESTA PÁGINA (REGISTRO.HTML)
+        ================================================================
+        ESTOS ESTILOS SE AÑADEN AQUÍ PARA PERSONALIZAR EL FORMULARIO
+        SIN MODIFICAR EL ARCHIVO GLOBAL, EVITANDO AFECTAR OTRAS PÁGINAS.
+        CADA REGLA CSS ESTÁ DETALLADAMENTE COMENTADA.
+    ================================================================ -->
+    <style>
+        /* --------------------------------------------------------------
+        ESTILOS DEL CUERPO (BODY) – FONDO CON IMAGEN
+        -------------------------------------------------------------- */
+        body {
+            /* background-image: ESTABLECE LA IMAGEN DE FONDO. */
+            /* USAMOS url_for (MINÚSCULAS) PARA GENERAR LA RUTA CORRECTA */
+            /* HACIA 'STATIC/IMG/FONDOS/FONDOPRINCI.PNG'. */
+            background-image: url('{{ url_for("static", filename="img/fondos/fondoprinci.png") }}');
+            /* background-size: COVER -> LA IMAGEN SE REDIMENSIONA PARA */
+            /* CUBRIR TODO EL FONDO SIN DISTORSIONARSE, RECORTANDO SI ES NECESARIO. */
+            background-size: cover;
+            /* background-position: CENTER -> CENTRA LA IMAGEN EN EL MEDIO */
+            /* DE LA PANTALLA. */
+            background-position: center;
+            /* background-repeat: NO-REPEAT -> EVITA QUE LA IMAGEN SE REPITA */
+            /* EN MOSAICO SI ES MÁS PEQUEÑA QUE LA PANTALLA. */
+            background-repeat: no-repeat;
+            /* min-height: 100VH -> ASEGURA QUE EL CUERPO OCUPE AL MENOS */
+            /* EL 100 % DE LA ALTURA VISIBLE DE LA VENTANA (VIEWPORT HEIGHT). */
+            /* ASÍ EL FONDO SIEMPRE CUBRE TODA LA PANTALLA. */
+            min-height: 100vh;
+            /* display: FLEX -> CONVIERTE AL BODY EN UN CONTENEDOR FLEXIBLE. */
+            /* ESTO PERMITE CENTRAR LA TARJETA DE REGISTRO TANTO VERTICAL */
+            /* COMO HORIZONTALMENTE USANDO LAS PROPIEDADES DE ALINEACIÓN. */
+            display: flex;
+            /* align-items: CENTER -> CENTRA EL CONTENIDO (LA TARJETA) */
+            /* VERTICALMENTE DENTRO DEL BODY. */
+            align-items: center;
+            /* justify-content: CENTER -> CENTRA EL CONTENIDO HORIZONTALMENTE. */
+            justify-content: center;
+            /* padding: 2REM 1REM -> AÑADE ESPACIO INTERIOR PARA QUE LA TARJETA */
+            /* NO TOQUE LOS BORDES DE LA PANTALLA EN DISPOSITIVOS PEQUEÑOS. */
+            /* 2REM ARRIBA/ABAJO, 1REM A LOS LADOS. */
+            padding: 2rem 1rem;
+            /* background-color: #F5EEF7 -> COLOR DE RESPALDO (MUY CLARO, */
+            /* CASI BLANCO CON UN TOQUE LILA). SI LA IMAGEN DE FONDO NO CARGA */
+            /* POR ALGÚN MOTIVO (ERROR DE RUTA, CONEXIÓN LENTA), ESTE COLOR */
+            /* SE MOSTRARÁ EN SU LUGAR, MANTENIENDO LA LEGIBILIDAD. */
+            background-color: #f5eef7;
+        }
+
+        /* --------------------------------------------------------------
+        TARJETA PRINCIPAL (REGISTER-CARD)
+        ES EL CONTENEDOR BLANCO/TRANSLÚCIDO QUE ENVUELVE EL FORMULARIO.
+        -------------------------------------------------------------- */
+        .register-card {
+            /* max-width: 620PX -> LIMITA EL ANCHO MÁXIMO DE LA TARJETA */
+            /* A 620 PÍXELES. EN PANTALLAS GRANDES NO SE ESTIRA DEMASIADO, */
+            /* MANTENIENDO UNA LECTURA CÓMODA. */
+            max-width: 620px;
+            /* width: 100 % -> OCUPA TODO EL ANCHO DISPONIBLE HASTA EL MÁXIMO. */
+            /* ESENCIAL PARA QUE SE ADAPTE A PANTALLAS PEQUEÑAS. */
+            width: 100%;
+            /* margin: 0 AUTO -> CENTRA LA TARJETA HORIZONTALMENTE DENTRO */
+            /* DEL BODY (GRACIAS AL AUTO EN LOS MÁRGENES IZQUIERDO/DERECHO). */
+            margin: 0 auto;
+            /* background: RGBA(255, 255, 255, 0.85) -> FONDO BLANCO CON */
+            /* UN 85 % DE OPACIDAD (TRANSPARENCIA). EL 15 % RESTANTE DEJA VER */
+            /* LIGERAMENTE LA IMAGEN DE FONDO, CREANDO UN EFECTO DE "VIDRIO". */
+            background: rgba(255, 255, 255, 0.85);
+            /* backdrop-filter: BLUR(6PX) -> APLICA UN DESENFOQUE (BLUR) */
+            /* A LA IMAGEN DE FONDO QUE SE VE DETRÁS DE LA TARJETA. */
+            /* ESTO POTENCIA EL EFECTO DE "VIDRIO ESMERILADO" (GLASSMORPHISM), */
+            /* HACIENDO QUE EL CONTENIDO SE VEA NÍTIDO PERO EL FONDO BORROSO. */
+            backdrop-filter: blur(6px);
+            /* border-radius: 48PX -> BORDES MUY REDONDEADOS (48PX), */
+            /* DÁNDOLE UNA FORMA SUAVE Y MODERNA, CASI OVALADA. */
+            border-radius: 48px;
+            /* border: 2PX SOLID #6A1B2E -> BORDE DE 2 PÍXELES DE GROSOR, */
+            /* DE COLOR VINO (ROJO OSCURO). ESTE BORDE DA CONTORNO Y */
+            /* REFUERZA LA IDENTIDAD DE COLOR DE BLOOMA. */
+            border: 2px solid #6a1b2e;
+            /* box-shadow: DOS SOMBRAS APILADAS: */
+            /* - PRIMERA: DESPLAZADA 25PX HACIA ABAJO, DIFUMINADO 45PX, */
+            /*     COLOR NEGRO CON 20 % OPACIDAD. DA PROFUNDIDAD (LA TARJETA FLOTA). */
+            /* - SEGUNDA: UN BORDE INTERIOR LUMINOSO MUY SUTIL (1PX) DE COLOR */
+            /*     VINO CON 20 % OPACIDAD, QUE SIMULA UN BRILLO INTERNO. */
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(106, 27, 46, 0.2);
+            /* padding: 2REM 2REM 2.5REM -> ESPACIO INTERIOR: */
+            /* - 2REM ARRIBA Y A LOS LADOS. */
+            /* - 2.5REM ABAJO (UN POCO MÁS PARA EQUILIBRIO VISUAL). */
+            padding: 2rem 2rem 2.5rem;
+            /* transition: TRANSFORM 0.2S EASE -> ANIMACIÓN SUAVE PARA */
+            /* LA PROPIEDAD "TRANSFORM" (USADA EN HOVER). */
+            /* DURA 0.2 SEGUNDOS CON CURVA DE ACELERACIÓN "EASE". */
+            transition: transform 0.2s ease;
+            /* position: RELATIVE -> NECESARIO PARA QUE LOS PSEUDO-ELEMENTOS */
+            /* ::BEFORE Y ::AFTER (LOS EMOJIS DECORATIVOS) SE POSICIONEN */
+            /* DE FORMA ABSOLUTA RESPECTO A ESTA TARJETA Y NO AL BODY. */
+            position: relative;
+        }
+
+        /* ESTILOS CUANDO EL MOUSE PASA POR ENCIMA DE LA TARJETA (HOVER). */
+        .register-card:hover {
+            /* transform: TRANSLATEY(-5PX) -> DESPLAZA LA TARJETA 5PX HACIA ARRIBA, */
+            /* DANDO LA SENSACIÓN DE QUE "FLOTA" O SE ELEVA LIGERAMENTE. */
+            transform: translateY(-5px);
+            /* border-color: #B8860B -> CAMBIA EL COLOR DEL BORDE A DORADO, */
+            /* CREANDO UN CONTRASTE ELEGANTE Y ATRACTIVO. */
+            border-color: #b8860b;
+            /* box-shadow: SE INTENSIFICA LA SOMBRA Y SE AÑADE UN RESPLANDOR */
+            /* DORADO SUTIL (0 0 0 2PX RGBA(184,134,11,0.3)). */
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.25), 0 0 0 2px rgba(184, 134, 11, 0.3);
+        }
+
+        /* --------------------------------------------------------------
+        TÍTULO PRINCIPAL (H2)
+        -------------------------------------------------------------- */
+        .register-card h2 {
+            /* font-family: 'PLAYFAIR DISPLAY', SERIF -> USA LA FUENTE ELEGANTE */
+            /* CON SERIF CARGADA DESDE GOOGLE FONTS. ES IDEAL PARA TÍTULOS. */
+            font-family: 'Playfair Display', serif;
+            /* font-size: 2REM -> TAMAÑO DE LETRA: 2 VECES EL TAMAÑO BASE */
+            /* DEL NAVEGADOR (NORMALMENTE 16PX * 2 = 32PX). */
+            font-size: 2rem;
+            /* text-align: CENTER -> CENTRA EL TEXTO HORIZONTALMENTE. */
+            text-align: center;
+            /* margin-bottom: 0.25REM -> PEQUEÑO MARGEN INFERIOR PARA SEPARAR */
+            /* DEL SUBTÍTULO O DEL CONTENIDO SIGUIENTE. */
+            margin-bottom: 0.25rem;
+            /* color: #2D1B2E -> MORADO OSCURO, QUE DA UN TONO SOFISTICADO */
+            /* Y COMBINA CON LA PALETA DE COLORES CLAROS. */
+            color: #2d1b2e;
+            /* letter-spacing: 1PX -> AÑADE 1 PÍXEL DE ESPACIO ENTRE LETRAS, */
+            /* MEJORANDO LA LEGIBILIDAD Y DANDO UN ASPECTO MÁS "AIREADO". */
+            letter-spacing: 1px;
+        }
+
+        /* --------------------------------------------------------------
+        SUBTÍTULO O DESCRIPCIÓN (SUBHEAD)
+        (SE USA PARA MENSAJES DECORATIVOS, AUNQUE EN ESTE CÓDIGO
+            NO APARECE EN EL HTML, PERO SE MANTIENE POR SI SE AÑADE)
+        -------------------------------------------------------------- */
+        .register-card .subhead {
+            text-align: center;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.75rem;
+            color: #6a1b2e; /* COLOR VINO */
+            margin-bottom: 1.8rem;
+            border-bottom: 1px dashed #b8860b; /* LÍNEA DISCONTINUA DORADA */
+            display: inline-block;
+            width: auto;
+            margin-left: auto;
+            margin-right: auto;
+            padding-bottom: 0.5rem;
+        }
+
+        /* --------------------------------------------------------------
+        GRUPOS DE CAMPOS DEL FORMULARIO (FORM-GROUP)
+        CADA CAMPO (INPUT, TEXTAREA) ESTÁ DENTRO DE UN DIV CON ESTA CLASE.
+        -------------------------------------------------------------- */
+        .form-group {
+            /* margin-bottom: 1.2REM -> SEPARACIÓN VERTICAL ENTRE CADA CAMPO, */
+            /* PARA QUE NO ESTÉN PEGADOS. */
+            margin-bottom: 1.2rem;
+        }
+
+        /* ESTILOS COMUNES PARA TODOS LOS CAMPOS DE ENTRADA: */
+        /* INPUTS DE TEXTO, EMAIL, PASSWORD, TELÉFONO, FECHA, */
+        /* TEXTAREAS Y EL INPUT DE TIPO FILE. */
+        .form-group input,
+        .form-group textarea,
+        .file-input {
+            /* width: 100 % -> OCUPAN TODO EL ANCHO DEL CONTENEDOR (FORM-GROUP). */
+            width: 100%;
+            /* padding: 12PX 16PX -> ESPACIO INTERIOR: 12PX ARRIBA/ABAJO, */
+            /* 16PX A LOS LADOS. HACE QUE LOS CAMPOS SEAN CÓMODOS PARA ESCRIBIR. */
+            padding: 12px 16px;
+            /* background: #FFFFFF -> FONDO BLANCO PURO PARA LOS CAMPOS, */
+            /* QUE CONTRASTA CON EL FONDO SEMITRANSPARENTE DE LA TARJETA. */
+            background: #ffffff;
+            /* border: 1PX SOLID #D4C4D9 -> BORDE GRIS-LILA SUAVE. */
+            /* ES SUTIL PERO DEFINE EL LÍMITE DEL CAMPO. */
+            border: 1px solid #d4c4d9;
+            /* border-radius: 40PX -> BORDES MUY REDONDEADOS (FORMA DE PÍLDORA), */
+            /* QUE DA UN ASPECTO MODERNO Y AMIGABLE. */
+            border-radius: 40px;
+            /* color: #2D1B2E -> TEXTO EN MORADO OSCURO PARA LEGIBILIDAD. */
+            color: #2d1b2e;
+            /* font-family: 'MONTSERRAT', SANS-SERIF -> FUENTE LIMPIA Y MODERNA. */
+            font-family: 'Montserrat', sans-serif;
+            /* font-size: 0.9REM -> LIGERAMENTE MÁS PEQUEÑO QUE EL TAMAÑO BASE. */
+            font-size: 0.9rem;
+            /* transition: ALL 0.2S -> ANIMACIÓN SUAVE PARA TODOS LOS CAMBIOS */
+            /* (BORDE, SOMBRA, ETC.) CUANDO EL CAMPO RECIBE FOCO. */
+            transition: all 0.2s;
+            /* box-shadow: INSET 0 1PX 3PX RGBA(0,0,0,0.05) -> SOMBRA INTERIOR */
+            /* MUY LEVE QUE DA PROFUNDIDAD AL CAMPO (EFECTO HUNDIDO). */
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        /* ESTILOS ESPECÍFICOS PARA EL ÁREA DE TEXTO (TEXTAREA). */
+        .form-group textarea {
+            /* border-radius: 24PX -> BORDES UN POCO MENOS REDONDEADOS QUE */
+            /* LOS INPUTS (24PX VS 40PX) PARA DAR VARIEDAD VISUAL. */
+            border-radius: 24px;
+            /* resize: VERTICAL -> PERMITE AL USUARIO REDIMENSIONAR EL ÁREA */
+            /* SOLO EN SENTIDO VERTICAL (ALTO), NO HORIZONTAL, PARA NO ROMPER */
+            /* EL DISEÑO DEL FORMULARIO. */
+            resize: vertical;
+        }
+
+        /* ESTILOS CUANDO UN CAMPO RECIBE EL FOCO (EL USUARIO HACE CLIC O */
+        /* NAVEGA CON EL TECLADO HASTA ÉL). */
+        .form-group input:focus,
+        .form-group textarea:focus {
+            /* outline: NONE -> ELIMINA EL BORDE AZUL O CONTORNO QUE ALGUNOS */
+            /* NAVEGADORES AÑADEN POR DEFECTO AL ENFOCAR. */
+            outline: none;
+            /* border-color: #6A1B2E -> CAMBIA EL BORDE A COLOR VINO, */
+            /* INDICANDO VISUALMENTE QUE EL CAMPO ESTÁ ACTIVO. */
+            border-color: #6a1b2e;
+            /* box-shadow: 0 0 0 3PX RGBA(106, 27, 46, 0.15) -> AÑADE UN */
+            /* RESPLANDOR EXTERIOR DE COLOR VINO CON 15 % DE OPACIDAD, */
+            /* QUE RESALTA EL CAMPO SIN SER AGRESIVO. */
+            box-shadow: 0 0 0 3px rgba(106, 27, 46, 0.15);
+        }
+
+        /* --------------------------------------------------------------
+        GRUPO DE BOTONES RADIO (TIPO DE CUENTA)
+        -------------------------------------------------------------- */
+        .radio-group {
+            /* display: FLEX -> USA FLEXBOX PARA ALINEAR LOS BOTONES EN FILA. */
+            display: flex;
+            /* gap: 1.5REM -> ESPACIO DE 1.5REM ENTRE CADA OPCIÓN (CLIENTE, DUEÑO, EMPLEADO). */
+            gap: 1.5rem;
+            /* justify-content: CENTER -> CENTRA LAS OPCIONES HORIZONTALMENTE. */
+            justify-content: center;
+            /* margin: 1.5REM 0 -> MARGEN SUPERIOR E INFERIOR PARA SEPARAR */
+            /* DEL RESTO DEL FORMULARIO. */
+            margin: 1.5rem 0;
+            /* background: RGBA(106, 27, 46, 0.08) -> FONDO CON UN TOQUE */
+            /* MUY SUTIL DE COLOR VINO (8 % OPACIDAD) PARA RESALTAR EL ÁREA. */
+            background: rgba(106, 27, 46, 0.08);
+            /* padding: 0.8REM 1.2REM -> ESPACIO INTERIOR ALREDEDOR DE LOS RADIOS. */
+            padding: 0.8rem 1.2rem;
+            /* border-radius: 60PX -> BORDES MUY REDONDEADOS (FORMA DE PÍLDORA). */
+            border-radius: 60px;
+            /* flex-wrap: WRAP -> SI EL ESPACIO ES INSUFICIENTE (PANTALLAS PEQUEÑAS), */
+            /* LOS BOTONES SE ENVUELVEN A LA SIGUIENTE LÍNEA EN LUGAR DE DESBORDARSE. */
+            flex-wrap: wrap;
+        }
+
+        /* CADA ETIQUETA LABEL DENTRO DEL GRUPO. */
+        .radio-group label {
+            /* display: FLEX -> ALINEA EL BOTÓN RADIO Y EL TEXTO EN LA MISMA LÍNEA. */
+            display: flex;
+            /* align-items: CENTER -> CENTRA VERTICALMENTE EL BOTÓN Y EL TEXTO. */
+            align-items: center;
+            /* gap: 0.5REM -> ESPACIO ENTRE EL BOTÓN RADIO Y EL TEXTO. */
+            gap: 0.5rem;
+            /* cursor: POINTER -> CAMBIA EL CURSOR A UNA MANITA AL PASAR */
+            /* SOBRE EL LABEL, INDICANDO QUE ES CLICKEABLE (SELECCIONA EL RADIO). */
+            cursor: pointer;
+            /* font-family: 'MONTSERRAT', SANS-SERIF -> FUENTE MODERNA. */
+            font-family: 'Montserrat', sans-serif;
+            /* font-weight: 500 -> PESO MEDIO (SEMIBOLD) PARA DESTACAR. */
+            font-weight: 500;
+            /* color: #2D1B2E -> TEXTO EN MORADO OSCURO. */
+            color: #2d1b2e;
+        }
+
+        /* ESTILOS ESPECÍFICOS PARA LOS INPUTS DE TIPO RADIO. */
+        .radio-group input[type="radio"] {
+            /* accent-color: #6A1B2E -> CAMBIA EL COLOR DEL BOTÓN RADIO */
+            /* CUANDO ESTÁ SELECCIONADO AL COLOR VINO (EN LUGAR DEL AZUL POR DEFECTO). */
+            accent-color: #6a1b2e;
+            /* width: 18PX; HEIGHT: 18PX -> TAMAÑO DEL BOTÓN RADIO. */
+            width: 18px;
+            height: 18px;
+            /* margin: 0 -> ELIMINA EL MARGEN POR DEFECTO QUE ALGUNOS */
+            /* NAVEGADORES AÑADEN. */
+            margin: 0;
+        }
+
+        /* --------------------------------------------------------------
+        CAMPOS ADICIONALES PARA DUEÑO Y EMPLEADO
+        AMBOS BLOQUES COMPARTEN ESTILOS SIMILARES.
+        SE MUESTRAN/OCULTAN CON JAVASCRIPT.
+        -------------------------------------------------------------- */
+        #campos_dueno,
+        #campos_empleado {
+            /* margin-top: 1REM -> SEPARACIÓN CON EL GRUPO DE RADIOS. */
+            margin-top: 1rem;
+            /* padding: 0.8REM 1REM -> ESPACIO INTERIOR. */
+            padding: 0.8rem 1rem;
+            /* background: RGBA(184, 134, 11, 0.06) -> FONDO DORADO MUY TENUE */
+            /* (6 % OPACIDAD) PARA DISTINGUIR VISUALMENTE ESTA SECCIÓN. */
+            background: rgba(184, 134, 11, 0.06);
+            /* border-radius: 32PX -> BORDES REDONDEADOS. */
+            border-radius: 32px;
+            /* border-left: 3PX SOLID #B8860B -> UNA LÍNEA VERTICAL A LA IZQUIERDA */
+            /* DE COLOR DORADO, COMO ACENTO DECORATIVO QUE INDICA "CAMPOS EXTRA". */
+            border-left: 3px solid #b8860b;
+        }
+
+        /* --------------------------------------------------------------
+        TEXTO PEQUEÑO DE AYUDA (SMALL-NOTE)
+        SE USA PARA MOSTRAR INSTRUCCIONES ADICIONALES (FORMATOS, ETC.)
+        -------------------------------------------------------------- */
+        .small-note {
+            /* font-size: 0.7REM -> TEXTO MUY PEQUEÑO (70 % DEL TAMAÑO BASE). */
+            font-size: 0.7rem;
+            /* color: #6A5B6E -> UN GRIS CON TONO MORADO, SUAVE Y LEGIBLE. */
+            color: #6a5b6e;
+            /* display: BLOCK -> OCUPA TODA LA LÍNEA, FORZANDO UN SALTO DE LÍNEA. */
+            display: block;
+            /* margin-top: 0.3REM -> PEQUEÑA SEPARACIÓN DEL CAMPO ANTERIOR. */
+            margin-top: 0.3rem;
+        }
+
+        /* --------------------------------------------------------------
+        BOTÓN DE ENVÍO (SUBMIT)
+        -------------------------------------------------------------- */
+        button[type="submit"] {
+            /* width: 100 % -> OCUPA TODO EL ANCHO DE LA TARJETA. */
+            width: 100%;
+            /* background: LINEAR-GRADIENT(95DEG, #6A1B2E, #4B2E5A) -> DEGRADADO */
+            /* QUE VA DE VINO (IZQUIERDA) A MORADO OSCURO (DERECHA). */
+            /* LE DA UN ASPECTO ATRACTIVO Y PROFESIONAL. */
+            background: linear-gradient(95deg, #6a1b2e, #4b2e5a);
+            /* border: NONE -> ELIMINA EL BORDE POR DEFECTO DE LOS BOTONES. */
+            border: none;
+            /* padding: 14PX -> ESPACIO INTERIOR GENEROSO PARA QUE SEA FÁCIL */
+            /* DE PULSAR, ESPECIALMENTE EN MÓVILES. */
+            padding: 14px;
+            /* border-radius: 40PX -> BORDES MUY REDONDEADOS (PÍLDORA). */
+            border-radius: 40px;
+            /* color: #FFFFFF -> TEXTO BLANCO PARA CONTRASTE CON EL FONDO OSCURO. */
+            color: #ffffff;
+            /* font-weight: BOLD -> TEXTO EN NEGRITA PARA DESTACAR. */
+            font-weight: bold;
+            /* font-family: 'MONTSERRAT', SANS-SERIF -> FUENTE MODERNA. */
+            font-family: 'Montserrat', sans-serif;
+            /* font-size: 1REM -> TAMAÑO ESTÁNDAR. */
+            font-size: 1rem;
+            /* margin-top: 1REM -> SEPARACIÓN CON EL ÚLTIMO CAMPO. */
+            margin-top: 1rem;
+            /* cursor: POINTER -> CAMBIA A MANITA AL PASAR EL MOUSE. */
+            cursor: pointer;
+            /* transition: 0.2S -> ANIMACIÓN SUAVE PARA CAMBIOS EN HOVER. */
+            transition: 0.2s;
+            /* box-shadow: 0 5PX 15PX RGBA(106, 27, 46, 0.3) -> SOMBRA */
+            /* DE COLOR VINO CON 30 % OPACIDAD, QUE DA PROFUNDIDAD AL BOTÓN. */
+            box-shadow: 0 5px 15px rgba(106, 27, 46, 0.3);
+            /* letter-spacing: 1PX -> ESPACIO ENTRE LETRAS PARA MEJOR LEGIBILIDAD. */
+            letter-spacing: 1px;
+        }
+
+        /* ESTILOS DEL BOTÓN CUANDO EL MOUSE ESTÁ ENCIMA (HOVER). */
+        button[type="submit"]:hover {
+            /* background: LINEAR-GRADIENT(95DEG, #8A2A40, #5A3A6A) -> EL DEGRADADO */
+            /* SE VUELVE MÁS CLARO, DANDO UN EFECTO DE "BRILLO" AL PASAR EL MOUSE. */
+            background: linear-gradient(95deg, #8a2a40, #5a3a6a);
+            /* transform: SCALE(1.02) -> EL BOTÓN SE AGRANDA UN 2 %, */
+            /* CREANDO UNA SENSACIÓN DE "PRESIÓN" O REALCE. */
+            transform: scale(1.02);
+            /* box-shadow: SE INTENSIFICA LA SOMBRA PARA DAR MÁS PROFUNDIDAD. */
+            box-shadow: 0 8px 20px rgba(106, 27, 46, 0.4);
+        }
+
+        /* --------------------------------------------------------------
+        ENLACE PIE DE PÁGINA (FOOTER-LINK)
+        ENLACE A "INICIAR SESIÓN" PARA USUARIOS QUE YA TIENEN CUENTA.
+        -------------------------------------------------------------- */
+        .footer-link {
+            /* display: BLOCK -> OCUPA TODA LA LÍNEA. */
+            display: block;
+            /* text-align: CENTER -> CENTRA EL TEXTO. */
+            text-align: center;
+            /* margin-top: 1.5REM -> SEPARACIÓN DEL BOTÓN DE REGISTRO. */
+            margin-top: 1.5rem;
+            /* color: #4B2E5A -> COLOR MORADO OSCURO. */
+            color: #4b2e5a;
+            /* text-decoration: NONE -> ELIMINA EL SUBRAYADO POR DEFECTO. */
+            text-decoration: none;
+            /* font-family: 'MONTSERRAT', SANS-SERIF -> FUENTE MODERNA. */
+            font-family: 'Montserrat', sans-serif;
+            /* font-size: 0.85REM -> LIGERAMENTE MÁS PEQUEÑO. */
+            font-size: 0.85rem;
+            /* transition: 0.2S -> ANIMACIÓN SUAVE PARA HOVER. */
+            transition: 0.2s;
+        }
+
+        /* ESTILOS DEL ENLACE AL PASAR EL MOUSE. */
+        .footer-link:hover {
+            /* color: #B8860B -> CAMBIA A DORADO, ATRAYENDO LA ATENCIÓN. */
+            color: #b8860b;
+            /* text-decoration: UNDERLINE -> SUBRAYA PARA INDICAR QUE ES UN ENLACE. */
+            text-decoration: underline;
+        }
+
+        /* --------------------------------------------------------------
+        ENLACE DE CORREO (CONTACT-EMAIL)
+        SE USA EN EL BLOQUE DE DUEÑO PARA CONTACTAR POR MAIL.
+        -------------------------------------------------------------- */
+        .contact-email {
+            /* color: #6A1B2E -> VINO, PARA QUE RESALTE. */
+            color: #6a1b2e;
+            /* text-decoration: NONE -> SIN SUBRAYADO INICIAL. */
+            text-decoration: none;
+            /* font-weight: 600 -> SEMINEGRITA PARA DESTACAR. */
+            font-weight: 600;
+        }
+
+        .contact-email:hover {
+            /* AL PASAR EL MOUSE, SE SUBRAYA PARA INDICAR QUE ES INTERACTIVO. */
+            text-decoration: underline;
+        }
+
+        /* --------------------------------------------------------------
+        DECORACIONES CON EMOJIS (::BEFORE Y ::AFTER)
+        AÑADEN FRESAS Y ARÁNDANOS ALREDEDOR DE LA TARJETA.
+        -------------------------------------------------------------- */
+        .register-card::before {
+            /* content: "🍓" -> EL EMOJI DE FRESA SE INSERTA ANTES DEL CONTENIDO. */
+            content: "🍓";
+            /* position: ABSOLUTE -> SE POSICIONA DE FORMA ABSOLUTA RESPECTO */
+            /* AL CONTENEDOR REGISTER-CARD (QUE TIENE POSITION: RELATIVE). */
+            position: absolute;
+            /* top: -15PX; LEFT: 20PX -> SE COLOCA 15PX POR ENCIMA DEL BORDE */
+            /* SUPERIOR Y 20PX DESDE LA IZQUIERDA, SOBRESALIENDO DE LA TARJETA. */
+            top: -15px;
+            left: 20px;
+            /* font-size: 2REM -> TAMAÑO GRANDE PARA QUE SE VEA BIEN. */
+            font-size: 2rem;
+            /* opacity: 0.4 -> 40 % DE OPACIDAD PARA QUE NO DISTRAIGA */
+            /* DEL CONTENIDO PRINCIPAL. */
+            opacity: 0.4;
+            /* pointer-events: NONE -> EL EMOJI NO BLOQUEA CLICS NI INTERACCIONES. */
+            pointer-events: none;
+        }
+
+        .register-card::after {
+            /* content: "🫐" -> EMOJI DE ARÁNDANO DESPUÉS DEL CONTENIDO. */
+            content: "🫐";
+            position: absolute;
+            /* bottom: -15PX; RIGHT: 20PX -> SE COLOCA 15PX POR DEBAJO */
+            /* Y 20PX DESDE LA DERECHA. */
+            bottom: -15px;
+            right: 20px;
+            font-size: 2rem;
+            opacity: 0.4;
+            pointer-events: none;
+        }
+
+        /* --------------------------------------------------------------
+        RESPONSIVE: AJUSTES PARA PANTALLAS MUY PEQUEÑAS (MÓVILES)
+        -------------------------------------------------------------- */
+        @media (max-width: 550px) {
+            /* CUANDO EL ANCHO DE LA PANTALLA SEA MENOR O IGUAL A 550PX */
+            /* (TELÉFONOS), SE APLICAN ESTOS ESTILOS. */
+            .register-card {
+                /* padding: 1.5REM -> REDUCIMOS EL ESPACIO INTERIOR PARA */
+                /* APROVECHAR MEJOR EL ESPACIO LIMITADO. */
+                padding: 1.5rem;
+            }
+            .radio-group {
+                /* flex-direction: COLUMN -> LOS BOTONES RADIO SE APILAN */
+                /* VERTICALMENTE EN LUGAR DE EN FILA. */
+                flex-direction: column;
+                /* align-items: CENTER -> LOS CENTRAMOS HORIZONTALMENTE. */
+                align-items: center;
+                /* gap: 0.8REM -> REDUCIMOS EL ESPACIO ENTRE OPCIONES. */
+                gap: 0.8rem;
+                /* border-radius: 30PX -> BORDES LIGERAMENTE MENOS REDONDEADOS. */
+                border-radius: 30px;
+            }
+        }
+
+        /* ESTILOS PARA MENSAJES FLASH (NOTIFICACIONES DEL SERVIDOR) */
+        .flash-messages {
+            margin: 1rem 0; /* MARGEN SUPERIOR E INFERIOR DE 1REM */
+        }
+        .alert {
+            padding: 0.8rem 1rem; /* ESPACIO INTERIOR */
+            border-radius: 40px; /* BORDES REDONDEADOS */
+            font-family: 'Montserrat', sans-serif; /* FUENTE MODERNA */
+            font-size: 0.9rem; /* TAMAÑO DE TEXTO */
+            text-align: center; /* TEXTO CENTRADO */
+            border: 1px solid transparent; /* BORDE TRANSPARENTE POR DEFECTO */
+        }
+        .alert-success {
+            background-color: #d4edda; /* FONDO VERDE CLARO */
+            border-color: #c3e6cb; /* BORDE VERDE */
+            color: #155724; /* TEXTO VERDE OSCURO */
+        }
+        .alert-danger {
+            background-color: #f8d7da; /* FONDO ROJO CLARO */
+            border-color: #f5c6cb; /* BORDE ROJO */
+            color: #721c24; /* TEXTO ROJO OSCURO */
+        }
+        .alert-info {
+            background-color: #d1ecf1; /* FONDO AZUL CLARO */
+            border-color: #bee5eb; /* BORDE AZUL */
+            color: #0c5460; /* TEXTO AZUL OSCURO */
+        }
+        .alert-warning {
+            background-color: #fff3cd; /* FONDO AMARILLO CLARO */
+            border-color: #ffeeba; /* BORDE AMARILLO */
+            color: #856404; /* TEXTO AMARILLO OSCURO */
+        }
+    </style>
+</head> <!-- FIN DE LA CABECERA -->
+
+<!-- CUERPO DE LA PÁGINA (BODY): TODO EL CONTENIDO VISIBLE SE COLOCA AQUÍ -->
+<body>
+
+    <!-- ================================================================
+        TARJETA PRINCIPAL (REGISTER-CARD)
+        ES EL CONTENEDOR QUE AGRUPA EL TÍTULO, EL FORMULARIO Y EL ENLACE.
+    ================================================================ -->
+    <div class="register-card">
+        <!-- 
+            DIV ES UN CONTENEDOR GENÉRICO SIN SIGNIFICADO SEMÁNTICO.
+            SE USA AQUÍ PARA APLICAR LOS ESTILOS DE LA TARJETA.
+        -->
+
+        <!-- ------------------------------------------------------------
+            TÍTULO CON ICONO
+        ------------------------------------------------------------ -->
+        <h2>
+            <!-- 
+                I ES UNA ETIQUETA PARA ICONOS. 
+                "FAS FA-SEEDLING" ES UN ICONO DE UNA PLANTITA (SEEDLING)
+                DE FONT AWESOME. 
+                EL ESTILO INLINE "COLOR: #6A1B2E" LO TIÑE DE VINO PARA
+                QUE COMBINE CON LA PALETA.
+            -->
+            <i class="fas fa-seedling" style="color: #6a1b2e;"></i> 
+            Crear cuenta
+        </h2>
+
+        <!-- ================================================================
+            MENSAJES FLASH (NOTIFICACIONES DEL SERVIDOR)
+            SE MUESTRAN SI HAY MENSAJES PENDIENTES (EJ. ERROR DE REGISTRO)
+        ================================================================ -->
+        <!-- BLOQUE JINJA2: OBTENER MENSAJES FLASH CON CATEGORÍAS -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        <!-- SI HAY MENSAJES, SE MUESTRA EL CONTENEDOR -->
+        {% if messages %}
+            <div class="flash-messages">
+            <!-- RECORRE CADA MENSAJE CON SU CATEGORÍA -->
+            {% for category, message in messages %}
+                <!-- DIV CON CLASE ALERT Y ALERT-CATEGORÍA (SUCCESS, DANGER, ETC.) -->
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+            </div>
+        {% endif %}
+        {% endwith %}
+
+        <!-- ================================================================
+            FORMULARIO DE REGISTRO
+            ATRIBUTOS IMPORTANTES:
+            - METHOD="POST": LOS DATOS SE ENVÍAN EN EL CUERPO DE LA PETICIÓN
+              (NO VISIBLES EN LA URL). ES SEGURO PARA CONTRASEÑAS.
+            - ENCTYPE="MULTIPART/FORM-DATA": NECESARIO PORQUE EL FORMULARIO
+              PERMITE SUBIR ARCHIVOS (DOCUMENTOS DE IDENTIDAD).
+        ================================================================ -->
+        <form method="POST" enctype="multipart/form-data">
+
+            <!-- ------------------------------------------------------------
+                CAMPO: NOMBRE COMPLETO (TEXTO)
+            ------------------------------------------------------------ -->
+            <div class="form-group">
+                <!-- 
+                    INPUT TYPE="TEXT" -> CAMPO DE TEXTO DE UNA LÍNEA.
+                    NAME="NOMBRE" -> IDENTIFICADOR QUE SE ENVÍA AL SERVIDOR.
+                    PLACEHOLDER -> TEXTO DE AYUDA QUE DESAPARECE AL ESCRIBIR.
+                    REQUIRED -> EL NAVEGADOR IMPIDE ENVIAR EL FORMULARIO
+                                SI ESTE CAMPO ESTÁ VACÍO.
+                -->
+                <input type="text" name="nombre" placeholder="Nombre completo" required>
+            </div>
+
+            <!-- ------------------------------------------------------------
+                CAMPO: CORREO ELECTRÓNICO
+            ------------------------------------------------------------ -->
+            <div class="form-group">
+                <!-- 
+                    TYPE="EMAIL" -> EL NAVEGADOR VALIDA QUE EL TEXTO TENGA
+                    FORMATO DE CORREO (CON @ Y DOMINIO). EN MÓVILES, MUESTRA
+                    UN TECLADO CON @ Y .COM.
+                -->
+                <input type="email" name="correo" placeholder="Correo electrónico" required>
+            </div>
+
+            <!-- ------------------------------------------------------------
+                CAMPO: CONTRASEÑA
+            ------------------------------------------------------------ -->
+            <div class="form-group">
+                <!-- 
+                    TYPE="PASSWORD" -> LOS CARACTERES SE OCULTAN (PUNTOS/ASTERISCOS).
+                -->
+                <input type="password" name="password" placeholder="Contraseña" required>
+            </div>
+
+            <!-- ------------------------------------------------------------
+                CAMPO: TELÉFONO
+            ------------------------------------------------------------ -->
+            <div class="form-group">
+                <!-- 
+                    TYPE="TEL" -> EN MÓVILES MUESTRA UN TECLADO NUMÉRICO,
+                    FACILITANDO LA ESCRITURA DE NÚMEROS.
+                -->
+                <input type="tel" name="telefono" placeholder="Teléfono" required>
+            </div>
+
+            <!-- ------------------------------------------------------------
+                CAMPO: FECHA DE NACIMIENTO
+            ------------------------------------------------------------ -->
+            <div class="form-group">
+                <!-- 
+                    TYPE="DATE" -> MUESTRA UN SELECTOR DE CALENDARIO NATIVO
+                    DEL NAVEGADOR, PERMITIENDO ELEGIR FECHA FÁCILMENTE.
+                    TITLE="FECHA DE NACIMIENTO" -> TEXTO QUE APARECE COMO
+                    TOOLTIP AL PASAR EL MOUSE.
+                -->
+                <input type="date" name="fecha" required title="Fecha de nacimiento">
+            </div>
+
+            <!-- ------------------------------------------------------------
+                GRUPO DE BOTONES RADIO (TIPO DE CUENTA)
+                EL USUARIO ELIGE ENTRE CLIENTE, DUEÑO O EMPLEADO.
+            ------------------------------------------------------------ -->
+            <div class="radio-group">
+                <!-- OPCIÓN 1: CLIENTE -->
+                <label>
+                    <!-- 
+                        INPUT TYPE="RADIO" -> BOTÓN CIRCULAR QUE PERMITE
+                        SELECCIONAR UNA OPCIÓN DENTRO DEL GRUPO.
+                        NAME="TIPO_CUENTA" -> TODOS LOS RADIOS CON EL MISMO
+                        NOMBRE PERTENECEN AL MISMO GRUPO (SOLO SE PUEDE ELEGIR UNO).
+                        VALUE="CLIENTE" -> VALOR QUE SE ENVÍA AL SERVIDOR.
+                        CHECKED -> ESTA OPCIÓN VIENE SELECCIONADA POR DEFECTO.
+                    -->
+                    <input type="radio" name="tipo_cuenta" value="cliente" checked>
+                    🛍️ Cliente
+                </label>
+
+                <!-- OPCIÓN 2: DUEÑO -->
+                <label>
+                    <input type="radio" name="tipo_cuenta" value="dueno">
+                    🏪 Solicitar ser Dueño
+                </label>
+
+                <!-- OPCIÓN 3: EMPLEADO (NUEVA) -->
+                <label>
+                    <input type="radio" name="tipo_cuenta" value="empleado">
+                    🧑‍💼 Solicitar ser Empleado
+                </label>
+            </div>
+
+            <!-- ------------------------------------------------------------
+                BLOQUE DE CAMPOS PARA DUEÑO
+                SE MUESTRA SOLO CUANDO EL RADIO "DUEÑO" ESTÁ SELECCIONADO.
+                POR DEFECTO ESTÁ OCULTO (STYLE="DISPLAY: NONE;").
+            ------------------------------------------------------------ -->
+            <div id="campos_dueno" style="display: none;">
+                <!-- 
+                    ESTE DIV SE IDENTIFICA CON "ID" PARA QUE JAVASCRIPT
+                    PUEDA MANIPULARLO FÁCILMENTE (MOSTRAR/OCULTAR).
+                -->
+
+                <!-- NOMBRE DEL LOCAL -->
+                <div class="form-group">
+                    <input type="text" name="nombre_local" placeholder="Nombre del negocio / local">
+                </div>
+
+                <!-- UBICACIÓN -->
+                <div class="form-group">
+                    <input type="text" name="ubicacion" placeholder="Ubicación del negocio (dirección, ciudad, etc.)">
+                </div>
+
+                <!-- DESCRIPCIÓN (TEXTAREA) -->
+                <div class="form-group">
+                    <!-- 
+                        TEXTAREA ES UN CAMPO DE TEXTO MULTILÍNEA.
+                        ROWS="2" INDICA QUE SE MUESTRAN 2 LÍNEAS DE ALTO.
+                    -->
+                    <textarea name="descripcion" rows="2" placeholder="Breve descripción del negocio (productos/servicios)"></textarea>
+                </div>
+
+                <!-- DOCUMENTO (ARCHIVO) -->
+                <div class="form-group">
+                    <!-- 
+                        LABEL ASOCIA UN TEXTO CON UN INPUT.
+                        STYLE="COLOR: #6A1B2E;" -> TEXTO EN COLOR VINO.
+                    -->
+                    <label style="color: #6a1b2e;">📄 Documento de identificación o comprobante (opcional)</label>
+                    <!-- 
+                        TYPE="FILE" -> PERMITE SELECCIONAR UN ARCHIVO LOCAL.
+                        NAME="DOCUMENTO" -> IDENTIFICADOR PARA EL SERVIDOR.
+                        ACCEPT="IMAGE/*,APPLICATION/PDF" -> LIMITA LOS TIPOS
+                        DE ARCHIVO A IMÁGENES Y PDF, PARA SEGURIDAD Y USABILIDAD.
+                        CLASS="FILE-INPUT" -> HEREDA LOS ESTILOS DE LOS INPUTS.
+                    -->
+                    <input type="file" name="documento" accept="image/*,application/pdf" class="file-input">
+                    <!-- TEXTO DE AYUDA -->
+                    <span class="small-note">Formatos permitidos: JPG, PNG, GIF, PDF. Máx 5MB.</span>
+                </div>
+
+                <!-- MENSAJE DE CONTACTO PARA QUIENES NO TIENEN DOCUMENTO -->
+                <div class="form-group">
+                    <small>
+                        <!-- 
+                            SMALL REDUCE EL TAMAÑO DEL TEXTO.
+                        -->
+                        ¿No tienes documento para adjuntar? 
+                        <!-- 
+                            A HREF="MAILTO:..." ES UN ENLACE DE CORREO.
+                            AL HACER CLIC, ABRE EL CLIENTE DE CORREO DEL USUARIO
+                            CON EL ASUNTO Y CUERPO PREDEFINIDOS.
+                            CLASS="CONTACT-EMAIL" APLICA EL ESTILO VINO.
+                        -->
+                        <a href="mailto:blooma@gmail.com?subject=Solicitud%20de%20due%C3%B1o%20sin%20documento&body=Hola,%20me%20gustar%C3%ADa%20registrarme%20como%20due%C3%B1o%20pero%20no%20cuento%20con%20el%20documento%20solicitado." class="contact-email">Contáctanos por correo</a> 
+                        y coordinaremos la verificación.
+                    </small>
+                </div>
+            </div>
+            <!-- FIN DE #CAMPOS_DUENO -->
+
+            <!-- ------------------------------------------------------------
+                BLOQUE DE CAMPOS PARA EMPLEADO (NUEVO)
+                SE MUESTRA SOLO CUANDO EL RADIO "EMPLEADO" ESTÁ SELECCIONADO.
+                POR DEFECTO ESTÁ OCULTO.
+            ------------------------------------------------------------ -->
+            <div id="campos_empleado" style="display: none;">
+
+                <!-- CÓDIGO DEL LOCAL -->
+                <div class="form-group">
+                    <input type="text" name="codigo_local" placeholder="Código del local (ej. LOC-COM-01)">
+                    <span class="small-note">Pídele el código al dueño del local donde deseas trabajar.</span>
+                </div>
+
+                <!-- PUESTO DESEADO -->
+                <div class="form-group">
+                    <input type="text" name="puesto" placeholder="Puesto deseado (ej. Ayudante, Mesero, Cajero)">
+                </div>
+
+                <!-- MENSAJE ADICIONAL (OPCIONAL) -->
+                <div class="form-group">
+                    <textarea name="mensaje" rows="2" placeholder="Mensaje adicional (opcional)"></textarea>
+                </div>
+
+                <!-- DOCUMENTO (OPCIONAL) -->
+                <div class="form-group">
+                    <label style="color: #6a1b2e;">📄 Documento de identificación (opcional)</label>
+                    <input type="file" name="documento" accept="image/*,application/pdf" class="file-input">
+                    <span class="small-note">Formatos permitidos: JPG, PNG, GIF, PDF. Máx 5MB.</span>
+                </div>
+            </div>
+            <!-- FIN DE #CAMPOS_EMPLEADO -->
+
+            <!-- ------------------------------------------------------------
+                BOTÓN DE ENVÍO
+            ------------------------------------------------------------ -->
+            <button type="submit">
+                <!-- 
+                    ICONO DE HOJA (LEAF) DE FONT AWESOME.
+                -->
+                <i class="fas fa-leaf"></i> Registrarse
+            </button>
+
+        </form>
+        <!-- FIN DEL FORMULARIO -->
+
+        <!-- ------------------------------------------------------------
+            ENLACE PARA INICIAR SESIÓN
+        ------------------------------------------------------------ -->
+        <a href="/login" class="footer-link">¿Ya tienes cuenta? Inicia sesión ✨</a>
+        <!-- 
+            REDIRIGE A LA PÁGINA DE LOGIN.
+            EL ATRIBUTO HREF="/LOGIN" ES UNA RUTA RELATIVA QUE EL SERVIDOR
+            FLASK INTERPRETARÁ.
+        -->
+
+    </div>
+    <!-- FIN DE REGISTER-CARD -->
+
+    <!-- ================================================================
+        JAVASCRIPT: CONTROL DE VISIBILIDAD DE CAMPOS ADICIONALES
+        ESTE SCRIPT SE ENCARGA DE MOSTRAR/OCULTAR LOS BLOQUES DE DUEÑO
+        Y EMPLEADO SEGÚN LA OPCIÓN SELECCIONADA EN LOS RADIOS.
+    ================================================================ -->
+    <script>
+        // ================================================================
+        // 1. OBTENER REFERENCIAS A LOS ELEMENTOS DEL DOM
+        // ================================================================
+
+        // document.querySelector() BUSCA EL PRIMER ELEMENTO HTML QUE
+        // COINCIDA CON EL SELECTOR CSS PROPORCIONADO.
+        // AQUÍ BUSCAMOS LOS INPUTS RADIO POR SU ATRIBUTO "VALUE".
+        const radioCliente = document.querySelector('input[value="cliente"]');
+        const radioDueno = document.querySelector('input[value="dueno"]');
+        const radioEmpleado = document.querySelector('input[value="empleado"]');
+
+        // document.getElementById() BUSCA UN ELEMENTO POR SU "ID".
+        // OBTENEMOS LOS DIVS QUE CONTIENEN LOS CAMPOS ADICIONALES.
+        const camposDueno = document.getElementById('campos_dueno');
+        const camposEmpleado = document.getElementById('campos_empleado');
+
+        // ================================================================
+        // 2. FUNCIÓN QUE ACTUALIZA LA VISIBILIDAD
+        // ================================================================
+
+        function toggleCampos() {
+            // LA PROPIEDAD "STYLE.DISPLAY" CONTROLA SI UN ELEMENTO ES VISIBLE.
+            // - 'BLOCK' -> EL ELEMENTO SE MUESTRA (OCUPA ESPACIO).
+            // - 'NONE' -> EL ELEMENTO SE OCULTA (DESAPARECE DEL FLUJO).
+
+            // "RADIODUENO.CHECKED" DEVUELVE TRUE SI EL BOTÓN DE DUEÑO
+            // ESTÁ SELECCIONADO, FALSE EN CASO CONTRARIO.
+
+            // OPERADOR TERNARIO: (CONDICIÓN) ? VALOR_SI_TRUE : VALOR_SI_FALSE
+
+            // MOSTRAR CAMPOS DE DUEÑO SOLO SI "DUEÑO" ESTÁ SELECCIONADO.
+            camposDueno.style.display = radioDueno.checked ? 'block' : 'none';
+
+            // MOSTRAR CAMPOS DE EMPLEADO SOLO SI "EMPLEADO" ESTÁ SELECCIONADO.
+            camposEmpleado.style.display = radioEmpleado.checked ? 'block' : 'none';
+        }
+
+        // ================================================================
+        // 3. ASIGNAR EVENTOS A LOS BOTONES RADIO
+        // ================================================================
+
+        // addEventListener() REGISTRA UNA FUNCIÓN QUE SE EJECUTARÁ CUANDO
+        // OCURRA UN EVENTO ESPECÍFICO.
+        // EL EVENTO 'CHANGE' SE DISPARA CUANDO EL USUARIO CAMBIA EL VALOR
+        // DEL ELEMENTO (EN ESTE CASO, SELECCIONA UN BOTÓN RADIO).
+        radioCliente.addEventListener('change', toggleCampos);
+        radioDueno.addEventListener('change', toggleCampos);
+        radioEmpleado.addEventListener('change', toggleCampos);
+
+        // ================================================================
+        // 4. EJECUTAR LA FUNCIÓN UNA VEZ AL CARGAR LA PÁGINA
+        // ================================================================
+
+        // LLAMAMOS A TOGGLECAMPOS() INMEDIATAMENTE PARA QUE LA INTERFAZ
+        // SE MUESTRE EN EL ESTADO CORRECTO DESDE EL PRINCIPIO.
+        // COMO "CLIENTE" ES LA OPCIÓN POR DEFECTO (CHECKED), AMBOS BLOQUES
+        // ADICIONALES QUEDARÁN OCULTOS (DISPLAY:NONE).
+        // SI EL USUARIO RECARGA LA PÁGINA CON OTRA SELECCIÓN, ESTO LA AJUSTA.
+        toggleCampos();
+
+        // ================================================================
+        // FIN DEL CÓDIGO JAVASCRIPT
+        // ================================================================
+    </script>
+
+</body> <!-- FIN DEL CUERPO -->
+</html> <!-- FIN DE LA ETIQUETA HTML -->
+<!-- 
+    FIN DEL DOCUMENTO HTML. 
+    EL NAVEGADOR INTERPRETA TODO LO QUE HAY ENTRE HTML Y /HTML.
+-->
